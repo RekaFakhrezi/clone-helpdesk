@@ -12,14 +12,17 @@ export function formatTimeAgo(value: string | Date, language: FormatLanguage = '
 
   const diffInSeconds = Math.floor((Date.now() - date.getTime()) / 1000);
   const rtf = new Intl.RelativeTimeFormat(language, { numeric: 'always', style: 'long' });
+  // Teks UI yang sudah ada memakai "N hari lalu", bukan "N hari yang lalu".
+  const phrase = (value: number, unit: Intl.RelativeTimeFormatUnit) =>
+    rtf.format(-value, unit).replace(' yang lalu', ' lalu').replace(' yang akan datang', ' lagi');
 
-  if (Math.abs(diffInSeconds) < 60) return rtf.format(-diffInSeconds, 'second');
+  if (Math.abs(diffInSeconds) < 60) return phrase(diffInSeconds, 'second');
 
   const diffInMinutes = Math.floor(diffInSeconds / 60);
-  if (Math.abs(diffInMinutes) < 60) return rtf.format(-diffInMinutes, 'minute');
+  if (Math.abs(diffInMinutes) < 60) return phrase(diffInMinutes, 'minute');
 
   const diffInHours = Math.floor(diffInMinutes / 60);
-  if (Math.abs(diffInHours) < 24) return rtf.format(-diffInHours, 'hour');
+  if (Math.abs(diffInHours) < 24) return phrase(diffInHours, 'hour');
 
-  return rtf.format(-Math.floor(diffInHours / 24), 'day');
+  return phrase(Math.floor(diffInHours / 24), 'day');
 }
