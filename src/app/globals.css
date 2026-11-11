@@ -69,6 +69,7 @@
 
 *,*::before,*::after{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
+@layer base {
 body{
   margin:0;
   background:var(--canvas);
@@ -87,10 +88,9 @@ button{font-family:inherit; cursor:pointer;}
 img,svg{display:block; max-width:100%;}
 table{font-variant-numeric:tabular-nums;}
 ::selection{background:rgba(0,45,114,0.16); color:var(--fg);}
-
 :focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:var(--radius);}
-
 *{scrollbar-width:thin; scrollbar-color:var(--rule-strong) transparent;}
+}
 
 .container{
   width:100%;

@@ -19,7 +19,7 @@ export default async function AdministrasiDashboard() {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-6 md:p-10 w-full max-w-[1440px] mx-auto pb-10">
+    <div className="flex flex-col gap-5 w-full max-w-[1440px] mx-auto pb-6">
       {/* Page Header */}
       <DashboardHeader 
         titleKey="dashboard.overview_title"

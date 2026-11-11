@@ -13,60 +13,60 @@ interface SummaryCardsProps {
   };
 }
 
+/**
+ * Strip metrik: satu pita dengan pembatas vertikal, bukan empat kartu.
+ * Warna status hanya dipakai pada angka yang memang membawa makna.
+ */
 export default function SummaryCards({ data }: SummaryCardsProps) {
   const { t } = useLanguage();
-  const defaultData = data || { today: 0, growth: "0", open: 0, overdue: 0, failedMessages: 0 };
-  
-  const cardData = [
+  const d = data || { today: 0, growth: '0', open: 0, overdue: 0, failedMessages: 0 };
+
+  const metrics = [
     {
-      title: t('dashboard.today_tickets'),
-      value: defaultData.today,
-      growth: `${defaultData.growth}% ${t('dashboard.vs_yesterday')}`,
-      containerClass: "bg-white border border-[var(--line-dark)] rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow",
-      titleClass: "text-[11px] font-bold text-[var(--text-dim)] uppercase tracking-wider mb-2",
-      valueClass: "text-4xl font-bold text-[var(--ink)]",
-      descClass: "text-xs text-[var(--text-dim)] mt-4",
+      label: t('dashboard.today_tickets'),
+      value: d.today,
+      note: `${d.growth}% ${t('dashboard.vs_yesterday')}`,
+      tone: 'text-[var(--fg)]',
     },
     {
-      title: t('dashboard.open_tickets'),
-      value: defaultData.open,
-      growth: t('dashboard.needs_attention'),
-      containerClass: "bg-white border border-amber-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow bg-amber-50/30",
-      titleClass: "text-[11px] font-bold text-amber-700 uppercase tracking-wider mb-2",
-      valueClass: "text-4xl font-bold text-amber-600",
-      descClass: "text-xs text-amber-700 mt-4",
+      label: t('dashboard.open_tickets'),
+      value: d.open,
+      note: t('dashboard.needs_attention'),
+      tone: 'text-[var(--warn)]',
     },
     {
-      title: t('dashboard.overdue_sla'),
-      value: defaultData.overdue,
-      growth: t('dashboard.action_required'),
-      containerClass: "bg-white border border-red-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow bg-red-50/30",
-      titleClass: "text-[11px] font-bold text-red-700 uppercase tracking-wider mb-2",
-      valueClass: "text-4xl font-bold text-red-600",
-      descClass: "text-xs text-red-700 mt-4",
+      label: t('dashboard.overdue_sla'),
+      value: d.overdue,
+      note: t('dashboard.action_required'),
+      tone: 'text-[var(--danger)]',
     },
     {
-      title: t('dashboard.solved_by_system'),
-      value: defaultData.failedMessages,
-      growth: t('dashboard.auto_resolved'),
-      containerClass: "bg-white border border-[var(--line-dark)] rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow",
-      titleClass: "text-[11px] font-bold text-[var(--text-dim)] uppercase tracking-wider mb-2",
-      valueClass: "text-4xl font-bold text-[var(--ink)]",
-      descClass: "text-xs text-[var(--text-dim)] mt-4",
+      label: t('dashboard.solved_by_system'),
+      value: d.failedMessages,
+      note: t('dashboard.auto_resolved'),
+      tone: 'text-[var(--fg)]',
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 fill-mode-both">
-      {cardData.map((card, idx) => (
-        <div key={idx} className={card.containerClass}>
-            <div>
-                <div className={card.titleClass}>{card.title}</div>
-                <div className={card.valueClass}>
-                    <AnimatedCounter value={card.value} duration={1200 + (idx * 300)} />
-                </div>
-            </div>
-            <div className={card.descClass}>{card.growth}</div>
+    <div className="w-full border-y border-[var(--rule)] grid grid-cols-2 lg:grid-cols-4 animate-in fade-in duration-300">
+      {metrics.map((metric, index) => (
+        <div
+          key={metric.label}
+          className={[
+            'py-5 lg:py-6 pr-4',
+            index % 2 === 1 ? 'pl-4 lg:pl-6' : 'pl-0',
+            index >= 2 ? 'max-lg:border-t max-lg:border-[var(--rule)]' : '',
+            index > 0 ? 'lg:border-l lg:border-[var(--rule)] lg:pl-6' : '',
+          ].join(' ')}
+        >
+          <div className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">
+            {metric.label}
+          </div>
+          <div className={`mt-2 text-[30px] leading-none font-medium tabular-nums ${metric.tone}`}>
+            <AnimatedCounter value={metric.value} duration={900} />
+          </div>
+          <div className="mt-2 text-[11.5px] text-[var(--fg-dim)]">{metric.note}</div>
         </div>
       ))}
     </div>

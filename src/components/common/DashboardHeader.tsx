@@ -19,11 +19,11 @@ export default function DashboardHeader({
   const { t } = useLanguage();
 
   return (
-    <div className="animate-in fade-in slide-in-from-left-4 duration-500">
-      <h1 className="text-2xl font-bold text-[var(--ink)] mb-1">
+    <div className="animate-in fade-in duration-300">
+      <h1 className="text-[22px] font-medium leading-tight tracking-[-0.01em] text-[var(--fg)]">
         {t(titleKey, defaultTitle)}
       </h1>
-      <p className="text-[var(--text-dim)] text-sm">
+      <p className="mt-1 text-[13px] text-[var(--fg-dim)]">
         {t(descKey, defaultDesc)}
       </p>
     </div>

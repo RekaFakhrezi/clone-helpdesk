@@ -24,11 +24,11 @@ export default function TicketTrendChart({ data = [] }: TicketTrendChartProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-lg font-bold text-slate-800">{t('charts.trend_title')}</h3>
-        <select 
-          className="bg-slate-50 border border-slate-200 text-slate-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-3 py-1.5 outline-none cursor-pointer"
+    <div className="bg-[var(--surface)] rounded-[4px] border border-[var(--rule)]">
+      <div className="flex justify-between items-center gap-4 px-5 py-3.5 border-b border-[var(--rule)]">
+        <h3 className="text-[13px] font-medium text-[var(--fg)]">{t('charts.trend_title')}</h3>
+        <select
+          className="bg-transparent border border-[var(--rule-strong)] text-[var(--fg-dim)] text-[11.5px] rounded-[4px] px-2 py-1 outline-none cursor-pointer hover:border-[var(--fg-faint)] focus:border-[var(--accent)] transition-colors duration-150"
           value={range}
           onChange={(e) => setRange(e.target.value)}
         >
@@ -37,30 +37,30 @@ export default function TicketTrendChart({ data = [] }: TicketTrendChartProps) {
           <option value="This Month">{t('charts.this_month')}</option>
         </select>
       </div>
-      <div className="w-full h-[250px]">
+      <div className="w-full h-[250px] px-2 py-4">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={displayData} margin={{ top: 0, right: 0, left: -25, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-            <XAxis 
-              dataKey="name" 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fontSize: 11, fill: '#94a3b8' }} 
-              dy={10}
+          <BarChart data={displayData} margin={{ top: 0, right: 8, left: -25, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="0" vertical={false} stroke="rgba(11,21,36,0.08)" />
+            <XAxis
+              dataKey="name"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 10.5, fill: '#7c8898' }}
+              dy={8}
             />
-            <YAxis 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fontSize: 11, fill: '#94a3b8' }}
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tick={{ fontSize: 10.5, fill: '#7c8898' }}
               tickCount={3}
             />
-            <Tooltip 
-              cursor={{ fill: '#f8fafc' }}
-              contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+            <Tooltip
+              cursor={{ fill: 'rgba(11,21,36,0.04)' }}
+              contentStyle={{ borderRadius: '4px', border: '1px solid rgba(11,21,36,0.18)', boxShadow: '0 8px 24px -12px rgba(11,21,36,0.28)', fontSize: '12px' }}
             />
-            <Bar dataKey="value" radius={[4, 4, 0, 0]} maxBarSize={60}>
+            <Bar dataKey="value" radius={[2, 2, 0, 0]} maxBarSize={44}>
               {displayData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.active ? '#0369a1' : '#cbd5e1'} />
+                <Cell key={`cell-${index}`} fill={entry.active ? '#002D72' : '#C3C6D1'} />
               ))}
             </Bar>
           </BarChart>

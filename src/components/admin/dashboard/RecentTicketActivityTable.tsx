@@ -35,48 +35,44 @@ export default function RecentTicketActivityTable({ data = [] }: RecentTicketAct
   };
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-      <div className="flex justify-between items-center p-6 border-b border-slate-100">
-        <h3 className="text-lg font-bold text-slate-800">{t('charts.recent_activity')}</h3>
-        <Link href="/dashboard/administrasi/tickets" className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors">
+    <div className="bg-[var(--surface)] rounded-[4px] border border-[var(--rule)] overflow-hidden flex flex-col">
+      <div className="flex justify-between items-center gap-4 px-5 py-3.5 border-b border-[var(--rule)]">
+        <h3 className="text-[13px] font-medium text-[var(--fg)]">{t('charts.recent_activity')}</h3>
+        <Link href="/dashboard/administrasi/tickets" className="text-[11.5px] font-medium text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors">
           {t('charts.view_all')}
         </Link>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-slate-500 font-bold uppercase text-[11px] tracking-wider">
-            <tr>
-              <th className="px-6 py-4">{t('charts.ticket_id')}</th>
-              <th className="px-6 py-4">{t('charts.type')}</th>
-              <th className="px-6 py-4 w-1/2">{t('charts.activity')}</th>
-              <th className="px-6 py-4 text-right">{t('charts.time')}</th>
+        <table className="w-full text-left">
+          <thead>
+            <tr className="border-b border-[var(--rule)]">
+              <th className="px-5 py-2.5 text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">{t('charts.ticket_id')}</th>
+              <th className="px-5 py-2.5 text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">{t('charts.type')}</th>
+              <th className="px-5 py-2.5 text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] w-1/2">{t('charts.activity')}</th>
+              <th className="px-5 py-2.5 text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] text-right">{t('charts.time')}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody>
             {data.length === 0 ? (
               <tr>
-                <td colSpan={4} className="p-4 text-center text-slate-500 text-sm">{t('charts.no_activity')}</td>
+                <td colSpan={4} className="px-5 py-8 text-center text-[12.5px] text-[var(--fg-faint)]">{t('charts.no_activity')}</td>
               </tr>
             ) : (
               data.map((rawActivity, index) => {
                 const activity = localizeActivity(rawActivity);
 
                 return (
-                <tr key={index} className="hover:bg-slate-50/50 transition-colors">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div>
-                        <p className="text-sm font-semibold text-blue-600">{activity.ticketNum}</p>
-                      </div>
-                    </div>
+                <tr key={index} className="border-b border-[var(--rule)] last:border-0 hover:bg-[var(--canvas)] transition-colors duration-150">
+                  <td className="px-5 py-3 whitespace-nowrap">
+                    <span className="text-[12.5px] font-medium tabular-nums text-[var(--accent)]">{activity.ticketNum}</span>
                   </td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center justify-center px-2.5 py-1 rounded-md text-xs font-semibold ${activity.iconColor}`}>
+                  <td className="px-5 py-3">
+                    <span className={`inline-flex items-center px-1.5 py-0.5 rounded-[3px] text-[10.5px] font-medium ${activity.iconColor}`}>
                       {activity.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-slate-600 text-sm leading-relaxed">{activity.message}</td>
-                  <td className="px-6 py-4 text-right text-xs text-slate-500 font-medium whitespace-nowrap">{activity.time}</td>
+                  <td className="px-5 py-3 text-[12.5px] text-[var(--fg-dim)]">{activity.message}</td>
+                  <td className="px-5 py-3 text-right text-[11.5px] text-[var(--fg-faint)] whitespace-nowrap">{activity.time}</td>
                 </tr>
                 );
               })
