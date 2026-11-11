@@ -47,3 +47,7 @@ dist/
 
 /KP
 KP/
+# skill lokal (npx skills / impeccable), bukan bagian aplikasi
+.agents/
+.claude/
+skills-lock.json
