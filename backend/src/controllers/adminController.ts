@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { supabase, supabaseAdmin } from '../config/supabase';
-import crypto from 'crypto';
 
 export const getAdminDashboard = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -269,7 +268,7 @@ export const createStaff = async (req: Request, res: Response) => {
 export const updateStaff = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { password, ...payload } = req.body; // exclude password from profile update
+    const payload = req.body;
     const { data, error } = await supabaseAdmin.from('staff_profiles').update(payload).eq('id', id).select().single();
     if (error) throw error;
     res.json({ success: true, data });

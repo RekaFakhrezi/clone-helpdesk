@@ -86,32 +86,3 @@ export const requireRole = (allowedRoles: string[]) => {
     next();
   };
 };
-
-// ============================================================================
-// 3. MIDDLEWARE KEAMANAN WEBHOOK WHATSAPP
-// ============================================================================
-
-/**
- * Memvalidasi request yang masuk ke endpoint Webhook.
- * Memastikan request benar-benar datang dari WhatsApp Gateway resmi.
- */
-export const verifyWebhook = (req: Request, res: Response, next: NextFunction) => {
-  // Ambil secret key dari environment variables
-  const expectedSecret = process.env.WASENDER_WEBHOOK_SECRET;
-  
-  // WASenderAPI bisa diatur untuk mengirim token di header tertentu, misalnya 'x-api-key' atau 'authorization'
-  const providedSecret = req.headers['x-api-key']; 
-
-  // Jika di environment kita memasang secret, pastikan yang dikirim dari WASender cocok
-  if (expectedSecret && providedSecret !== expectedSecret) {
-    console.warn('🚨 Percobaan akses webhook ilegal terdeteksi! Token tidak cocok.');
-    return res.status(403).json({ error: 'Akses Webhook Ditolak!' });
-  }
-
-  // Pastikan request memiliki body (berisi pesan WA)
-  if (!req.body || Object.keys(req.body).length === 0) {
-    return res.status(400).json({ error: 'Payload tidak valid.' });
-  }
-
-  next();
-};

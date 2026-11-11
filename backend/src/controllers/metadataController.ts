@@ -70,23 +70,6 @@ export const reorderCategories = async (req: Request, res: Response) => {
 };
 
 /**
- * GET /api/admin/technicians
- */
-export const getTechnicians = async (req: Request, res: Response) => {
-  try {
-    const { data, error } = await supabase
-      .from('staff_profiles')
-      .select('id, name, email, role, dept_id')
-      .in('role', ['teknisi', 'agent']);
-      
-    if (error) throw error;
-    res.status(200).json({ success: true, data });
-  } catch (error: any) {
-    res.status(400).json({ success: false, message: error.message });
-  }
-};
-
-/**
  * POST /api/admin/categories
  */
 export const createCategory = async (req: Request, res: Response) => {
