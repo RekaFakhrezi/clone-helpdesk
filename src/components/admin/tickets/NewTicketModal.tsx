@@ -8,6 +8,16 @@ interface NewTicketModalProps {
   onSubmit: (ticketData: any) => void;
 }
 
+const LABEL_CLASS = 'text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]';
+const INPUT_CLASS =
+  'h-9 w-full px-2.5 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12.5px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors duration-150';
+const READONLY_CLASS =
+  'h-9 w-full px-2.5 rounded-[4px] border border-[var(--rule)] bg-[var(--canvas)] text-[12.5px] text-[var(--fg-dim)] cursor-not-allowed outline-none';
+const SELECT_CLASS =
+  'h-9 w-full px-2.5 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12.5px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors duration-150 cursor-pointer';
+const TEXTAREA_CLASS =
+  'w-full min-h-[76px] px-2.5 py-2 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12.5px] leading-relaxed text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors duration-150 resize-y';
+
 export default function NewTicketModal({ onClose, onSubmit }: NewTicketModalProps) {
   // Setup default date to today
   const today = new Date().toISOString().split('T')[0];
@@ -78,57 +88,57 @@ export default function NewTicketModal({ onClose, onSubmit }: NewTicketModalProp
         </>
       }
     >
-      <form ref={formRef} onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 flex flex-col gap-5">
+      <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-5 max-h-[65vh] overflow-y-auto pr-1">
 
         {/* Row 1: Date & Status (Auto/Readonly) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-[0.05em]">Date Created</label>
-            <input type="date" name="dateCreated" value={formData.dateCreated} readOnly className="p-2 border border-[#C3C6D1] rounded bg-gray-50 text-sm text-[#43474F] cursor-not-allowed outline-none" />
+          <div className="flex flex-col gap-1.5">
+            <label className={LABEL_CLASS}>Date Created</label>
+            <input type="date" name="dateCreated" value={formData.dateCreated} readOnly className={READONLY_CLASS} />
           </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-[0.05em]">Status Tiket</label>
-            <input type="text" name="status" value={formData.status} readOnly className="p-2 border border-[#C3C6D1] rounded bg-gray-50 text-sm text-[#001B3C] font-bold cursor-not-allowed outline-none" />
+          <div className="flex flex-col gap-1.5">
+            <label className={LABEL_CLASS}>Status Tiket</label>
+            <input type="text" name="status" value={formData.status} readOnly className={READONLY_CLASS} />
           </div>
         </div>
 
         {/* Data Diri Pelapor (From) */}
-        <div className="p-4 border border-[#C3C6D1] rounded-lg bg-[#F9F9FC] flex flex-col gap-4">
-          <h3 className="text-[#1A1C1E] font-iBMPlexSans text-sm font-semibold border-b border-[#C3C6D1] pb-2">Informasi Pelapor (From)</h3>
+        <div className="flex flex-col gap-3 border-t border-[var(--rule)] pt-4">
+          <h3 className={LABEL_CLASS}>Informasi Pelapor (From)</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="flex flex-col gap-1">
-              <label className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-[0.05em]">Nama Lengkap *</label>
-              <input required type="text" name="requesterName" value={formData.requesterName} onChange={handleChange} placeholder="Contoh: Andi Saputra" className="p-2 border border-[#C3C6D1] rounded text-sm text-[#1A1C1E] focus:border-[#0059BB] focus:ring-1 focus:ring-[#0059BB] outline-none transition-all" />
+            <div className="flex flex-col gap-1.5">
+              <label className={LABEL_CLASS}>Nama Lengkap *</label>
+              <input required type="text" name="requesterName" value={formData.requesterName} onChange={handleChange} placeholder="Contoh: Andi Saputra" className={INPUT_CLASS} />
             </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-[0.05em]">NIM / NIP *</label>
-              <input required type="text" name="requesterNim" value={formData.requesterNim} onChange={handleChange} placeholder="Nomor Induk" className="p-2 border border-[#C3C6D1] rounded text-sm text-[#1A1C1E] focus:border-[#0059BB] focus:ring-1 focus:ring-[#0059BB] outline-none transition-all" />
+            <div className="flex flex-col gap-1.5">
+              <label className={LABEL_CLASS}>NIM / NIP *</label>
+              <input required type="text" name="requesterNim" value={formData.requesterNim} onChange={handleChange} placeholder="Nomor Induk" className={INPUT_CLASS} />
             </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-[0.05em]">Fakultas / Unit Kerja *</label>
-              <input required type="text" name="requesterUnit" value={formData.requesterUnit} onChange={handleChange} placeholder="Contoh: Fakultas Teknik" className="p-2 border border-[#C3C6D1] rounded text-sm text-[#1A1C1E] focus:border-[#0059BB] focus:ring-1 focus:ring-[#0059BB] outline-none transition-all" />
+            <div className="flex flex-col gap-1.5">
+              <label className={LABEL_CLASS}>Fakultas / Unit Kerja *</label>
+              <input required type="text" name="requesterUnit" value={formData.requesterUnit} onChange={handleChange} placeholder="Contoh: Fakultas Teknik" className={INPUT_CLASS} />
             </div>
           </div>
         </div>
 
         {/* Ticket Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-[0.05em]">No. WhatsApp *</label>
-            <input type="text" name="requesterPhone" required value={formData.requesterPhone} onChange={handleChange} className="p-2 border border-[#C3C6D1] rounded text-sm outline-none focus:border-[#1E3A8A]" placeholder="628..." />
+          <div className="flex flex-col gap-1.5">
+            <label className={LABEL_CLASS}>No. WhatsApp *</label>
+            <input type="text" name="requesterPhone" required value={formData.requesterPhone} onChange={handleChange} className={INPUT_CLASS} placeholder="628..." />
           </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-[0.05em]">Kategori Kendala *</label>
-            <select required name="category" value={formData.category} onChange={handleChange} className="p-2 border border-[#C3C6D1] rounded text-sm text-[#1A1C1E] focus:border-[#0059BB] outline-none transition-all bg-white">
+          <div className="flex flex-col gap-1.5">
+            <label className={LABEL_CLASS}>Kategori Kendala *</label>
+            <select required name="category" value={formData.category} onChange={handleChange} className={SELECT_CLASS}>
               <option value="" disabled>Pilih Kategori...</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>{c.display_name || c.name}</option>
               ))}
             </select>
           </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-[0.05em]">Departemen (Assign To)</label>
-            <select name="assignTo" value={formData.assignTo} onChange={handleChange} className="p-2 border border-[#C3C6D1] rounded text-sm text-[#1A1C1E] focus:border-[#0059BB] outline-none transition-all bg-white">
+          <div className="flex flex-col gap-1.5">
+            <label className={LABEL_CLASS}>Departemen (Assign To)</label>
+            <select name="assignTo" value={formData.assignTo} onChange={handleChange} className={SELECT_CLASS}>
               <option value="">Unassigned (Biarkan kosong)</option>
               {departments.map((d) => (
                 <option key={d.id} value={d.id}>{d.name}</option>
@@ -137,14 +147,14 @@ export default function NewTicketModal({ onClose, onSubmit }: NewTicketModalProp
           </div>
         </div>
 
-        <div className="flex flex-col gap-1">
-          <label className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-[0.05em]">Subject *</label>
-          <input required type="text" name="subject" value={formData.subject} onChange={handleChange} placeholder="Ringkasan singkat kendala" className="p-2 border border-[#C3C6D1] rounded text-sm text-[#1A1C1E] focus:border-[#0059BB] focus:ring-1 focus:ring-[#0059BB] outline-none transition-all" />
+        <div className="flex flex-col gap-1.5">
+          <label className={LABEL_CLASS}>Subject *</label>
+          <input required type="text" name="subject" value={formData.subject} onChange={handleChange} placeholder="Ringkasan singkat kendala" className={INPUT_CLASS} />
         </div>
 
-        <div className="flex flex-col gap-1">
-          <label className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-[0.05em]">Deskripsi Kendala *</label>
-          <textarea required name="description" value={formData.description} onChange={handleChange} rows={4} placeholder="Jelaskan secara detail kendala yang dialami..." className="p-2 border border-[#C3C6D1] rounded text-sm text-[#1A1C1E] focus:border-[#0059BB] focus:ring-1 focus:ring-[#0059BB] outline-none transition-all resize-y"></textarea>
+        <div className="flex flex-col gap-1.5">
+          <label className={LABEL_CLASS}>Deskripsi Kendala *</label>
+          <textarea required name="description" value={formData.description} onChange={handleChange} rows={4} placeholder="Jelaskan secara detail kendala yang dialami..." className={TEXTAREA_CLASS}></textarea>
         </div>
 
       </form>

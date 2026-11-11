@@ -150,14 +150,14 @@ export default function PimpinanTicketWorkspace() {
   };
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-[1440px] mx-auto pb-10 animate-in fade-in slide-in-from-bottom-2 duration-300">
+    <div className="flex w-full flex-col gap-6 pb-10 animate-in fade-in duration-300">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end w-full gap-4">
+      <div className="flex flex-col justify-between gap-4 w-full md:flex-row md:items-end">
         <div className="flex flex-col items-start gap-1">
-          <h1 className="text-2xl font-bold text-[var(--ink)] tracking-tight">
+          <h1 className="text-[22px] font-medium leading-tight tracking-[-0.01em] text-[var(--fg)]">
             {t('pimpinan.report_title', 'Laporan Tiket')}
           </h1>
-          <p className="text-[var(--text-dim)] text-sm font-medium">
+          <p className="mt-1 text-[13px] text-[var(--fg-dim)]">
             {t(
               'pimpinan.report_desc',
               'Pemantauan seluruh tiket pengaduan IT Helpdesk secara waktu nyata.'
@@ -166,95 +166,105 @@ export default function PimpinanTicketWorkspace() {
         </div>
         <button
           onClick={exportPDF}
-          className="flex items-center gap-2 px-4 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] hover:bg-[var(--paper-2)] transition-colors shadow-sm active:scale-95"
+          className="h-9 inline-flex items-center gap-1.5 rounded-[4px] border border-[var(--rule-strong)] px-3 text-[12px] font-medium text-[var(--fg-dim)] transition-colors hover:bg-[var(--canvas)] hover:text-[var(--fg)]"
         >
-          <Printer className="w-4 h-4 text-[var(--text-dim)]" />
+          <Printer className="h-4 w-4" strokeWidth={1.75} />
           {t('pimpinan.print_report', 'Cetak Laporan')}
         </button>
       </div>
 
       {/* Main Container Card */}
-      <div className="w-full bg-white rounded-2xl shadow-sm border border-[var(--line)] overflow-hidden">
+      <div className="w-full overflow-hidden rounded-[4px] border border-[var(--rule)] bg-[var(--surface)]">
         {/* Navigation Tabs */}
-        <div className="flex items-center gap-2 px-6 pt-4 border-b border-[var(--line)] overflow-x-auto no-scrollbar bg-slate-50/50">
+        <div className="flex items-end gap-1 overflow-x-auto border-b border-[var(--rule)] px-4 no-scrollbar">
           <button
             onClick={() => setActiveTab('all')}
-            className={`cursor-pointer px-4 py-3 text-sm font-semibold transition-all border-b-2 flex items-center gap-2 whitespace-nowrap ${
+            className={`-mb-px inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap border-b px-3 py-2.5 text-[12.5px] transition-colors ${
               activeTab === 'all'
-                ? 'border-[var(--gold)] text-[var(--gold-dim)] font-bold'
-                : 'border-transparent text-[var(--text-dim)] hover:text-[var(--ink)]'
+                ? 'border-[var(--accent)] text-[var(--fg)] font-medium'
+                : 'border-transparent text-[var(--fg-dim)] hover:text-[var(--fg)]'
             }`}
           >
-            <Inbox className="w-4 h-4" />
-            {t('tickets.tab_all', 'Semua Tiket')} ({tickets.length})
+            <Inbox className="h-4 w-4" strokeWidth={1.75} />
+            {t('tickets.tab_all', 'Semua Tiket')}{' '}
+            <span className="text-[11px] tabular-nums text-[var(--fg-faint)]">({tickets.length})</span>
           </button>
           <button
             onClick={() => setActiveTab('unhandled')}
-            className={`cursor-pointer px-4 py-3 text-sm font-semibold transition-all border-b-2 flex items-center gap-2 whitespace-nowrap ${
+            className={`-mb-px inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap border-b px-3 py-2.5 text-[12.5px] transition-colors ${
               activeTab === 'unhandled'
-                ? 'border-[var(--gold)] text-[var(--gold-dim)] font-bold'
-                : 'border-transparent text-[var(--text-dim)] hover:text-[var(--ink)]'
+                ? 'border-[var(--accent)] text-[var(--fg)] font-medium'
+                : 'border-transparent text-[var(--fg-dim)] hover:text-[var(--fg)]'
             }`}
           >
-            <Clock className="w-4 h-4" />
-            {t('pimpinan.tab_unhandled', 'Belum Ditangani')} (
-            {
-              tickets.filter(t =>
-                ['WAITING VERIFICATION', 'NEW', 'OPEN'].includes(t.status)
-              ).length
-            }
-            )
+            <Clock className="h-4 w-4" strokeWidth={1.75} />
+            {t('pimpinan.tab_unhandled', 'Belum Ditangani')}{' '}
+            <span className="text-[11px] tabular-nums text-[var(--fg-faint)]">
+              (
+              {
+                tickets.filter(t =>
+                  ['WAITING VERIFICATION', 'NEW', 'OPEN'].includes(t.status)
+                ).length
+              }
+              )
+            </span>
           </button>
           <button
             onClick={() => setActiveTab('inprogress')}
-            className={`cursor-pointer px-4 py-3 text-sm font-semibold transition-all border-b-2 flex items-center gap-2 whitespace-nowrap ${
+            className={`-mb-px inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap border-b px-3 py-2.5 text-[12.5px] transition-colors ${
               activeTab === 'inprogress'
-                ? 'border-[var(--gold)] text-[var(--gold-dim)] font-bold'
-                : 'border-transparent text-[var(--text-dim)] hover:text-[var(--ink)]'
+                ? 'border-[var(--accent)] text-[var(--fg)] font-medium'
+                : 'border-transparent text-[var(--fg-dim)] hover:text-[var(--fg)]'
             }`}
           >
-            <Clock className="w-4 h-4 text-blue-500" />
-            {t('pimpinan.tab_inprogress', 'Sedang Diproses')} (
-            {
-              tickets.filter(t =>
-                ['IN PROGRESS', 'DIPROSES', 'WAITING CONFIRMATION'].includes(
-                  (t.status || '').toUpperCase()
-                )
-              ).length
-            }
-            )
+            <Clock className="h-4 w-4" strokeWidth={1.75} />
+            {t('pimpinan.tab_inprogress', 'Sedang Diproses')}{' '}
+            <span className="text-[11px] tabular-nums text-[var(--fg-faint)]">
+              (
+              {
+                tickets.filter(t =>
+                  ['IN PROGRESS', 'DIPROSES', 'WAITING CONFIRMATION'].includes(
+                    (t.status || '').toUpperCase()
+                  )
+                ).length
+              }
+              )
+            </span>
           </button>
           <button
             onClick={() => setActiveTab('resolved')}
-            className={`cursor-pointer px-4 py-3 text-sm font-semibold transition-all border-b-2 flex items-center gap-2 whitespace-nowrap ${
+            className={`-mb-px inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap border-b px-3 py-2.5 text-[12.5px] transition-colors ${
               activeTab === 'resolved'
-                ? 'border-[var(--gold)] text-[var(--gold-dim)] font-bold'
-                : 'border-transparent text-[var(--text-dim)] hover:text-[var(--ink)]'
+                ? 'border-[var(--accent)] text-[var(--fg)] font-medium'
+                : 'border-transparent text-[var(--fg-dim)] hover:text-[var(--fg)]'
             }`}
           >
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-            {t('pimpinan.tab_resolved', 'Selesai')} (
-            {
-              tickets.filter(t =>
-                ['RESOLVED', 'CLOSED', 'RESOLVED_BY_SYSTEM'].includes(
-                  (t.status || '').toUpperCase()
-                )
-              ).length
-            }
-            )
+            <CheckCircle2 className="h-4 w-4" strokeWidth={1.75} />
+            {t('pimpinan.tab_resolved', 'Selesai')}{' '}
+            <span className="text-[11px] tabular-nums text-[var(--fg-faint)]">
+              (
+              {
+                tickets.filter(t =>
+                  ['RESOLVED', 'CLOSED', 'RESOLVED_BY_SYSTEM'].includes(
+                    (t.status || '').toUpperCase()
+                  )
+                ).length
+              }
+              )
+            </span>
           </button>
           <button
             onClick={() => setActiveTab('escalated')}
-            className={`cursor-pointer px-4 py-3 text-sm font-semibold transition-all border-b-2 flex items-center gap-2 whitespace-nowrap ${
+            className={`-mb-px inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap border-b px-3 py-2.5 text-[12.5px] transition-colors ${
               activeTab === 'escalated'
-                ? 'border-red-500 text-red-600 font-bold'
-                : 'border-transparent text-[var(--text-dim)] hover:text-red-600'
+                ? 'border-[var(--danger)] text-[var(--danger)] font-medium'
+                : 'border-transparent text-[var(--fg-dim)] hover:text-[var(--fg)]'
             }`}
           >
-            <AlertTriangle className="w-4 h-4 text-red-500" />
+            <AlertTriangle className="h-4 w-4" strokeWidth={1.75} />
             {t('pimpinan.tab_escalated', 'Tiket Eskalasi & Terlambat')}
             {escalatedCount > 0 && (
-              <span className="bg-red-100 text-red-700 text-[11px] font-bold px-2 py-0.5 rounded-full">
+              <span className="inline-flex items-center rounded-[3px] border border-[rgba(179,33,27,.18)] bg-[rgba(179,33,27,.08)] px-1.5 py-0.5 text-[10.5px] font-medium tabular-nums text-[var(--danger)]">
                 {escalatedCount}
               </span>
             )}
@@ -262,7 +272,7 @@ export default function PimpinanTicketWorkspace() {
         </div>
 
         {/* Search Toolbar */}
-        <div className="p-4 border-b border-[var(--line)] flex flex-wrap justify-between items-center gap-3 bg-white">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--rule)] px-4 py-3">
           <div className="relative w-full sm:w-80">
             <input
               type="text"
@@ -272,11 +282,11 @@ export default function PimpinanTicketWorkspace() {
               )}
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 text-sm border border-[var(--line-dark)] rounded-xl bg-[var(--paper)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--gold)] transition-all"
+              className="h-9 w-full rounded-[4px] border border-[var(--rule-strong)] bg-transparent pl-9 pr-3 text-[12.5px] text-[var(--fg)] placeholder:text-[var(--fg-faint)] transition-colors focus:border-[var(--accent)] focus:outline-none"
             />
-            <Search className="w-4 h-4 absolute left-3.5 top-3 text-[var(--text-dim)]" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--fg-faint)]" strokeWidth={1.75} />
           </div>
-          <div className="text-xs font-semibold text-[var(--text-dim)]">
+          <div className="text-[11.5px] tabular-nums text-[var(--fg-dim)]">
             {t('tickets.showing', 'Menampilkan')} {filteredTickets.length}{' '}
             {t('tickets.tickets_count', 'tiket')}
           </div>
@@ -284,16 +294,16 @@ export default function PimpinanTicketWorkspace() {
 
         {/* Table Content */}
         {loading ? (
-          <div className="p-16 flex flex-col items-center justify-center gap-3">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--gold)]"></div>
-            <p className="text-xs font-semibold text-[var(--text-dim)]">
+          <div className="flex flex-col items-center justify-center gap-3 p-16">
+            <div className="h-7 w-7 animate-spin rounded-full border border-[var(--rule)] border-t-[var(--accent)]"></div>
+            <p className="text-[11.5px] text-[var(--fg-dim)]">
               {t('pimpinan.loading_tickets', 'Memuat data tiket...')}
             </p>
           </div>
         ) : filteredTickets.length === 0 ? (
-          <div className="p-16 flex flex-col items-center justify-center gap-2">
-            <Inbox className="w-10 h-10 text-[var(--text-dim)] opacity-40" />
-            <p className="text-sm font-medium text-[var(--text-dim)]">
+          <div className="flex flex-col items-center justify-center gap-2 p-16">
+            <Inbox className="h-5 w-5 text-[var(--fg-faint)]" strokeWidth={1.75} />
+            <p className="text-[12.5px] text-[var(--fg-dim)]">
               Tidak ada data tiket pada filter ini.
             </p>
           </div>

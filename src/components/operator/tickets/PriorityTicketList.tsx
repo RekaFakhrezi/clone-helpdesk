@@ -21,26 +21,25 @@ export default function PriorityTicketList({ tickets }: PriorityTicketListProps)
 
     if (priorityTickets.length === 0) {
         return (
-            <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center shadow-sm">
-                <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+            <div className="bg-[var(--surface)] border border-[var(--rule)] rounded-[4px] p-10 text-center">
+                <div className="w-10 h-10 bg-[var(--canvas)] border border-[var(--rule)] rounded-[4px] flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-4 h-4 text-[var(--ok)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" d="M5 13l4 4L19 7"></path></svg>
                 </div>
-                <h3 className="text-slate-900 font-bold text-lg mb-1">{t('tickets.all_controlled')}</h3>
-                <p className="text-slate-500 text-sm">{t('tickets.no_priority')}</p>
+                <h3 className="text-[13px] font-medium text-[var(--fg)] mb-1">{t('tickets.all_controlled')}</h3>
+                <p className="text-[12px] text-[var(--fg-dim)]">{t('tickets.no_priority')}</p>
             </div>
         );
     }
 
     const renderPriorityBadge = (priority: string) => {
         const p = (priority || 'MEDIUM').toUpperCase();
-        let bg = 'bg-slate-100';
-        let text = 'text-slate-600';
-        
-        if (p === 'CRITICAL') { bg = 'bg-red-100'; text = 'text-red-700'; }
-        if (p === 'HIGH') { bg = 'bg-orange-100'; text = 'text-orange-700'; }
+        let colorClass = 'bg-[var(--canvas)] text-[var(--fg-dim)] border-[var(--rule)]';
+
+        if (p === 'CRITICAL') { colorClass = 'bg-[rgba(179,33,27,.08)] text-[var(--danger)] border-[rgba(179,33,27,.18)]'; }
+        if (p === 'HIGH') { colorClass = 'bg-[rgba(178,107,0,.08)] text-[var(--warn)] border-[rgba(178,107,0,.18)]'; }
 
         return (
-            <span className={`px-2.5 py-1 text-[10px] font-bold uppercase rounded ${bg} ${text}`}>
+            <span className={`inline-flex items-center px-1.5 py-0.5 rounded-[3px] text-[10.5px] font-medium border tracking-[0.02em] whitespace-nowrap ${colorClass}`}>
                 {language === 'en'
                     ? ({ URGENT: 'Urgent', CRITICAL: 'Critical', HIGH: 'High', MEDIUM: 'Medium', LOW: 'Low' } as Record<string, string>)[p] || p
                     : ({ URGENT: 'MENDESAK', CRITICAL: 'KRITIS', HIGH: 'TINGGI', MEDIUM: 'SEDANG', LOW: 'RENDAH' } as Record<string, string>)[p] || p}
@@ -80,25 +79,25 @@ export default function PriorityTicketList({ tickets }: PriorityTicketListProps)
     };
 
     return (
-        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-            <div className="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50/50">
-                <h2 className="text-lg font-bold text-slate-900">{t('tickets.need_quick_action')}</h2>
-                <Link href="/dashboard/operator/tickets" className="text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline">
+        <div className="bg-[var(--surface)] border border-[var(--rule)] rounded-[4px] overflow-hidden">
+            <div className="px-4 py-3 border-b border-[var(--rule)] flex justify-between items-center">
+                <h2 className="text-[13px] font-medium text-[var(--fg)]">{t('tickets.need_quick_action')}</h2>
+                <Link href="/dashboard/operator/tickets" className="text-[12px] font-medium text-[var(--fg-dim)] transition-colors hover:text-[var(--accent)]">
                     {t('tickets.view_all')}
                 </Link>
             </div>
             <div className="overflow-x-auto">
                 <table className="w-full text-left table-auto">
-                    <thead className="bg-slate-50 border-b border-slate-200">
+                    <thead className="border-b border-[var(--rule)]">
                         <tr>
-                            <th className="px-5 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('tickets.ticket_no')}</th>
-                            <th className="px-5 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('tickets.subject')}</th>
-                            <th className="px-5 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('tickets.status')}</th>
-                            <th className="px-5 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('tickets.priority')}</th>
-                            <th className="px-5 py-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-right">{t('tickets.action')}</th>
+                            <th className="px-4 py-2.5 text-[10px] font-medium text-[var(--fg-faint)] uppercase tracking-[0.14em]">{t('tickets.ticket_no')}</th>
+                            <th className="px-4 py-2.5 text-[10px] font-medium text-[var(--fg-faint)] uppercase tracking-[0.14em]">{t('tickets.subject')}</th>
+                            <th className="px-4 py-2.5 text-[10px] font-medium text-[var(--fg-faint)] uppercase tracking-[0.14em]">{t('tickets.status')}</th>
+                            <th className="px-4 py-2.5 text-[10px] font-medium text-[var(--fg-faint)] uppercase tracking-[0.14em]">{t('tickets.priority')}</th>
+                            <th className="px-4 py-2.5 text-[10px] font-medium text-[var(--fg-faint)] uppercase tracking-[0.14em] text-right">{t('tickets.action')}</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody>
                         {priorityTickets.map((ticket, idx) => {
                             const formattedTicketNum = ticket.ticket_num ? 
                                 (ticket.ticket_num.match(/\d+$/)?.[0].padStart(6, '0') || ticket.ticket_num) 
@@ -106,34 +105,36 @@ export default function PriorityTicketList({ tickets }: PriorityTicketListProps)
                             const tNum = `#${formattedTicketNum}`;
 
                             return (
-                                <tr key={ticket.id} className="hover:bg-slate-50 transition-colors">
-                                    <td className="px-5 py-4 font-mono text-[13px] font-medium text-slate-800 whitespace-nowrap">
-                                        <Link href={`/dashboard/operator/tickets/${ticket.id}`} className="hover:text-blue-600 hover:underline">
+                                <tr key={ticket.id} className="border-b border-[var(--rule)] transition-colors hover:bg-[var(--canvas)]">
+                                    <td className="px-4 py-3 tabular-nums text-[12px] font-medium text-[var(--accent)] whitespace-nowrap">
+                                        <Link href={`/dashboard/operator/tickets/${ticket.id}`} className="hover:underline">
                                             {tNum}
                                         </Link>
                                     </td>
-                                    <td className="px-5 py-4">
-                                        <p className="text-[13.5px] font-medium text-slate-800 line-clamp-1">
+                                    <td className="px-4 py-3">
+                                        <p className="text-[12.5px] font-medium text-[var(--fg)] line-clamp-1">
                                             {translateCategoryName(translateTicketSubject(ticket.subject || ticket.category?.name || t('tickets.no_subject'), language), language)}
                                         </p>
-                                        <p className="text-[12px] text-slate-500 mt-0.5">
+                                        <p className="text-[11.5px] text-[var(--fg-faint)] mt-0.5">
                                             {t('tickets.from')}: {ticket.reporter_name || 'N/A'}
                                         </p>
                                     </td>
-                                    <td className="px-5 py-4 whitespace-nowrap">
-                                        <span className={`px-2.5 py-1 text-[11px] font-bold rounded-full ${
-                                            ticket.status === 'WAITING VERIFICATION' ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-700'
+                                    <td className="px-4 py-3 whitespace-nowrap">
+                                        <span className={`inline-flex items-center px-1.5 py-0.5 rounded-[3px] text-[10.5px] font-medium border ${
+                                            ticket.status === 'WAITING VERIFICATION'
+                                                ? 'bg-[rgba(178,107,0,.08)] text-[var(--warn)] border-[rgba(178,107,0,.18)]'
+                                                : 'bg-[var(--canvas)] text-[var(--fg-dim)] border-[var(--rule)]'
                                         }`}>
                                             {renderStatusBadge(ticket.status)}
                                         </span>
                                     </td>
-                                    <td className="px-5 py-4 whitespace-nowrap">
+                                    <td className="px-4 py-3 whitespace-nowrap">
                                         {renderPriorityBadge(ticket.priority)}
                                     </td>
-                                    <td className="px-5 py-4 text-right whitespace-nowrap">
+                                    <td className="px-4 py-3 text-right whitespace-nowrap">
                                         <Link 
                                             href={`/dashboard/operator/tickets/${ticket.id}`}
-                                            className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg text-[12.5px] font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm"
+                                            className="inline-flex h-8 items-center px-3 rounded-[4px] border border-[var(--rule-strong)] text-[12px] font-medium text-[var(--fg-dim)] transition-colors hover:bg-[var(--canvas)] hover:text-[var(--fg)]"
                                         >
                                             {ticket.status === 'WAITING VERIFICATION' ? t('tickets.verify', 'Verifikasi') : t('tickets.detail', 'Detail')}
                                         </Link>

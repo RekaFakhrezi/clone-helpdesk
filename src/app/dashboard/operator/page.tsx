@@ -32,7 +32,7 @@ export default async function OperatorDashboard() {
     const { todayCount, verifiedCount, waitingVerificationCount, systemResolvedCount } = counts || {};
 
     return (
-        <div className="flex flex-col gap-6 p-6 md:p-10">
+        <div className="w-full max-w-[1440px] mx-auto animate-in fade-in duration-300">
             <DashboardHeader 
                 titleKey="dashboard.operator_title"
                 defaultTitle="Operator Dashboard"
@@ -41,14 +41,16 @@ export default async function OperatorDashboard() {
             />
 
             {/* Statistik Penting */}
-            <OperatorStatCards
-                todayCount={todayCount || 0}
-                waitingVerificationCount={waitingVerificationCount || 0}
-                systemResolvedCount={systemResolvedCount || 0}
-            />
+            <div className="mt-6">
+                <OperatorStatCards
+                    todayCount={todayCount || 0}
+                    waitingVerificationCount={waitingVerificationCount || 0}
+                    systemResolvedCount={systemResolvedCount || 0}
+                />
+            </div>
 
             {/* Komponen Statistik & Grafik */}
-            <div className="animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300 fill-mode-both">
+            <div className="mt-6">
                 <OperatorStatistics
                     tickets={tickets || []}
                     ticketLogs={ticketLogs || []}
@@ -58,7 +60,7 @@ export default async function OperatorDashboard() {
             </div>
 
             {/* Komponen Tabel Prioritas */}
-            <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-500 fill-mode-both">
+            <div className="mt-6">
                 <PriorityTicketList tickets={tickets || []} />
             </div>
         </div>

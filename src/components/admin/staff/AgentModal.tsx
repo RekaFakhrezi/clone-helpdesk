@@ -92,18 +92,18 @@ export default function AgentModal({ isOpen, onClose, onSuccess, showToast, agen
       onClose={onClose}
       maxWidth="max-w-[500px]"
     >
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-4">
           <div>
-            <label className="block text-sm text-gray-600 mb-1">{t('profile.full_name')}</label>
-            <input required type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full border border-gray-300 rounded p-2 text-sm" />
+            <label className="block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5">{t('profile.full_name')}</label>
+            <input required type="text" value={name} onChange={(e) => setName(e.target.value)} className="h-9 w-full rounded-[4px] border border-[var(--rule-strong)] bg-transparent px-3 text-[12px] text-[var(--fg)] focus:outline-none focus:border-[var(--accent)]" />
           </div>
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Email</label>
-            <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full border border-gray-300 rounded p-2 text-sm" />
+            <label className="block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5">Email</label>
+            <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-9 w-full rounded-[4px] border border-[var(--rule-strong)] bg-transparent px-3 text-[12px] text-[var(--fg)] focus:outline-none focus:border-[var(--accent)]" />
           </div>
           {!agent && (
             <div>
-              <label className="block text-sm text-gray-600 mb-1">Password</label>
+              <label className="block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5">Password</label>
               <div className="relative">
                 <input
                   required
@@ -112,12 +112,12 @@ export default function AgentModal({ isOpen, onClose, onSuccess, showToast, agen
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Minimal 6 karakter"
                   minLength={6}
-                  className="w-full border border-gray-300 rounded p-2 pr-10 text-sm"
+                  className="h-9 w-full rounded-[4px] border border-[var(--rule-strong)] bg-transparent pl-3 pr-10 text-[12px] text-[var(--fg)] focus:outline-none focus:border-[var(--accent)]"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-[var(--fg-faint)] hover:text-[var(--fg-dim)] transition-colors"
                   tabIndex={-1}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -126,12 +126,12 @@ export default function AgentModal({ isOpen, onClose, onSuccess, showToast, agen
             </div>
           )}
           <div>
-            <label className="block text-sm text-gray-600 mb-1">{t('profile.phone')}</label>
-            <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full border border-gray-300 rounded p-2 text-sm" />
+            <label className="block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5">{t('profile.phone')}</label>
+            <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className="h-9 w-full rounded-[4px] border border-[var(--rule-strong)] bg-transparent px-3 text-[12px] text-[var(--fg)] focus:outline-none focus:border-[var(--accent)]" />
           </div>
           <div>
-            <label className="block text-sm text-gray-600 mb-1">{t('profile.role')}</label>
-            <select value={role} onChange={(e) => setRole(e.target.value)} className="w-full border border-gray-300 rounded p-2 text-sm">
+            <label className="block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5">{t('profile.role')}</label>
+            <select value={role} onChange={(e) => setRole(e.target.value)} className="h-9 w-full rounded-[4px] border border-[var(--rule-strong)] bg-transparent px-3 text-[12px] text-[var(--fg)] focus:outline-none focus:border-[var(--accent)]">
               <option value="admin">Administrator</option>
               <option value="operator">Operator</option>
               <option value="agent">Agent</option>
@@ -139,8 +139,8 @@ export default function AgentModal({ isOpen, onClose, onSuccess, showToast, agen
             </select>
           </div>
           <div>
-            <label className="block text-sm text-gray-600 mb-1">{t('staff.department')}</label>
-            <select value={deptId} onChange={(e) => setDeptId(e.target.value)} className="w-full border border-gray-300 rounded p-2 text-sm">
+            <label className="block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5">{t('staff.department')}</label>
+            <select value={deptId} onChange={(e) => setDeptId(e.target.value)} className="h-9 w-full rounded-[4px] border border-[var(--rule-strong)] bg-transparent px-3 text-[12px] text-[var(--fg)] focus:outline-none focus:border-[var(--accent)]">
               <option value="">{t('staff.select_department')}</option>
               {departments.map((d) => (
                 <option key={d.id} value={d.id}>{d.name}</option>
@@ -148,9 +148,9 @@ export default function AgentModal({ isOpen, onClose, onSuccess, showToast, agen
             </select>
           </div>
           
-          <div className="flex justify-end gap-3 mt-4">
+          <div className="flex justify-end gap-2 mt-2">
             <ModalCancelButton onClick={onClose}>{t('staff.cancel')}</ModalCancelButton>
-            <button type="submit" disabled={loading} className="px-4 py-2 text-sm text-white bg-[#001E40] rounded hover:bg-[#00142d] disabled:opacity-50">
+            <button type="submit" disabled={loading} className="h-9 px-3 rounded-[4px] bg-[var(--accent)] text-[12px] font-medium text-white transition-colors hover:bg-[var(--accent-hover)] disabled:opacity-50">
               {loading ? t('staff.saving') : t('staff.save')}
             </button>
           </div>

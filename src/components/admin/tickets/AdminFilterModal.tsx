@@ -9,6 +9,10 @@ interface AdminFilterModalProps {
   categories: any[];
 }
 
+const LABEL_CLASS = 'block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5';
+const FIELD_CLASS =
+  'h-9 w-full px-2.5 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12.5px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors duration-150';
+
 export default function AdminFilterModal({ onClose, onApply, categories }: AdminFilterModalProps) {
   const [category, setCategory] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -39,7 +43,7 @@ export default function AdminFilterModal({ onClose, onApply, categories }: Admin
           <button
             type="button"
             onClick={handleReset}
-            className="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 rounded transition-colors"
+            className="mr-auto h-9 px-3 rounded-[4px] border border-transparent text-[12px] font-medium text-[var(--fg-faint)] hover:bg-[var(--canvas)] hover:text-[var(--fg-dim)] transition-colors duration-150"
           >
             Reset Filters
           </button>
@@ -48,34 +52,34 @@ export default function AdminFilterModal({ onClose, onApply, categories }: Admin
         </>
       }
     >
-      <div className="space-y-4">
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Start Date</label>
+      <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className={LABEL_CLASS}>Start Date</label>
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+              className={`${FIELD_CLASS} tabular-nums`}
             />
           </div>
-          <div className="flex-1">
-            <label className="block text-sm font-semibold text-gray-700 mb-1">End Date</label>
+          <div>
+            <label className={LABEL_CLASS}>End Date</label>
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+              className={`${FIELD_CLASS} tabular-nums`}
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-1">Priority</label>
+          <label className={LABEL_CLASS}>Priority</label>
           <select
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+            className={`${FIELD_CLASS} cursor-pointer`}
           >
             <option value="">All Priorities</option>
             <option value="CRITICAL">CRITICAL</option>

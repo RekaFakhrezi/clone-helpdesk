@@ -20,32 +20,32 @@ const INITIAL_SLA_DATA: SLAItem[] = [
   {
     id: "kritis",
     priority: "KRITIS",
-    badgeBg: "bg-[#FFDAD6]",
-    badgeTextColor: "text-[#93000A]",
+    badgeBg: "bg-[rgba(179,33,27,.08)]",
+    badgeTextColor: "text-[var(--danger)]",
     responseTime: 30,
     resolutionTime: 240,
   },
   {
     id: "tinggi",
     priority: "TINGGI",
-    badgeBg: "bg-[#FFEDD5]",
-    badgeTextColor: "text-[#9A3412]",
+    badgeBg: "bg-[rgba(178,107,0,.08)]",
+    badgeTextColor: "text-[var(--warn)]",
     responseTime: 60,
     resolutionTime: 480,
   },
   {
     id: "sedang",
     priority: "SEDANG",
-    badgeBg: "bg-[#DBEAFE]",
-    badgeTextColor: "text-[#1E40AF]",
+    badgeBg: "bg-[rgba(0,45,114,.06)]",
+    badgeTextColor: "text-[var(--accent)]",
     responseTime: 120,
     resolutionTime: 1440,
   },
   {
     id: "rendah",
     priority: "RENDAH",
-    badgeBg: "bg-[#DCFCE7]",
-    badgeTextColor: "text-[#166534]",
+    badgeBg: "bg-[rgba(15,123,79,.08)]",
+    badgeTextColor: "text-[var(--ok)]",
     responseTime: 240,
     resolutionTime: 2880,
   },
@@ -70,8 +70,8 @@ export default function SLAWorkspace() {
         return {
           id: String(d.id),
           priority: d.priority as any,
-          badgeBg: initial?.badgeBg || 'bg-[#F3F3F6]',
-          badgeTextColor: initial?.badgeTextColor || 'text-[#43474F]',
+          badgeBg: initial?.badgeBg || 'bg-[var(--canvas)]',
+          badgeTextColor: initial?.badgeTextColor || 'text-[var(--fg-dim)]',
           responseTime: (d.response_target_hours || 0) * 60,
           resolutionTime: (d.resolution_target_hours || 0) * 60,
         };
@@ -115,7 +115,7 @@ export default function SLAWorkspace() {
     <div className="flex flex-col items-start gap-6 w-full relative">
       <SLAHeader />
 
-      <div className="flex flex-col items-start rounded-lg border border-[#C3C6D1] bg-[#FFF] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] w-full overflow-hidden relative">
+      <div className="flex flex-col items-start rounded-[4px] border border-[var(--rule)] bg-[var(--surface)] w-full overflow-hidden relative">
         <SLATableSection slaData={slaData} onUpdateSLA={handleUpdateSLA} />
       </div>
       

@@ -64,7 +64,7 @@ export default function Workspace() {
               count: t('categories.items_count').replace('{count}', String(children.length)),
               status: c.is_active ? "AKTIF" : "NONAKTIF",
               type: isBranch ? "branch" : "leaf-bordered",
-              childrenWrapperClassName: "flex flex-col border-l border-gray-200 ml-10 w-[calc(100%-40px)]",
+              childrenWrapperClassName: "flex flex-col border-l border-[var(--rule)] ml-10 w-[calc(100%-40px)]",
               children: children.length > 0 ? children : undefined
             };
           });

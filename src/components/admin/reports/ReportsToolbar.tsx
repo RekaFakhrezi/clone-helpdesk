@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { CalendarDays, Download, Info } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface ReportsToolbarProps {
@@ -16,6 +17,12 @@ interface ReportsToolbarProps {
     status: string;
   }) => void;
 }
+
+const MICRO_LABEL =
+  "text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]";
+
+const FIELD_BOX =
+  "relative flex h-9 w-full items-center rounded-[4px] border border-[var(--rule-strong)] px-3 transition-colors focus-within:border-[var(--accent)]";
 
 export default function ReportsToolbar({
   fromDate,
@@ -62,183 +69,88 @@ export default function ReportsToolbar({
   };
 
   return (
-    <div className="flex flex-col items-start rounded-lg border border-[#C3C6D1] bg-[#FFF] shadow-[01px2px0rgba(0,0,0,0.05)] w-full overflow-hidden">
-      <div className="flex p-6 flex-col items-start border-b border-b-[#C3C6D1] bg-[rgba(243,243,246,0.30)] w-full">
-        <div className="flex items-center gap-2 w-full">
-          <svg
-            width="18"
-            height="12"
-            viewBox="0 0 18 12"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="flex flex-col items-start w-fit "
-          >
-            <path
-              d="M7 12V10H11V12H7ZM3 7V5H15V7H3ZM0 2V0H18V2H0Z"
-              fill="#001E40"
-            />
-          </svg>
-          <p className="text-[#001E40] font-iBMPlexSans text-xl font-medium leading-7 w-fit">
-            {language === 'en' ? 'Export Configuration' : 'Konfigurasi Ekspor'}
-          </p>
-        </div>
+    <div className="flex w-full flex-col overflow-hidden rounded-[4px] border border-[var(--rule)] bg-[var(--surface)]">
+      <div className="flex items-center gap-2 border-b border-[var(--rule)] px-5 py-3.5">
+        <h2 className="text-[13px] font-medium text-[var(--fg)]">
+          {language === 'en' ? 'Export Configuration' : 'Konfigurasi Ekspor'}
+        </h2>
       </div>
-      
-      {/* Wrapper scroll dihapus, w-full dikembalikan murni agar merentang penuh 100% tanpa batas minimal */}
-      <div className="flex p-6 flex-col items-start gap-6 w-full">
-        
-        {/* flex-col md:flex-row agar input tanggal tumpuk vertikal di layar mobile, sejajar di layar besar */}
-        <div className="flex flex-col md:flex-row justify-center items-start gap-6 w-full">
-          <div className="flex flex-col items-start gap-2 w-full">
-            <div className="flex flex-col items-start w-full">
-              <p className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-full tracking-[0.05em]">
-                {language === 'en' ? 'FROM DATE' : 'DARI TANGGAL MASUK'}
-              </p>
-            </div>
-            <div className="flex flex-col items-start w-full relative">
-              <div className="flex p-3 justify-center items-start rounded border border-[#C3C6D1] bg-[#FFF] w-full overflow-hidden">
-                <div className="flex items-center w-full">
-                  <div className="flex items-start w-full overflow-hidden">
-                    <div className="flex py-0 px-px items-start gap-px w-fit h-full">
-                      {activeFromDate ? (
-                        <p className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-fit">
-                          {activeFromDate}
-                        </p>
-                      ) : (
-                        <>
-                          <p className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-fit">mm</p>
-                          <p className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-fit">&#x2F;</p>
-                          <p className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-fit">dd</p>
-                          <p className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-fit">&#x2F;</p>
-                          <p className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-fit">yyyy</p>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex p-0.5 flex-col items-start w-5 h-5 overflow-hidden">
-                    <div className="shrink-0 w-4 h-[15px] overflow-hidden"></div>
-                  </div>
-                </div>
-              </div>
-              <svg
-                width="18"
-                height="24"
-                viewBox="0 0 18 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="flex flex-col items-start absolute right-3 top-[13px] w-fit h-6 pointer-events-none"
-              >
-                <path
-                  d="M2 20C1.45 20 0.979167 19.8042 0.5875 19.4125C0.195833 19.0208 0 18.55 0 18V4C0 3.45 0.195833 2.97917 0.5875 2.5875C0.979167 2.19583 1.45 2 2 2H3V0H5V2H13V0H15V2H16C16.55 2 17.0208 2.19583 17.4125 2.5875C17.8042 2.97917 18 3.45 18 4V18C18 18.55 17.8042 19.0208 17.4125 19.4125C17.0208 19.8042 16.55 20 16 20H2ZM2 18H16V8H2V18ZM2 6H16V4H2V6ZM2 6V4V6Z"
-                  fill="#737780"
-                />
-              </svg>
+
+      <div className="flex flex-col gap-5 p-5">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {/* Dari tanggal */}
+          <div className="flex flex-col items-start gap-1.5">
+            <span className={MICRO_LABEL}>
+              {language === 'en' ? 'FROM DATE' : 'DARI TANGGAL MASUK'}
+            </span>
+            <div className={FIELD_BOX}>
+              <span className="flex-1 truncate text-[12px] tabular-nums text-[var(--fg)]">
+                {activeFromDate ? (
+                  activeFromDate
+                ) : (
+                  <span className="text-[var(--fg-faint)]">mm/dd/yyyy</span>
+                )}
+              </span>
+              <CalendarDays className="ml-2 h-4 w-4 shrink-0 text-[var(--fg-faint)]" strokeWidth={1.75} />
               <input
                 type="date"
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
                 value={activeFromDate}
                 onChange={(e) => activeSetFromDate(e.target.value)}
               />
             </div>
-            <div className="flex flex-col items-start w-full">
-              <p className="text-[#43474F] font-iBMPlexSans text-[11px] leading-[16.5px] w-full">
-                {language === 'en' ? 'Leave empty to include all data from the beginning' : 'Kosongkan jika ingin mengambil semua data dari awal'}
-              </p>
-            </div>
+            <span className="text-[11.5px] leading-[1.5] text-[var(--fg-faint)]">
+              {language === 'en' ? 'Leave empty to include all data from the beginning' : 'Kosongkan jika ingin mengambil semua data dari awal'}
+            </span>
           </div>
-          <div className="flex flex-col items-start gap-2 w-full">
-            <div className="flex flex-col items-start w-full">
-              <p className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-full tracking-[0.05em]">
-                {language === 'en' ? 'TO DATE' : 'SAMPAI TANGGAL MASUK'}
-              </p>
-            </div>
-            <div className="flex flex-col items-start w-full relative">
-              <div className="flex p-3 justify-center items-start rounded border border-[#C3C6D1] bg-[#FFF] w-full overflow-hidden">
-                <div className="flex items-center w-full">
-                  <div className="flex items-start w-full overflow-hidden">
-                    <div className="flex py-0 px-px items-start gap-px w-fit h-full">
-                      {activeToDate ? (
-                        <p className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-fit">
-                          {activeToDate}
-                        </p>
-                      ) : (
-                        <>
-                          <p className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-fit">mm</p>
-                          <p className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-fit">&#x2F;</p>
-                          <p className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-fit">dd</p>
-                          <p className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-fit">&#x2F;</p>
-                          <p className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-fit">yyyy</p>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex p-0.5 flex-col items-start w-5 h-5 overflow-hidden">
-                    <div className="shrink-0 w-4 h-[15px] overflow-hidden"></div>
-                  </div>
-                </div>
-              </div>
-              <svg
-                width="18"
-                height="24"
-                viewBox="0 0 18 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="flex flex-col items-start absolute right-3 top-[13px] w-fit h-6 pointer-events-none"
-              >
-                <path
-                  d="M11.5 16C10.8 16 10.2083 15.7583 9.725 15.275C9.24167 14.7917 9 14.2 9 13.5C9 12.8 9.24167 12.2083 9.725 11.725C10.2083 11.2417 10.8 11 11.5 11C12.2 11 12.7917 11.2417 13.275 11.725C13.7583 12.2083 14 12.8 14 13.5C14 14.2 13.7583 14.7917 13.275 15.275C12.7917 15.7583 12.2 16 11.5 16ZM2 20C1.45 20 0.979167 19.8042 0.5875 19.4125C0.195833 19.0208 0 18.55 0 18V4C0 3.45 0.195833 2.97917 0.5875 2.5875C0.979167 2.19583 1.45 2 2 2H3V0H5V2H13V0H15V2H16C16.55 2 17.0208 2.19583 17.4125 2.5875C17.8042 2.97917 18 3.45 18 4V18C18 18.55 17.8042 19.0208 17.4125 19.4125C17.0208 19.8042 16.55 20 16 20H2ZM2 18H16V8H2V18ZM2 6H16V4H2V6ZM2 6V4V6Z"
-                  fill="#737780"
-                />
-              </svg>
+
+          {/* Sampai tanggal */}
+          <div className="flex flex-col items-start gap-1.5">
+            <span className={MICRO_LABEL}>
+              {language === 'en' ? 'TO DATE' : 'SAMPAI TANGGAL MASUK'}
+            </span>
+            <div className={FIELD_BOX}>
+              <span className="flex-1 truncate text-[12px] tabular-nums text-[var(--fg)]">
+                {activeToDate ? (
+                  activeToDate
+                ) : (
+                  <span className="text-[var(--fg-faint)]">mm/dd/yyyy</span>
+                )}
+              </span>
+              <CalendarDays className="ml-2 h-4 w-4 shrink-0 text-[var(--fg-faint)]" strokeWidth={1.75} />
               <input
                 type="date"
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
                 value={activeToDate}
                 onChange={(e) => activeSetToDate(e.target.value)}
               />
             </div>
-            <div className="flex flex-col items-start w-full">
-              <p className="text-[#43474F] font-iBMPlexSans text-[11px] leading-[16.5px] w-full">
-                {language === 'en' ? 'Leave empty to include data through today' : 'Kosongkan jika ingin mengambil data hingga hari ini'}
-              </p>
-            </div>
+            <span className="text-[11.5px] leading-[1.5] text-[var(--fg-faint)]">
+              {language === 'en' ? 'Leave empty to include data through today' : 'Kosongkan jika ingin mengambil data hingga hari ini'}
+            </span>
           </div>
         </div>
 
-        <div className="flex flex-col items-start gap-2 w-full">
-          <div className="flex flex-col items-start w-full">
-            <p className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-full tracking-[0.05em]">
-              {language === 'en' ? 'TICKET STATUS' : 'STATUS TIKET'}
-            </p>
-          </div>
-          <div className="flex p-3 justify-center items-center rounded border border-[#C3C6D1] bg-[#FFF] w-full relative">
-            
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center justify-center overflow-hidden">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="shrink-0 w-6 h-6 overflow-hidden relative "
-              >
-                <path
-                  d="M7.19922 9.59998L11.9992 14.4L16.7992 9.59998"
-                  stroke="#6B7280"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-
-            <div className="flex flex-col items-start w-full">
-              <p className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-full">
-                {activeStatus || (language === 'en' ? 'All Statuses' : 'Semua Status')}
-              </p>
-            </div>
+        {/* Status tiket */}
+        <div className="flex flex-col items-start gap-1.5 md:max-w-[calc(50%-0.5rem)]">
+          <span className={MICRO_LABEL}>
+            {language === 'en' ? 'TICKET STATUS' : 'STATUS TIKET'}
+          </span>
+          <div className={FIELD_BOX}>
+            <span className="flex-1 truncate text-[12px] text-[var(--fg)]">
+              {activeStatus || (language === 'en' ? 'All Statuses' : 'Semua Status')}
+            </span>
+            <svg
+              className="ml-2 h-4 w-4 shrink-0 text-[var(--fg-faint)]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" d="M6 9l6 6 6-6" />
+            </svg>
             <select
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+              className="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
               value={activeStatus}
               onChange={(e) => activeSetStatus(e.target.value)}
             >
@@ -251,69 +163,37 @@ export default function ReportsToolbar({
           </div>
         </div>
 
-        <div className="flex p-4 items-start gap-4 border-l-4 border-l-[#001E40] bg-[rgba(213,227,255,0.30)] w-full">
-          
-          <svg
-            width="20"
-            height="71"
-            viewBox="0 0 20 71"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="flex flex-col items-start shrink-0 w-fit h-full "
-          >
-            <path
-              d="M9 15H11V9H9V15ZM10 7C10.2833 7 10.5208 6.90417 10.7125 6.7125C10.9042 6.52083 11 6.28333 11 6C11 5.71667 10.9042 5.47917 10.7125 5.2875C10.5208 5.09583 10.2833 5 10 5C9.71667 5 9.47917 5.09583 9.2875 5.2875C9.09583 5.47917 9 5.71667 9 6C9 6.28333 9.09583 6.52083 9.2875 6.7125C9.47917 6.90417 9.71667 7 10 7ZM10 20C8.61667 20 7.31667 19.7375 6.1 19.2125C4.88333 18.6875 3.825 17.975 2.925 17.075C2.025 16.175 1.3125 15.1167 0.7875 13.9C0.2625 12.6833 0 11.3833 0 10C0 8.61667 0.2625 7.31667 0.7875 6.1C1.3125 4.88333 2.025 3.825 2.925 2.925C3.825 2.025 4.88333 1.3125 6.1 0.7875C7.31667 0.2625 8.61667 0 10 0C11.3833 0 12.6833 0.2625 13.9 0.7875C15.1167 1.3125 16.175 2.025 17.075 2.925C17.975 3.825 18.6875 4.88333 19.2125 6.1C19.7375 7.31667 20 8.61667 20 10C20 11.3833 19.7375 12.6833 19.2125 13.9C18.6875 15.1167 17.975 16.175 17.075 17.075C16.175 17.975 15.1167 18.6875 13.9 19.2125C12.6833 19.7375 11.3833 20 10 20Z"
-              fill="#001E40"
-            />
-          </svg>
-          <div className="flex flex-col items-start gap-1 w-fit h-full">
-            <div className="flex flex-col items-start w-full">
-              <p className="text-[#001E40] font-iBMPlexSans text-base font-bold leading-6 w-fit">
-                {language === 'en' ? 'Data Information:' : 'Informasi Data:'}
-              </p>
-            </div>
-            <div className="flex flex-col items-start w-full">
-              <p className="text-[#1F477B] font-iBMPlexSans text-[13px] leading-[21.13px] w-fit">
-                {language === 'en'
-                  ? 'Downloaded data includes Ticket Number, Reporter Identity (Name, Unit, Email), Issue Category, Priority, Last Status, and Handling Time Details (Response Time, Resolution Time).'
-                  : <>Data yang diunduh mencakup Nomor Tiket, Identitas Pelapor
-                &#40;Nama, Unit, Email&#41;, Kategori Masalah, Prioritas,
-                Status Terakhir, dan Detail Waktu Penanganan &#40;Response
-                Time, Resolution Time&#41;.</>}
-              </p>
-            </div>
+        {/* Catatan isi data */}
+        <div className="flex items-start gap-3 border border-[var(--rule)] bg-[var(--canvas)] rounded-[4px] px-3 py-2.5">
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-[var(--accent)]" strokeWidth={1.75} />
+          <div className="flex flex-col gap-1">
+            <p className="text-[12.5px] font-medium text-[var(--fg)]">
+              {language === 'en' ? 'Data Information:' : 'Informasi Data:'}
+            </p>
+            <p className="text-[11.5px] leading-[1.6] text-[var(--fg-dim)]">
+              {language === 'en'
+                ? 'Downloaded data includes Ticket Number, Reporter Identity (Name, Unit, Email), Issue Category, Priority, Last Status, and Handling Time Details (Response Time, Resolution Time).'
+                : <>Data yang diunduh mencakup Nomor Tiket, Identitas Pelapor
+              (Nama, Unit, Email), Kategori Masalah, Prioritas,
+              Status Terakhir, dan Detail Waktu Penanganan (Response
+              Time, Resolution Time).</>}
+            </p>
           </div>
         </div>
-        <div className="flex pt-4 justify-end items-start w-full">
-          <div
-            className="flex py-4 px-12 items-center gap-3 rounded bg-[#036] w-fit relative hover:bg-[#002855] transition-colors"
+
+        <div className="flex justify-end border-t border-[var(--rule)] pt-4">
+          <button
+            type="button"
             onClick={handleExport}
-            style={{ 
+            className="h-9 inline-flex items-center gap-1.5 rounded-[4px] bg-[var(--accent)] px-3 text-[12px] font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
+            style={{
               cursor: isExporting ? "not-allowed" : "pointer",
-              opacity: isExporting ? 0.7 : 1 
+              opacity: isExporting ? 0.7 : 1
             }}
           >
-            <div className="absolute inset-0 rounded bg-[rgba(255,255,255,0.00)] shadow-[04px6px-1pxrgba(0,0,0,0.10),02px4px-2pxrgba(0,0,0,0.10)] w-full h-full"></div>
-            
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="flex flex-col items-center w-fit "
-            >
-              <path
-                d="M8 12L3 7L4.4 5.55L7 8.15V0H9V8.15L11.6 5.55L13 7L8 12ZM2 16C1.45 16 0.979167 15.8042 0.5875 15.4125C0.195833 15.0208 0 14.55 0 14V11H2V14H14V11H16V14C16 14.55 15.8042 15.0208 15.4125 15.4125C15.0208 15.8042 14.55 16 14 16H2Z"
-                fill="white"
-              />
-            </svg>
-            <div className="flex flex-col items-center w-fit">
-              <p className="text-[#FFF] font-iBMPlexSans text-base font-bold leading-6 w-fit">
-                {isExporting ? t('reports.processing') : t('reports.download_excel')}
-              </p>
-            </div>
-          </div>
+            <Download className="h-4 w-4" strokeWidth={1.75} />
+            {isExporting ? t('reports.processing') : t('reports.download_excel')}
+          </button>
         </div>
       </div>
     </div>

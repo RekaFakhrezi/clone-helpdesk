@@ -2,74 +2,69 @@ import React from 'react';
 
 export default function Loading() {
     return (
-        <div className="flex flex-col gap-6 p-6 md:p-10 animate-pulse">
-            <div className="flex flex-col gap-2 mb-2">
-                <div className="h-8 w-64 bg-slate-200 rounded-md"></div>
-                <div className="h-4 w-96 bg-slate-100 rounded-md"></div>
+        <div className="w-full max-w-[1440px] mx-auto animate-pulse">
+            <div className="flex flex-col gap-2">
+                <div className="h-[22px] w-64 bg-[var(--canvas)] rounded-[3px]"></div>
+                <div className="h-[13px] w-96 bg-[var(--canvas)] rounded-[3px]"></div>
             </div>
 
-            {/* Statistik Hari Ini Skeleton */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Strip metrik skeleton */}
+            <div className="mt-6 border-y border-[var(--rule)] grid grid-cols-1 md:grid-cols-3">
                 {[...Array(3)].map((_, i) => (
-                    <div key={i} className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between h-[140px]">
-                        <div>
-                            <div className="h-3 w-40 bg-slate-200 rounded mb-4 uppercase"></div>
-                            <div className="h-10 w-16 bg-slate-200 rounded"></div>
-                        </div>
-                        <div className="h-3 w-40 bg-slate-100 rounded mt-4"></div>
+                    <div key={i} className={`py-5 lg:py-6 pr-4 ${i > 0 ? 'md:border-l md:border-[var(--rule)] md:pl-6' : ''}`}>
+                        <div className="h-[10px] w-40 bg-[var(--canvas)] rounded-[3px]"></div>
+                        <div className="mt-3 h-[30px] w-16 bg-[var(--canvas)] rounded-[3px]"></div>
+                        <div className="mt-3 h-[11px] w-40 bg-[var(--canvas)] rounded-[3px]"></div>
                     </div>
                 ))}
             </div>
 
-            {/* Operator Statistics Skeleton wrapper */}
-            <div className="flex flex-col gap-6">
-                {/* Date Filter Skeleton */}
-                <div className="bg-white border border-slate-200 rounded-2xl p-6 flex flex-wrap items-end gap-3 h-[96px]">
+            <div className="mt-6 flex flex-col gap-6">
+                {/* Filter tanggal skeleton */}
+                <div className="bg-[var(--surface)] border border-[var(--rule)] rounded-[4px] p-4 flex flex-wrap items-end gap-3 h-[88px]">
                     <div className="flex flex-col gap-2">
-                        <div className="h-3 w-20 bg-slate-200 rounded uppercase"></div>
-                        <div className="h-[34px] w-36 bg-slate-100 rounded-lg"></div>
+                        <div className="h-[10px] w-20 bg-[var(--canvas)] rounded-[3px]"></div>
+                        <div className="h-9 w-36 bg-[var(--canvas)] rounded-[3px]"></div>
                     </div>
-                    <div className="h-5 w-4 bg-slate-100 rounded mb-1"></div>
+                    <div className="h-4 w-4 bg-[var(--canvas)] rounded-[3px] mb-2"></div>
                     <div className="flex flex-col gap-2">
-                        <div className="h-3 w-24 bg-slate-200 rounded uppercase"></div>
-                        <div className="h-[34px] w-36 bg-slate-100 rounded-lg"></div>
+                        <div className="h-[10px] w-24 bg-[var(--canvas)] rounded-[3px]"></div>
+                        <div className="h-9 w-36 bg-[var(--canvas)] rounded-[3px]"></div>
                     </div>
-                    <div className="h-[34px] w-20 bg-slate-200 rounded ml-2"></div>
+                    <div className="h-9 w-20 bg-[var(--canvas)] rounded-[3px] ml-2"></div>
                 </div>
 
-                {/* Charts Skeleton */}
+                {/* Grafik skeleton */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Line Chart Skeleton */}
-                    <div className="bg-white border border-slate-200 rounded-2xl p-6 h-[400px] lg:col-span-2 flex flex-col">
-                        <div className="h-5 w-48 bg-slate-200 rounded mb-6"></div>
-                        <div className="flex-1 flex items-end gap-2 w-full px-4 border-b border-l border-slate-100">
+                    <div className="bg-[var(--surface)] border border-[var(--rule)] rounded-[4px] p-4 h-[400px] lg:col-span-2 flex flex-col">
+                        <div className="h-[13px] w-48 bg-[var(--canvas)] rounded-[3px] mb-6"></div>
+                        <div className="flex-1 flex items-end gap-2 w-full px-4 border-b border-l border-[var(--rule)]">
                             {[...Array(12)].map((_, i) => (
-                                <div key={i} className="flex-1 bg-slate-100 rounded-t-sm" style={{ height: `${Math.max(20, Math.random() * 80)}%` }}></div>
+                                <div key={i} className="flex-1 bg-[var(--canvas)] rounded-[2px]" style={{ height: `${Math.max(20, Math.random() * 80)}%` }}></div>
                             ))}
                         </div>
                     </div>
-                    {/* Donut Chart Skeleton */}
-                    <div className="bg-white border border-slate-200 rounded-2xl p-6 h-[400px] flex flex-col items-center">
-                        <div className="h-5 w-48 bg-slate-200 rounded mb-2 self-start"></div>
-                        <div className="h-3 w-32 bg-slate-100 rounded mb-12 self-start"></div>
-                        <div className="h-[200px] w-[200px] rounded-full border-[24px] border-slate-100 mt-2"></div>
+                    <div className="bg-[var(--surface)] border border-[var(--rule)] rounded-[4px] p-4 h-[400px] flex flex-col items-center">
+                        <div className="h-[13px] w-48 bg-[var(--canvas)] rounded-[3px] mb-2 self-start"></div>
+                        <div className="h-[11px] w-32 bg-[var(--canvas)] rounded-[3px] mb-12 self-start"></div>
+                        <div className="h-[200px] w-[200px] rounded-full border-[24px] border-[var(--canvas)] mt-2"></div>
                     </div>
                 </div>
 
-                {/* Table Skeleton */}
-                <div className="bg-white border border-slate-200 rounded-2xl p-6 h-[400px] flex flex-col gap-6">
+                {/* Tabel skeleton */}
+                <div className="bg-[var(--surface)] border border-[var(--rule)] rounded-[4px] p-4 h-[400px] flex flex-col gap-6">
                     <div className="flex justify-between items-center">
-                        <div className="h-6 w-48 bg-slate-200 rounded"></div>
-                        <div className="h-4 w-32 bg-slate-100 rounded"></div>
+                        <div className="h-[13px] w-48 bg-[var(--canvas)] rounded-[3px]"></div>
+                        <div className="h-[11px] w-32 bg-[var(--canvas)] rounded-[3px]"></div>
                     </div>
-                    <div className="border border-slate-100 rounded-xl overflow-hidden">
-                        <div className="h-[48px] bg-slate-50 border-b border-slate-100"></div>
+                    <div className="border border-[var(--rule)] rounded-[4px] overflow-hidden">
+                        <div className="h-[40px] bg-[var(--canvas)] border-b border-[var(--rule)]"></div>
                         {[...Array(4)].map((_, i) => (
-                            <div key={i} className="h-[52px] border-b border-slate-50 flex items-center px-5">
-                                <div className="h-4 w-1/4 bg-slate-200 rounded"></div>
-                                <div className="h-4 w-16 bg-slate-200 rounded mx-auto"></div>
-                                <div className="h-4 w-24 bg-slate-200 rounded mx-auto"></div>
-                                <div className="h-[24px] w-20 bg-slate-200 rounded ml-auto"></div>
+                            <div key={i} className="h-[48px] border-b border-[var(--rule)] flex items-center px-4">
+                                <div className="h-3 w-1/4 bg-[var(--canvas)] rounded-[3px]"></div>
+                                <div className="h-3 w-16 bg-[var(--canvas)] rounded-[3px] mx-auto"></div>
+                                <div className="h-3 w-24 bg-[var(--canvas)] rounded-[3px] mx-auto"></div>
+                                <div className="h-6 w-20 bg-[var(--canvas)] rounded-[3px] ml-auto"></div>
                             </div>
                         ))}
                     </div>

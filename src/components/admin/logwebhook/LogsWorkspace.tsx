@@ -8,9 +8,8 @@ import LogsSummaryCards from "./LogsSummaryCards";
 
 export default function LogsWorkspace() {
   return (
-    // PERUBAHAN: Mengubah w-[1071px] menjadi w-full agar layout mengisi ruang kosong secara penuh di sebelah kanan
-    <div className="flex p-8 flex-col items-start gap-8 w-full">
-      <div className="flex justify-between items-center w-full">
+    <div className="flex flex-col items-start gap-6 w-full">
+      <div className="flex flex-col items-start justify-between gap-4 w-full md:flex-row md:items-center">
         <LogsHeader />
         <LogsToolbar />
       </div>

@@ -12,22 +12,22 @@ type ActionMenuProps = {
   variant: "dots-16" | "dots-14" | "edit" | "dots-3";
 };
 
+/** Aksi baris: ikon garis 16px, warna tinta, bukan pil berwarna. */
 export default function ActionMenu({ variant }: ActionMenuProps) {
   if (variant === "dots-16") {
     return (
-      <div className="flex pt-1.5 pr-1 pb-1 pl-1 justify-center items-center rounded-xl w-fit">
+      <div className="flex p-1.5 justify-center items-center rounded-[4px] text-[var(--fg-faint)] w-fit">
         <svg
           width="4"
           height="16"
           viewBox="0 0 4 16"
-          fill="none"
+          fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
-          className="flex justify-center items-start w-fit "
+          className="flex justify-center items-start w-fit"
         >
-          <path
-            d="M2 16C1.45 16 0.979167 15.8042 0.5875 15.4125C0.195833 15.0208 0 14.55 0 14C0 13.45 0.195833 12.9792 0.5875 12.5875C0.979167 12.1958 1.45 12 2 12C2.55 12 3.02083 12.1958 3.4125 12.5875C3.80417 12.9792 4 13.45 4 14C4 14.55 3.80417 15.0208 3.4125 15.4125C3.02083 15.8042 2.55 16 2 16ZM2 10C1.45 10 0.979167 9.80417 0.5875 9.4125C0.195833 9.02083 0 8.55 0 8C0 7.45 0.195833 6.97917 0.5875 6.5875C0.979167 6.19583 1.45 6 2 6C2.55 6 3.02083 6.19583 3.4125 6.5875C3.80417 6.97917 4 7.45 4 8C4 8.55 3.80417 9.02083 3.4125 9.4125C3.02083 9.80417 2.55 10 2 10ZM2 4C1.45 4 0.979167 3.80417 0.5875 3.4125C0.195833 3.02083 0 2.55 0 2C0 1.45 0.195833 0.979167 0.5875 0.5875C0.979167 0.195833 1.45 0 2 0C2.55 0 3.02083 0.195833 3.4125 0.5875C3.80417 0.979167 4 1.45 4 2C4 2.55 3.80417 3.02083 3.4125 3.4125C3.02083 3.80417 2.55 4 2 4Z"
-            fill="#43474F"
-          />
+          <circle cx="2" cy="2" r="1.6" />
+          <circle cx="2" cy="8" r="1.6" />
+          <circle cx="2" cy="14" r="1.6" />
         </svg>
       </div>
     );
@@ -35,19 +35,18 @@ export default function ActionMenu({ variant }: ActionMenuProps) {
 
   if (variant === "dots-14") {
     return (
-      <div className="flex pt-2 pr-1 pb-1 pl-1 justify-center items-center rounded-xl w-fit">
+      <div className="flex p-1.5 justify-center items-center rounded-[4px] text-[var(--fg-faint)] w-fit">
         <svg
           width="4"
           height="14"
           viewBox="0 0 4 14"
-          fill="none"
+          fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
-          className="flex justify-center items-start w-fit "
+          className="flex justify-center items-start w-fit"
         >
-          <path
-            d="M1.66667 13.3333C1.20833 13.3333 0.815972 13.1701 0.489583 12.8438C0.163194 12.5174 0 12.125 0 11.6667C0 11.2083 0.163194 10.816 0.489583 10.4896C0.815972 10.1632 1.20833 10 1.66667 10C2.125 10 2.51736 10.1632 2.84375 10.4896C3.17014 10.816 3.33333 11.2083 3.33333 11.6667C3.33333 12.125 3.17014 12.5174 2.84375 12.8438C2.51736 13.1701 2.125 13.3333 1.66667 13.3333ZM1.66667 8.33333C1.20833 8.33333 0.815972 8.17014 0.489583 7.84375C0.163194 7.51736 0 7.125 0 6.66667C0 6.20833 0.163194 5.81597 0.489583 5.48958C0.815972 5.16319 1.20833 5 1.66667 5C2.125 5 2.51736 5.16319 2.84375 5.48958C3.17014 5.81597 3.33333 6.20833 3.33333 6.66667C3.33333 7.125 3.17014 7.51736 2.84375 7.84375C2.51736 8.17014 2.125 8.33333 1.66667 8.33333ZM1.66667 3.33333C1.20833 3.33333 0.815972 3.17014 0.489583 2.84375C0.163194 2.51736 0 2.125 0 1.66667C0 1.20833 0.163194 0.815972 0.489583 0.489583C0.815972 0.163194 1.20833 0 1.66667 0C2.125 0 2.51736 0.163194 2.84375 0.489583C3.17014 0.815972 3.33333 1.20833 3.33333 1.66667C3.33333 2.125 3.17014 2.51736 2.84375 2.84375C2.51736 3.17014 2.125 3.33333 1.66667 3.33333Z"
-            fill="#43474F"
-          />
+          <circle cx="2" cy="1.75" r="1.4" />
+          <circle cx="2" cy="7" r="1.4" />
+          <circle cx="2" cy="12.25" r="1.4" />
         </svg>
       </div>
     );
@@ -56,34 +55,38 @@ export default function ActionMenu({ variant }: ActionMenuProps) {
   if (variant === "edit") {
     return (
       <svg
-        width="12"
-        height="12"
-        viewBox="0 0 12 12"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
         fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         xmlns="http://www.w3.org/2000/svg"
-        className="flex justify-center items-center w-fit "
+        className="flex justify-center items-center text-[var(--fg-faint)] w-fit"
       >
-        <path
-          d="M1.33333 10.6667H2.28333L8.8 4.15L7.85 3.2L1.33333 9.71667V10.6667ZM0 12V9.16667L8.8 0.383333C8.93333 0.261111 9.08056 0.166667 9.24167 0.1C9.40278 0.0333333 9.57222 0 9.75 0C9.92778 0 10.1 0.0333333 10.2667 0.1C10.4333 0.166667 10.5778 0.266667 10.7 0.4L11.6167 1.33333C11.75 1.45556 11.8472 1.6 11.9083 1.76667C11.9694 1.93333 12 2.1 12 2.26667C12 2.44444 11.9694 2.61389 11.9083 2.775C11.8472 2.93611 11.75 3.08333 11.6167 3.21667L2.83333 12H0ZM10.6667 2.26667L9.73333 1.33333L10.6667 2.26667ZM8.31667 3.68333L7.85 3.2L8.8 4.15L8.31667 3.68333Z"
-          fill="#43474F"
-        />
+        <path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
       </svg>
     );
   }
 
   return (
     <svg
-      width="3"
-      height="12"
-      viewBox="0 0 3 12"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
       fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       xmlns="http://www.w3.org/2000/svg"
-      className="flex justify-center items-center w-fit "
+      className="flex justify-center items-center text-[var(--fg-faint)] w-fit"
     >
-      <path
-        d="M1.5 12C1.0875 12 0.734375 11.8531 0.440625 11.5594C0.146875 11.2656 0 10.9125 0 10.5C0 10.0875 0.146875 9.73438 0.440625 9.44063C0.734375 9.14688 1.0875 9 1.5 9C1.9125 9 2.26562 9.14688 2.55938 9.44063C2.85313 9.73438 3 10.0875 3 10.5C3 10.9125 2.85313 11.2656 2.55938 11.5594C2.26562 11.8531 1.9125 12 1.5 12ZM1.5 7.5C1.0875 7.5 0.734375 7.35312 0.440625 7.05937C0.146875 6.76562 0 6.4125 0 6C0 5.5875 0.146875 5.23438 0.440625 4.94063C0.734375 4.64688 1.0875 4.5 1.5 4.5C1.9125 4.5 2.26562 4.64688 2.55938 4.94063C2.85313 5.23438 3 5.5875 3 6C3 6.4125 2.85313 6.76562 2.55938 7.05937C2.26562 7.35312 1.9125 7.5 1.5 7.5ZM1.5 3C1.0875 3 0.734375 2.85313 0.440625 2.55938C0.146875 2.26562 0 1.9125 0 1.5C0 1.0875 0.146875 0.734375 0.440625 0.440625C0.734375 0.146875 1.0875 0 1.5 0C1.9125 0 2.26562 0.146875 2.55938 0.440625C2.85313 0.734375 3 1.0875 3 1.5C3 1.9125 2.85313 2.26562 2.55938 2.55938C2.26562 2.85313 1.9125 3 1.5 3Z"
-        fill="#43474F"
-      />
+      <circle cx="12" cy="12" r="1"></circle>
+      <circle cx="12" cy="5" r="1"></circle>
+      <circle cx="12" cy="19" r="1"></circle>
     </svg>
   );
 }

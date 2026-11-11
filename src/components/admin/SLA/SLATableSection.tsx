@@ -114,36 +114,34 @@ export default function SLATableSection({
   };
 
   return (
-    <div className="flex flex-col items-start -space-y-px w-full overflow-x-auto">
+    <div className="flex flex-col items-start w-full overflow-x-auto">
       {/* Table column header */}
-      <div className="flex flex-col items-start border-b border-b-[#C3C6D1] bg-[#F3F3F6] w-full min-w-[927px]">
-        <div className="flex justify-between items-start w-full">
-          <div className="flex py-4 px-6 flex-col items-start w-52">
-            <p className="text-[#43474F] font-iBMPlexSans text-[11px] font-bold leading-4 w-fit tracking-[0.05em]">
-              TINGKAT PRIORITAS
-            </p>
-          </div>
-          <div className="flex py-4 px-6 flex-col items-start w-[258px]">
-            <p className="text-[#43474F] font-iBMPlexSans text-[11px] font-bold leading-4 w-fit tracking-[0.05em]">
-              TARGET RESPONS &#40;MENIT&#41;
-            </p>
-          </div>
-          <div className="flex py-4 px-6 flex-col items-start w-[294px]">
-            <p className="text-[#43474F] font-iBMPlexSans text-[11px] font-bold leading-4 w-fit tracking-[0.05em]">
-              TARGET PENYELESAIAN &#40;MENIT&#41;
-            </p>
-          </div>
-          <div className="flex py-4 px-6 flex-col items-end w-[167px]">
-            <p className="text-[#43474F] font-iBMPlexSans text-[11px] font-bold leading-4 w-fit tracking-[0.05em]">
-              AKSI
-            </p>
-          </div>
+      <div className="flex items-center border-b border-[var(--rule)] w-full min-w-[927px]">
+        <div className="flex py-2.5 px-4 items-center w-52">
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] w-fit">
+            TINGKAT PRIORITAS
+          </p>
+        </div>
+        <div className="flex py-2.5 px-4 items-center w-[258px]">
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] w-fit">
+            TARGET RESPONS (MENIT)
+          </p>
+        </div>
+        <div className="flex py-2.5 px-4 items-center w-[294px]">
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] w-fit">
+            TARGET PENYELESAIAN (MENIT)
+          </p>
+        </div>
+        <div className="flex py-2.5 px-4 items-center justify-end flex-1">
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] w-fit">
+            AKSI
+          </p>
         </div>
       </div>
 
       {/* Table rows */}
-      <div className="flex flex-col items-start -space-y-px w-full min-w-[927px]">
-        {slaData.map((item, index) => {
+      <div className="flex flex-col items-start w-full min-w-[927px]">
+        {slaData.map((item) => {
           const row = formState[item.id] || {
             responseTime: String(item.responseTime),
             resolutionTime: String(item.resolutionTime),
@@ -152,31 +150,25 @@ export default function SLATableSection({
             error: null,
           };
 
-          const isLastRow = index === slaData.length - 1;
-
           return (
             <div
               key={item.id}
-              className={`flex justify-between items-center gap-6 ${
-                index > 0 ? "border-t border-t-[#C3C6D1]" : ""
-              } w-full`}
+              className="flex justify-between items-center gap-6 border-b border-[var(--rule)] hover:bg-[var(--canvas)] transition-colors duration-150 w-full"
             >
-              <div className="flex pt-[34px] pr-6 pb-[33px] pl-6 flex-col items-start w-52">
+              <div className="flex py-3 pr-6 pl-4 items-center w-52">
                 <div
-                  className={`flex py-1 px-3 items-start rounded-sm ${item.badgeBg} w-fit`}
+                  className={`flex py-0.5 px-1.5 items-start rounded-[3px] border ${item.badgeBg} ${item.badgeTextColor} w-fit`}
                 >
-                  <p
-                    className={`${item.badgeTextColor} font-nimbusSans text-xs font-bold leading-4 w-fit tracking-[0.1em]`}
-                  >
+                  <p className="text-[10.5px] font-medium leading-4 w-fit tracking-[0.02em]">
                     {item.priority}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-3 w-[210px]">
                 <div
-                  className={`flex py-2 px-3 flex-col items-start shrink-0 rounded-sm border ${
-                    row.error ? "border-red-500" : "border-[#C3C6D1]"
-                  } bg-[#FFF] w-24 overflow-hidden`}
+                  className={`flex flex-col items-start shrink-0 rounded-[4px] border ${
+                    row.error ? "border-[var(--danger)]" : "border-[var(--rule-strong)]"
+                  } w-24 overflow-hidden`}
                 >
                   <div className="flex items-center w-full">
                     <div className="flex flex-col items-start w-full">
@@ -191,23 +183,23 @@ export default function SLATableSection({
                               e.target.value
                             )
                           }
-                          className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-full bg-transparent border-none outline-none p-0 focus:ring-0"
+                          className="px-2 py-1.5 text-[12px] tabular-nums text-[var(--fg)] w-full bg-transparent border-none outline-none p-0 focus:ring-0"
                         />
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col items-start opacity-60 w-fit">
-                  <p className="text-[#43474F] font-iBMPlexSans text-[13px] leading-[18px] w-fit">
-                    &#40;{formatHours(row.responseTime)}&#41;
+                <div className="flex flex-col items-start w-fit">
+                  <p className="text-[11.5px] text-[var(--fg-faint)] w-fit">
+                    ({formatHours(row.responseTime)})
                   </p>
                 </div>
               </div>
               <div className="flex pl-6 items-center gap-3 w-[270px]">
                 <div
-                  className={`flex py-2 px-3 flex-col items-start shrink-0 rounded-sm border ${
-                    row.error ? "border-red-500" : "border-[#C3C6D1]"
-                  } bg-[#FFF] w-24 overflow-hidden`}
+                  className={`flex flex-col items-start shrink-0 rounded-[4px] border ${
+                    row.error ? "border-[var(--danger)]" : "border-[var(--rule-strong)]"
+                  } w-24 overflow-hidden`}
                 >
                   <div className="flex items-center w-full">
                     <div className="flex flex-col items-start w-full">
@@ -222,37 +214,29 @@ export default function SLATableSection({
                               e.target.value
                             )
                           }
-                          className="text-[#1A1C1E] font-iBMPlexSans text-base leading-6 w-full bg-transparent border-none outline-none p-0 focus:ring-0"
+                          className="px-2 py-1.5 text-[12px] tabular-nums text-[var(--fg)] w-full bg-transparent border-none outline-none p-0 focus:ring-0"
                         />
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col items-start opacity-60 w-fit">
-                  <p className="text-[#43474F] font-iBMPlexSans text-[13px] leading-[18px] w-fit">
-                    &#40;{formatHours(row.resolutionTime)}&#41;
+                <div className="flex flex-col items-start w-fit">
+                  <p className="text-[11.5px] text-[var(--fg-faint)] w-fit">
+                    ({formatHours(row.resolutionTime)})
                   </p>
                 </div>
               </div>
-              <div
-                className={
-                  isLastRow
-                    ? "flex pt-[30px] pr-6 pb-[29px] pl-6 flex-col items-end w-[167px]"
-                    : "flex py-[30px] px-6 flex-col items-end w-[167px]"
-                }
-              >
+              <div className="flex py-3 px-4 flex-col items-end flex-1">
                 <button
                   onClick={() => handleSave(item)}
                   disabled={row.loading}
-                  className="cursor-pointer text-nowrap flex py-2 px-6 justify-center items-center rounded-sm bg-[#001E40] w-fit disabled:opacity-50"
+                  className="cursor-pointer text-nowrap flex h-9 px-3 justify-center items-center rounded-[4px] bg-[var(--accent)] text-[12px] font-medium text-white hover:bg-[var(--accent-hover)] transition-colors disabled:opacity-50"
                 >
-                  <p className="text-[#FFF] font-iBMPlexSans text-xs font-semibold leading-4 w-fit tracking-[0.05em]">
-                    {row.loading
-                      ? "Memproses..."
-                      : row.success
-                      ? "Tersimpan"
-                      : "Simpan"}
-                  </p>
+                  {row.loading
+                    ? "Memproses..."
+                    : row.success
+                    ? "Tersimpan"
+                    : "Simpan"}
                 </button>
               </div>
             </div>

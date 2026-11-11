@@ -110,121 +110,124 @@ export default function PimpinanPerformancePage() {
   const isLoading = loadingTickets || loadingStaff;
 
   return (
-    <div className="flex flex-col items-start gap-6 w-full max-w-[1440px] mx-auto pb-10 animate-in fade-in slide-in-from-bottom-2 duration-300">
+    <div className="flex w-full flex-col gap-6 pb-10 animate-in fade-in duration-300">
       {/* Page Header */}
       <div className="flex flex-col items-start gap-1">
-        <h1 className="text-2xl font-bold text-[var(--ink)] tracking-tight">
+        <h1 className="text-[22px] font-medium leading-tight tracking-[-0.01em] text-[var(--fg)]">
           {t('perf.page_title', 'Laporan Performa')}
         </h1>
-        <p className="text-[var(--text-dim)] text-sm font-medium">
+        <p className="mt-1 text-[13px] text-[var(--fg-dim)]">
           Pemantauan Kinerja Penanganan Tiket Helpdesk IT
         </p>
       </div>
 
-      <div className="w-full">
-        {/* Laporan Kinerja Card */}
-        <div className="bg-white p-6 rounded-2xl border border-[var(--line)] shadow-sm flex flex-col h-full">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold text-[var(--ink)] flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
-                <Trophy className="w-4 h-4" />
-              </div>
-              Laporan Kinerja
-            </h2>
-            <span className="text-xs font-semibold px-2.5 py-1 bg-slate-100 rounded-lg text-[var(--text-dim)]">
-              {performanceData.length} {t('perf.active_tech', 'Aktif')}
-            </span>
-          </div>
+      <div className="w-full overflow-hidden rounded-[4px] border border-[var(--rule)] bg-[var(--surface)]">
+        <div className="flex items-center justify-between gap-4 border-b border-[var(--rule)] px-5 py-3.5">
+          <h2 className="flex items-center gap-2 text-[13px] font-medium text-[var(--fg)]">
+            <Trophy className="h-4 w-4 text-[var(--fg-faint)]" strokeWidth={1.75} />
+            Laporan Kinerja
+          </h2>
+          <span className="rounded-[3px] border border-[var(--rule)] bg-[var(--canvas)] px-2 py-1 text-[11px] font-medium tabular-nums text-[var(--fg-dim)]">
+            {performanceData.length} {t('perf.active_tech', 'Aktif')}
+          </span>
+        </div>
 
-          {isLoading ? (
-            <div className="py-12 flex flex-col items-center justify-center gap-3">
-              <div className="animate-spin rounded-full h-7 w-7 border-b-2 border-[var(--gold)]" />
-              <p className="text-xs font-semibold text-[var(--text-dim)]">
-                Memuat data kinerja...
-              </p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
-                <thead>
-                  <tr className="border-b border-[var(--line)] text-xs font-bold text-[var(--text-dim)] uppercase tracking-wider">
-                    <th className="pb-3 pr-4">Nama</th>
-                    <th className="pb-3 px-4">Email</th>
-                    <th className="pb-3 px-4 text-center">Selesai</th>
-                    <th className="pb-3 pl-4 text-right">Tingkat SLA</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[var(--line)]">
-                  {performanceData.length > 0 ? (
-                    performanceData.map((staff, idx) => (
-                      <tr
-                        key={staff.id}
-                        className="hover:bg-slate-50/70 transition-colors"
-                      >
-                        <td className="py-3.5 pr-4 font-semibold text-[var(--ink)]">
-                          <div className="flex items-center gap-2">
-                            <span className="w-5 text-xs font-mono text-[var(--text-dim)]">
-                              #{idx + 1}
-                            </span>
-                            <div>
-                              <div>{staff.name}</div>
-                              <div className="text-[11px] font-normal text-[var(--text-dim)] capitalize">
-                                {staff.role}
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-3.5 px-4 text-[var(--text-dim)]">
-                          {staff.email}
-                        </td>
-                        <td className="py-3.5 px-4 text-center">
-                          <span className="inline-block bg-blue-50 text-blue-700 rounded-lg px-2.5 py-1 text-xs font-bold border border-blue-100">
-                            {staff.resolved}
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center gap-3 py-12">
+            <div className="h-7 w-7 animate-spin rounded-full border border-[var(--rule)] border-t-[var(--accent)]" />
+            <p className="text-[11.5px] text-[var(--fg-dim)]">
+              Memuat data kinerja...
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-[var(--rule)]">
+                  <th className="px-4 py-2.5">
+                    <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">Nama</span>
+                  </th>
+                  <th className="px-4 py-2.5">
+                    <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">Email</span>
+                  </th>
+                  <th className="px-4 py-2.5 text-center">
+                    <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">Selesai</span>
+                  </th>
+                  <th className="px-4 py-2.5 text-right">
+                    <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">Tingkat SLA</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {performanceData.length > 0 ? (
+                  performanceData.map((staff, idx) => (
+                    <tr
+                      key={staff.id}
+                      className="border-b border-[var(--rule)] transition-colors hover:bg-[var(--canvas)] last:border-b-0"
+                    >
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <span className="w-5 font-mono text-[11px] tabular-nums text-[var(--fg-faint)]">
+                            #{idx + 1}
                           </span>
-                        </td>
-                        <td className="py-3.5 pl-4 text-right">
-                          <div className="inline-flex items-center gap-2 justify-end">
-                            <div className="w-16 h-2 bg-slate-100 rounded-full overflow-hidden hidden sm:block">
-                              <div
-                                className={`h-full rounded-full ${
-                                  staff.slaRate >= 80
-                                    ? 'bg-emerald-500'
-                                    : 'bg-amber-500'
-                                }`}
-                                style={{ width: `${staff.slaRate}%` }}
-                              />
+                          <div>
+                            <div className="text-[12.5px] text-[var(--fg)]">{staff.name}</div>
+                            <div className="text-[11.5px] capitalize text-[var(--fg-faint)]">
+                              {staff.role}
                             </div>
-                            <span
-                              className={`text-xs font-bold ${
-                                staff.slaRate >= 80
-                                  ? 'text-emerald-700'
-                                  : 'text-amber-700'
-                              }`}
-                            >
-                              {staff.slaRate}%
-                            </span>
                           </div>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan={4}
-                        className="py-8 text-center text-[var(--text-dim)] text-sm"
-                      >
-                        {t(
-                          'perf.no_data',
-                          'Belum ada data performa yang tercatat.'
-                        )}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-[12px] text-[var(--fg-dim)]">
+                        {staff.email}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <span className="tabular-nums text-[12px] text-[var(--fg)]">
+                          {staff.resolved}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <div className="inline-flex items-center justify-end gap-2">
+                          <div className="hidden h-1.5 w-16 overflow-hidden rounded-[2px] bg-[rgba(11,21,36,0.08)] sm:block">
+                            <div
+                              className={`h-full ${
+                                staff.slaRate >= 80
+                                  ? 'bg-[var(--ok)]'
+                                  : 'bg-[var(--warn)]'
+                              }`}
+                              style={{ width: `${staff.slaRate}%` }}
+                            />
+                          </div>
+                          <span
+                            className={`text-[11.5px] font-medium tabular-nums ${
+                              staff.slaRate >= 80
+                                ? 'text-[var(--ok)]'
+                                : 'text-[var(--warn)]'
+                            }`}
+                          >
+                            {staff.slaRate}%
+                          </span>
+                        </div>
                       </td>
                     </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={4}
+                      className="px-4 py-10 text-center text-[12.5px] text-[var(--fg-dim)]"
+                    >
+                      {t(
+                        'perf.no_data',
+                        'Belum ada data performa yang tercatat.'
+                      )}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );

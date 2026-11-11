@@ -222,12 +222,12 @@ export default function Tree() {
           onDrop={(e) => handleDrop(node.id, e)}
           onDragEnd={() => setDraggedId(null)}
           className={`w-full transition-colors ${
-            draggedId === node.id ? "opacity-40 bg-blue-50" : "hover:bg-[#FAFAFB]"
+            draggedId === node.id ? "opacity-40 bg-[var(--canvas)]" : ""
           }`}
         >
           <Row
             nodeId={node.id}
-            outerWrapperClassName={`flex flex-col items-end w-full ${index > 0 ? "border-t border-gray-200" : ""}`}
+            outerWrapperClassName="flex flex-col items-end w-full"
             iconBgClassName={node.iconBgClassName}
             icon={node.icon}
             title={translateCategoryName(node.title)}
@@ -250,13 +250,13 @@ export default function Tree() {
         onDragOver={handleDragOver}
         onDrop={(e) => handleDrop(node.id, e)}
         onDragEnd={() => setDraggedId(null)}
-        className={`w-full ${draggedId === node.id ? "opacity-40 bg-blue-50" : ""}`}
+        className={`w-full ${draggedId === node.id ? "opacity-40 bg-[var(--canvas)]" : ""}`}
       >
         {node.type === "branch" ? (
           <SubRow
             variant="branch"
             nodeId={node.id}
-            headerClassName={`w-full relative ${index > 0 ? "border-t border-gray-200" : ""}`}
+            headerClassName="w-full relative"
             title={translateCategoryName(node.title)}
             originalTitle={node.title}
             count={node.count}
@@ -321,14 +321,14 @@ export default function Tree() {
   };
 
   return (
-    <div className="w-full flex flex-col bg-white border border-[#E5E7EB] rounded-xl shadow-sm">
+    <div className="w-full flex flex-col">
       
       {/* DAFTAR KATEGORI DENGAN FITUR DRAG AND DROP */}
       <div className="w-full flex flex-col">
         {filteredData.map((row, index) => renderNode(row, index, true))}
 
         {filteredData.length === 0 && (
-          <div className="p-8 w-full flex justify-center text-center text-[#6B7280] text-sm">
+          <div className="p-8 w-full flex justify-center text-center text-[12.5px] text-[var(--fg-dim)]">
             {t('categories.empty_search').replace('{query}', ctx?.searchQuery || '')}
           </div>
         )}

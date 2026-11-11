@@ -28,7 +28,16 @@ interface OperatorStatisticsProps {
   departments: Department[];
 }
 
-const COLORS = ['#0059BB', '#10b981', '#f59e0b', '#6366f1', '#ec4899', '#8b5cf6', '#14b8a6', '#f43f5e'];
+const COLORS = [
+  'rgba(8,87,178,1)',
+  'rgba(195,212,236,1)',
+  'rgba(0,45,114,0.85)',
+  'rgba(8,87,178,0.55)',
+  'rgba(11,21,36,0.45)',
+  'rgba(195,212,236,0.7)',
+  'rgba(8,87,178,0.28)',
+  'rgba(11,21,36,0.22)',
+];
 
 export default function OperatorStatistics({
   tickets,
@@ -197,9 +206,9 @@ export default function OperatorStatistics({
   const CustomPieTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white border border-[var(--line-dark)] p-3 rounded-xl shadow-lg">
-          <p className="text-[13px] font-bold text-[var(--ink)] mb-1">{payload[0].name}</p>
-          <p className="text-[13px] font-medium text-[var(--text-dim)]">{t('stats.total')}: <span className="font-bold text-[var(--ink)]">{payload[0].value} {t('stats.tickets_count')}</span></p>
+        <div className="bg-[var(--surface)] border border-[var(--rule-strong)] rounded-[4px] px-3 py-2 shadow-[var(--shadow-pop)]">
+          <p className="text-[12px] font-medium text-[var(--fg)] mb-0.5">{payload[0].name}</p>
+          <p className="text-[11.5px] text-[var(--fg-dim)] tabular-nums">{t('stats.total')}: <span className="font-medium text-[var(--fg)]">{payload[0].value} {t('stats.tickets_count')}</span></p>
         </div>
       );
     }
@@ -209,27 +218,27 @@ export default function OperatorStatistics({
   return (
     <div className="flex flex-col gap-6">
       {/* Chart Filter */}
-      <div className="bg-white border border-[var(--line-dark)] rounded-2xl p-5 shadow-sm flex flex-col sm:flex-row sm:items-end gap-4">
-        <div>
-          <label className="block text-[11px] font-bold text-[var(--text-dim)] uppercase tracking-wider mb-2">{t('stats.start_date')}</label>
+      <div className="bg-[var(--surface)] border border-[var(--rule)] rounded-[4px] px-5 py-4 flex flex-col sm:flex-row sm:items-end gap-4">
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">{t('stats.start_date')}</label>
           <input
             type="date"
             value={chartStartDate}
             onChange={(e) => setChartStartDate(e.target.value)}
-            className="w-full sm:w-auto px-4 py-2 bg-[var(--paper)] border border-[var(--line-dark)] rounded-xl text-[13px] font-medium outline-none focus:border-[var(--gold-soft)] transition-colors"
+            className="h-9 w-full sm:w-auto px-2.5 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12.5px] text-[var(--fg)] tabular-nums outline-none focus:border-[var(--accent)] transition-colors duration-150"
           />
         </div>
-        <div>
-          <label className="block text-[11px] font-bold text-[var(--text-dim)] uppercase tracking-wider mb-2">{t('stats.end_date')}</label>
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">{t('stats.end_date')}</label>
           <input
             type="date"
             value={chartEndDate}
             onChange={(e) => setChartEndDate(e.target.value)}
-            className="w-full sm:w-auto px-4 py-2 bg-[var(--paper)] border border-[var(--line-dark)] rounded-xl text-[13px] font-medium outline-none focus:border-[var(--gold-soft)] transition-colors"
+            className="h-9 w-full sm:w-auto px-2.5 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12.5px] text-[var(--fg)] tabular-nums outline-none focus:border-[var(--accent)] transition-colors duration-150"
           />
         </div>
-        <div className="ml-auto flex items-center gap-3">
-          <div className="text-[12px] font-bold text-[var(--ink)] bg-[var(--paper-2)] py-2.5 px-4 rounded-xl border border-[var(--line-dark)] hidden md:block">
+        <div className="ml-auto flex items-center gap-2">
+          <div className="hidden md:inline-flex items-center h-9 px-2.5 rounded-[3px] bg-[var(--canvas)] border border-[var(--rule)] text-[11.5px] text-[var(--fg-dim)] tabular-nums">
             {t('stats.range')}: {chartStartDate} - {chartEndDate}
           </div>
           <button
@@ -239,7 +248,7 @@ export default function OperatorStatistics({
               setChartStartDate(d.toISOString().split('T')[0]);
               setChartEndDate(new Date().toISOString().split('T')[0]);
             }}
-            className="text-[12px] font-bold text-[var(--ink)] hover:bg-[var(--paper-2)] py-2 px-4 rounded-xl border border-[var(--line)] transition-colors"
+            className="h-9 px-3 rounded-[4px] border border-[var(--rule-strong)] text-[12px] font-medium text-[var(--fg-dim)] hover:bg-[var(--canvas)] hover:text-[var(--fg)] transition-colors duration-150"
           >
             {t('common.reset')}
           </button>
@@ -249,27 +258,46 @@ export default function OperatorStatistics({
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Line Chart */}
-        <div className="bg-white border border-[var(--line-dark)] rounded-2xl p-6 shadow-sm lg:col-span-2">
-          <h2 className="text-[18px] font-bold text-[var(--ink)] mb-6">{t('charts.activity_graph')}</h2>
-          <div className="h-72 w-full">
+        <div className="bg-[var(--surface)] border border-[var(--rule)] rounded-[4px] lg:col-span-2">
+          <div className="px-5 py-3.5 border-b border-[var(--rule)]">
+            <h2 className="text-[13px] font-medium text-[var(--fg)]">{t('charts.activity_graph')}</h2>
+          </div>
+          <div className="h-72 w-full px-2 py-4">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={lineChartData} margin={{ top: 5, right: 10, bottom: 5, left: -20 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#64748b' }} tickMargin={10} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: '#64748b' }} tickMargin={10} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
-                <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '12px' }} />
-                <Line type="monotone" name={t('charts.incoming_tickets')} dataKey="opened" stroke="#3b82f6" strokeWidth={3} activeDot={{ r: 6 }} dot={false} />
-                <Line type="monotone" name={t('charts.verified_tickets')} dataKey="verified" stroke="#10b981" strokeWidth={3} activeDot={{ r: 6 }} dot={false} />
+              <LineChart data={lineChartData} margin={{ top: 5, right: 12, bottom: 0, left: -20 }}>
+                <CartesianGrid strokeDasharray="0" vertical={false} stroke="rgba(11,21,36,0.08)" />
+                <XAxis
+                  dataKey="date"
+                  tick={{ fontSize: 10.5, fill: 'rgba(98,108,121,1)' }}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{ fontSize: 10.5, fill: 'rgba(98,108,121,1)' }}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip
+                  contentStyle={{ borderRadius: '4px', border: '1px solid rgba(11,21,36,0.18)', boxShadow: '0 8px 24px -12px rgba(11,21,36,0.28)', fontSize: '12px' }}
+                  labelStyle={{ color: 'rgba(11,21,36,1)', fontSize: '11.5px' }}
+                  itemStyle={{ fontSize: '11.5px' }}
+                />
+                <Legend wrapperStyle={{ paddingTop: '16px', fontSize: '11.5px' }} iconType="line" iconSize={10} />
+                <Line type="monotone" name={t('charts.incoming_tickets')} dataKey="opened" stroke="rgba(8,87,178,1)" strokeWidth={2} activeDot={{ r: 4 }} dot={false} />
+                <Line type="monotone" name={t('charts.verified_tickets')} dataKey="verified" stroke="rgba(195,212,236,1)" strokeWidth={2} activeDot={{ r: 4 }} dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Donut Chart */}
-        <div className="bg-white border border-[var(--line-dark)] rounded-2xl p-6 shadow-sm flex flex-col">
-          <h2 className="text-[18px] font-bold text-[var(--ink)] mb-2">{t('charts.topic_distribution')}</h2>
-          <p className="text-[12px] text-[var(--text-dim)] mb-6">{t('charts.topic_desc')}</p>
+        <div className="bg-[var(--surface)] border border-[var(--rule)] rounded-[4px] flex flex-col">
+          <div className="px-5 py-3.5 border-b border-[var(--rule)]">
+            <h2 className="text-[13px] font-medium text-[var(--fg)]">{t('charts.topic_distribution')}</h2>
+            <p className="text-[11.5px] text-[var(--fg-faint)] mt-0.5">{t('charts.topic_desc')}</p>
+          </div>
           <div className="flex-1 w-full h-64">
             {donutChartData.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
@@ -282,6 +310,8 @@ export default function OperatorStatistics({
                     outerRadius={95}
                     paddingAngle={2}
                     dataKey="value"
+                    stroke="rgba(255,255,255,1)"
+                    strokeWidth={1}
                     >
                     {donutChartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -292,12 +322,12 @@ export default function OperatorStatistics({
                         layout="horizontal" 
                         verticalAlign="bottom" 
                         align="center"
-                        wrapperStyle={{ fontSize: '11px', marginTop: '10px' }}
+                        wrapperStyle={{ fontSize: '11px', marginTop: '10px', color: 'rgba(98,108,121,1)' }}
                     />
                 </PieChart>
                 </ResponsiveContainer>
             ) : (
-                <div className="flex h-full items-center justify-center text-[13px] text-[var(--text-dim)]">
+                <div className="flex h-full items-center justify-center text-[12.5px] text-[var(--fg-faint)]">
                     {t('charts.no_topic_data')}
                 </div>
             )}
@@ -306,26 +336,26 @@ export default function OperatorStatistics({
       </div>
 
       {/* Statistics Table */}
-      <div className="bg-white border border-[var(--line-dark)] rounded-2xl shadow-sm overflow-hidden">
-        <div className="p-5 md:p-6 border-b border-[var(--line-dark)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <h2 className="text-[18px] font-bold text-[var(--ink)] flex items-center gap-2">
+      <div className="bg-[var(--surface)] border border-[var(--rule)] rounded-[4px] overflow-hidden">
+        <div className="px-5 py-3.5 border-b border-[var(--rule)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <h2 className="text-[13px] font-medium text-[var(--fg)]">
             {t('charts.stats_data')}
           </h2>
           {/* Internal Table Filters */}
-          <div className="flex items-center gap-3">
-             <div className="flex items-center border border-[var(--line-dark)] bg-[var(--paper-2)] rounded-lg overflow-hidden">
+          <div className="flex items-center gap-2">
+             <div className="flex items-center border border-[var(--rule-strong)] rounded-[4px] h-9 overflow-hidden">
                 <input
                     type="date"
                     value={tableStartDate}
                     onChange={(e) => setTableStartDate(e.target.value)}
-                    className="px-3 py-1.5 bg-transparent text-[12px] font-medium outline-none focus:bg-white"
+                    className="h-9 px-2.5 bg-transparent text-[11.5px] text-[var(--fg-dim)] tabular-nums outline-none focus:text-[var(--fg)] border-0"
                 />
-                <div className="w-[1px] h-4 bg-[var(--line-dark)] mx-1"></div>
+                <div className="w-px h-4 bg-[var(--rule)] mx-0.5"></div>
                 <input
                     type="date"
                     value={tableEndDate}
                     onChange={(e) => setTableEndDate(e.target.value)}
-                    className="px-3 py-1.5 bg-transparent text-[12px] font-medium outline-none focus:bg-white"
+                    className="h-9 px-2.5 bg-transparent text-[11.5px] text-[var(--fg-dim)] tabular-nums outline-none focus:text-[var(--fg)] border-0"
                 />
              </div>
              <button
@@ -335,7 +365,7 @@ export default function OperatorStatistics({
                   setTableStartDate(d.toISOString().split('T')[0]);
                   setTableEndDate(new Date().toISOString().split('T')[0]);
                 }}
-                className="text-[11px] font-bold text-[var(--ink)] uppercase hover:text-[var(--gold)] transition-colors"
+                className="h-9 px-2.5 rounded-[4px] border border-[var(--rule-strong)] text-[11.5px] font-medium text-[var(--fg-dim)] hover:bg-[var(--canvas)] hover:text-[var(--fg)] transition-colors duration-150"
               >
                 {t('common.reset')}
               </button>
@@ -343,15 +373,15 @@ export default function OperatorStatistics({
         </div>
         
         {/* Tabs */}
-        <div className="flex border-b border-[var(--line-dark)] bg-[var(--paper)] px-4 pt-2">
+        <div className="flex border-b border-[var(--rule)] px-2">
           <button 
-            className={`px-5 py-3 text-[13px] font-bold transition-colors border-b-2 -mb-[1px] ${activeTab === 'department' ? 'border-[#3b82f6] text-[#3b82f6]' : 'border-transparent text-[var(--text-dim)] hover:text-[var(--ink)]'}`}
+            className={`px-3 py-2.5 text-[12px] font-medium transition-colors duration-150 border-b-2 -mb-[1px] ${activeTab === 'department' ? 'border-[var(--accent)] text-[var(--fg)]' : 'border-transparent text-[var(--fg-faint)] hover:text-[var(--fg-dim)]'}`}
             onClick={() => setActiveTab('department')}
           >
             {t('charts.department_tab')}
           </button>
           <button 
-            className={`px-5 py-3 text-[13px] font-bold transition-colors border-b-2 -mb-[1px] ${activeTab === 'topics' ? 'border-[#3b82f6] text-[#3b82f6]' : 'border-transparent text-[var(--text-dim)] hover:text-[var(--ink)]'}`}
+            className={`px-3 py-2.5 text-[12px] font-medium transition-colors duration-150 border-b-2 -mb-[1px] ${activeTab === 'topics' ? 'border-[var(--accent)] text-[var(--fg)]' : 'border-transparent text-[var(--fg-faint)] hover:text-[var(--fg-dim)]'}`}
             onClick={() => setActiveTab('topics')}
           >
             {t('charts.topics_tab')}
@@ -360,27 +390,27 @@ export default function OperatorStatistics({
 
         {/* Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
-            <thead className="bg-[var(--paper-2)]/30 border-b border-[var(--line-dark)]">
+          <table className="w-full text-left">
+            <thead className="border-b border-[var(--rule)]">
               <tr>
-                <th className="px-6 py-4 text-[11px] font-bold text-[var(--text-dim)] uppercase tracking-wider w-1/3">{activeTab === 'department' ? t('charts.department_tab') : t('charts.topics_tab')}</th>
-                <th className="px-6 py-4 text-[11px] font-bold text-[var(--text-dim)] uppercase tracking-wider text-center">{t('stats.opened_header')} <span className="font-medium text-[10px] block opacity-70 mt-0.5">{t('stats.opened')}</span></th>
-                <th className="px-6 py-4 text-[11px] font-bold text-[var(--text-dim)] uppercase tracking-wider text-center">{t('stats.assigned_header')} <span className="font-medium text-[10px] block opacity-70 mt-0.5">{t('stats.assigned')}</span></th>
-                <th className="px-6 py-4 text-[11px] font-bold text-[var(--text-dim)] uppercase tracking-wider text-center">{t('stats.closed_header')} <span className="font-medium text-[10px] block opacity-70 mt-0.5">{t('stats.closed')}</span></th>
+                <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] w-1/3">{activeTab === 'department' ? t('charts.department_tab') : t('charts.topics_tab')}</th>
+                <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] text-center">{t('stats.opened_header')} <span className="block normal-case tracking-normal text-[10px] font-normal mt-0.5">{t('stats.opened')}</span></th>
+                <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] text-center">{t('stats.assigned_header')} <span className="block normal-case tracking-normal text-[10px] font-normal mt-0.5">{t('stats.assigned')}</span></th>
+                <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] text-center">{t('stats.closed_header')} <span className="block normal-case tracking-normal text-[10px] font-normal mt-0.5">{t('stats.closed')}</span></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--line-dark)]">
+            <tbody>
               {activeStatsData.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="text-center py-12 text-[var(--text-dim)] text-[14px]">{t('stats.no_data_period')}</td>
+                  <td colSpan={4} className="text-center py-12 text-[var(--fg-faint)] text-[12.5px]">{t('stats.no_data_period')}</td>
                 </tr>
               ) : (
                 activeStatsData.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-[var(--paper-2)]/30 transition-colors">
-                    <td className="px-6 py-4 text-[13px] font-bold text-[var(--ink)]">{row.name}</td>
-                    <td className="px-6 py-4 text-[13px] text-center font-medium text-[var(--ink)]">{row.opened}</td>
-                    <td className="px-6 py-4 text-[13px] text-center font-medium text-[var(--ink)]">{row.assigned}</td>
-                    <td className="px-6 py-4 text-[13px] text-center font-medium text-[var(--ink)]">{row.closed}</td>
+                  <tr key={idx} className="border-b border-[var(--rule)] hover:bg-[var(--canvas)] transition-colors duration-150">
+                    <td className="px-4 py-3 text-[12.5px] font-medium text-[var(--fg)]">{row.name}</td>
+                    <td className="px-4 py-3 text-[12.5px] text-center text-[var(--fg-dim)] tabular-nums">{row.opened}</td>
+                    <td className="px-4 py-3 text-[12.5px] text-center text-[var(--fg-dim)] tabular-nums">{row.assigned}</td>
+                    <td className="px-4 py-3 text-[12.5px] text-center text-[var(--fg-dim)] tabular-nums">{row.closed}</td>
                   </tr>
                 ))
               )}

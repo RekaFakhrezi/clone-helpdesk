@@ -176,7 +176,7 @@ export default function PimpinanReportsPage() {
 
         // Header Title
         doc.setFontSize(14);
-        doc.setTextColor(30, 58, 138); // #1E3A8A
+        doc.setTextColor(30, 58, 138);
         doc.text('IT HELPDESK UNIVERSITAS DIPONEGORO', 14, 15);
 
         doc.setFontSize(11);
@@ -272,40 +272,36 @@ export default function PimpinanReportsPage() {
       titleKey: 'reports.weekly_title',
       descKey: 'reports.weekly_desc',
       icon: Calendar,
-      iconColor: 'bg-blue-50 text-blue-600',
     },
     {
       id: 'monthly',
       titleKey: 'reports.monthly_title',
       descKey: 'reports.monthly_desc',
       icon: FileText,
-      iconColor: 'bg-indigo-50 text-indigo-600',
     },
     {
       id: 'sla',
       titleKey: 'reports.sla_title',
       descKey: 'reports.sla_desc',
       icon: ShieldCheck,
-      iconColor: 'bg-emerald-50 text-emerald-600',
     },
     {
       id: 'whatsapp',
       titleKey: 'reports.wa_title',
       descKey: 'reports.wa_desc',
       icon: MessageSquare,
-      iconColor: 'bg-amber-50 text-amber-600',
     },
   ];
 
   return (
-    <div className="flex flex-col items-start gap-6 w-full max-w-[1440px] mx-auto pb-10 animate-in fade-in slide-in-from-bottom-2 duration-300">
+    <div className="flex w-full flex-col gap-6 pb-10 animate-in fade-in duration-300">
       {/* Page Header */}
       <div className="flex flex-col items-start gap-1">
-        <h1 className="text-2xl font-bold text-[var(--ink)] tracking-tight">{t('reports.page_title')}</h1>
-        <p className="text-[var(--text-dim)] text-sm font-medium">{t('reports.page_desc')}</p>
+        <h1 className="text-[22px] font-medium leading-tight tracking-[-0.01em] text-[var(--fg)]">{t('reports.page_title')}</h1>
+        <p className="mt-1 text-[13px] text-[var(--fg-dim)]">{t('reports.page_desc')}</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+      <div className="flex w-full flex-col overflow-hidden rounded-[4px] border border-[var(--rule)] bg-[var(--surface)]">
         {reportList.map((item) => {
           const Icon = item.icon;
           const title = t(item.titleKey);
@@ -315,38 +311,36 @@ export default function PimpinanReportsPage() {
           return (
             <div 
               key={item.id}
-              className="bg-white p-6 rounded-2xl border border-[var(--line)] shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
+              className="flex flex-col gap-4 border-b border-[var(--rule)] px-5 py-4 last:border-b-0 md:flex-row md:items-center md:justify-between"
             >
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-10 h-10 rounded-xl ${item.iconColor} flex items-center justify-center`}>
-                    <Icon className="w-5 h-5" />
+              <div className="flex items-start gap-3">
+                <Icon className="mt-0.5 h-4 w-4 shrink-0 text-[var(--fg-faint)]" strokeWidth={1.75} />
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-[12.5px] font-medium text-[var(--fg)]">{title}</h3>
+                    <span className="rounded-[3px] border border-[var(--rule)] bg-[var(--canvas)] px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">{t('reports.auto_format')}</span>
                   </div>
-                  <div>
-                    <h3 className="font-bold text-[var(--ink)] text-base">{title}</h3>
-                    <span className="text-[11px] font-semibold text-[var(--text-dim)] uppercase tracking-wider">{t('reports.auto_format')}</span>
-                  </div>
+                  <p className="max-w-2xl text-[11.5px] leading-[1.6] text-[var(--fg-dim)]">
+                    {t(item.descKey)}
+                  </p>
                 </div>
-                <p className="text-sm text-[var(--text-dim)] mb-6 leading-relaxed">
-                  {t(item.descKey)}
-                </p>
               </div>
 
-              <div className="flex gap-3 pt-4 border-t border-[var(--line)]">
+              <div className="flex items-center gap-2 md:shrink-0">
                 <button 
                   onClick={() => handleExport(item.id, title, 'PDF')}
                   disabled={!!downloading}
-                  className="flex-1 py-2.5 bg-[var(--ink)] text-white text-xs font-bold rounded-xl hover:bg-[var(--text)] transition-colors flex items-center justify-center gap-2 shadow-sm active:scale-95 disabled:opacity-50"
+                  className="h-9 inline-flex items-center gap-1.5 rounded-[4px] bg-[var(--accent)] px-3 text-[12px] font-medium text-white transition-colors hover:bg-[var(--accent-hover)] disabled:opacity-50"
                 >
-                  <Download className="w-3.5 h-3.5" />
+                  <Download className="h-4 w-4" strokeWidth={1.75} />
                   {isPdfLoading ? t('reports.processing') : t('reports.download_pdf')}
                 </button>
                 <button 
                   onClick={() => handleExport(item.id, title, 'Excel')}
                   disabled={!!downloading}
-                  className="flex-1 py-2.5 bg-white border border-[var(--line-dark)] text-[var(--ink)] text-xs font-bold rounded-xl hover:bg-[var(--paper-2)] transition-colors flex items-center justify-center gap-2 shadow-sm active:scale-95 disabled:opacity-50"
+                  className="h-9 inline-flex items-center gap-1.5 rounded-[4px] border border-[var(--rule-strong)] px-3 text-[12px] font-medium text-[var(--fg-dim)] transition-colors hover:bg-[var(--canvas)] hover:text-[var(--fg)] disabled:opacity-50"
                 >
-                  <Download className="w-3.5 h-3.5 text-[var(--text-dim)]" />
+                  <Download className="h-4 w-4" strokeWidth={1.75} />
                   {isExcelLoading ? t('reports.processing') : t('reports.download_excel')}
                 </button>
               </div>

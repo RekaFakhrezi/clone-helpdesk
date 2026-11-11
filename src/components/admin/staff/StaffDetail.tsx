@@ -6,6 +6,11 @@ import { supabase } from '@/lib/supabase';
 import StatusBadge from '@/components/admin/tickets/StatusBadge';
 import { useSearchParams, useRouter } from 'next/navigation';
 
+const FIELD_LABEL = 'text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]';
+const FIELD_VALUE = 'text-[13px] text-[var(--fg)]';
+const INPUT_CLASS = 'h-9 w-full rounded-[4px] border border-[var(--rule-strong)] bg-transparent px-3 text-[12px] text-[var(--fg)] focus:outline-none focus:border-[var(--accent)]';
+const TH_CLASS = 'px-4 py-2.5 text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] select-none';
+
 export default function StaffDetail({ staffId }: { staffId: string }) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -128,18 +133,18 @@ export default function StaffDetail({ staffId }: { staffId: string }) {
 
   if (isLoading) {
     return (
-      <div className="p-8 md:p-10 animate-pulse flex flex-col gap-8 max-w-[1200px]">
-        <div className="h-10 w-48 bg-gray-200 rounded"></div>
-        <div className="h-64 bg-gray-200 rounded-xl"></div>
+      <div className="flex flex-col gap-6 w-full max-w-[1200px] animate-pulse">
+        <div className="h-8 w-48 rounded-[4px] bg-[var(--canvas)]"></div>
+        <div className="h-64 rounded-[4px] border border-[var(--rule)] bg-[var(--canvas)]"></div>
       </div>
     );
   }
 
   if (!staff) {
     return (
-      <div className="p-16 text-center">
-        <h2 className="text-xl font-bold">Staf tidak ditemukan</h2>
-        <Link href="/dashboard/administrasi/staff" className="text-[#0059BB] font-bold mt-2 inline-block hover:underline">
+      <div className="flex flex-col items-center gap-2 py-16 text-center">
+        <h2 className="text-[15px] font-medium text-[var(--fg)]">Staf tidak ditemukan</h2>
+        <Link href="/dashboard/administrasi/staff" className="text-[12.5px] font-medium text-[var(--accent)] hover:underline">
           Kembali ke Manajemen Staf
         </Link>
       </div>
@@ -148,9 +153,9 @@ export default function StaffDetail({ staffId }: { staffId: string }) {
 
   if (staff.error) {
     return (
-      <div className="p-16 text-center">
-        <h2 className="text-xl font-bold text-red-600">Error: {staff.error}</h2>
-        <Link href="/dashboard/administrasi/staff" className="text-[#0059BB] font-bold mt-2 inline-block hover:underline">
+      <div className="flex flex-col items-center gap-2 py-16 text-center">
+        <h2 className="text-[15px] font-medium text-[var(--danger)]">Error: {staff.error}</h2>
+        <Link href="/dashboard/administrasi/staff" className="text-[12.5px] font-medium text-[var(--accent)] hover:underline">
           Kembali ke Manajemen Staf
         </Link>
       </div>
@@ -162,83 +167,83 @@ export default function StaffDetail({ staffId }: { staffId: string }) {
   const activeTickets = tickets.filter(t => !(t.status === 'RESOLVED' || t.status === 'CLOSED' || t.status === 'WAITING CONFIRMATION'));
 
   return (
-    <div className="flex flex-col gap-8 animate-in fade-in slide-in-from-bottom-2 duration-300 p-6 md:p-10 w-full max-w-[1200px]">
+    <div className="flex flex-col gap-6 animate-in fade-in duration-300 w-full max-w-[1200px]">
       
-      <div className="flex flex-col gap-1.5 w-full">
-        <div className="flex items-center gap-2 text-[12px] font-bold text-gray-500 mb-1 font-iBMPlexSans">
-          <Link href="/dashboard/administrasi/staff" className="hover:text-gray-900 transition-colors">
+      <div className="flex flex-col gap-1 w-full">
+        <div className="flex items-center gap-2">
+          <Link href="/dashboard/administrasi/staff" className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] transition-colors hover:text-[var(--fg-dim)]">
             Manajemen Staf
           </Link>
-          <span>/</span>
-          <span className="text-gray-900">Detail Staf</span>
+          <span className="text-[10px] text-[var(--fg-faint)]">/</span>
+          <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">Detail Staf</span>
         </div>
         <div className="flex justify-between items-center w-full">
-            <h1 className="text-[#001E40] font-iBMPlexSans text-[32px] font-semibold leading-10 tracking-[-0.02em]">
+            <h1 className="text-[22px] font-medium leading-tight tracking-[-0.01em] text-[var(--fg)]">
             Profil Staf
             </h1>
             {!isEditing && (
                 <button 
                     onClick={() => setIsEditing(true)}
-                    className="flex items-center gap-2 px-4 py-2 border border-[#C3C6D1] rounded bg-white hover:bg-gray-50 text-sm text-[#43474F] font-iBMPlexSans font-medium transition-colors cursor-pointer"
+                    className="flex h-9 items-center gap-1.5 px-3 rounded-[4px] border border-[var(--rule-strong)] text-[12px] font-medium text-[var(--fg-dim)] transition-colors hover:bg-[var(--canvas)] hover:text-[var(--fg)] cursor-pointer"
                 >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                     Edit Data
                 </button>
             )}
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-[#C3C6D1] p-8 shadow-sm flex flex-col relative w-full">
+      <div className="bg-[var(--surface)] rounded-[4px] border border-[var(--rule)] p-6 flex flex-col relative w-full">
         
         {isEditing ? (
             <form onSubmit={handleSave} className="flex flex-col gap-6 w-full">
-                <div className="flex flex-col md:flex-row gap-8 w-full">
+                <div className="flex flex-col md:flex-row gap-6 w-full">
                     {/* Avatar placeholder during edit */}
-                    <div className="w-24 h-24 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-4xl font-bold shrink-0 self-start mt-2">
+                    <div className="w-12 h-12 rounded-[4px] border border-[var(--rule)] bg-[var(--canvas)] text-[var(--fg-dim)] flex items-center justify-center text-[15px] font-medium shrink-0 self-start">
                         {formData.name?.charAt(0)?.toUpperCase() || 'S'}
                     </div>
 
                     <div className="flex flex-col gap-4 flex-1">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="flex flex-col gap-1.5">
-                                <label className="text-xs font-semibold text-[#43474F] font-iBMPlexSans tracking-wide">NAMA LENGKAP</label>
+                                <label className={FIELD_LABEL}>NAMA LENGKAP</label>
                                 <input 
                                     type="text" 
                                     required
                                     value={formData.name}
                                     onChange={e => setFormData({...formData, name: e.target.value})}
-                                    className="px-4 py-2.5 text-sm border border-[#C3C6D1] rounded-md focus:outline-none focus:border-[#1E3A8A] focus:ring-1 focus:ring-[#1E3A8A] transition-shadow text-[#1A1C1E] font-iBMPlexSans"
+                                    className={INPUT_CLASS}
                                 />
                             </div>
                             <div className="flex flex-col gap-1.5">
-                                <label className="text-xs font-semibold text-[#43474F] font-iBMPlexSans tracking-wide">EMAIL</label>
+                                <label className={FIELD_LABEL}>EMAIL</label>
                                 <input 
                                     type="email" 
                                     required
                                     value={formData.email}
                                     onChange={e => setFormData({...formData, email: e.target.value})}
-                                    className="px-4 py-2.5 text-sm border border-[#C3C6D1] rounded-md focus:outline-none focus:border-[#1E3A8A] focus:ring-1 focus:ring-[#1E3A8A] transition-shadow text-[#1A1C1E] font-iBMPlexSans"
+                                    className={INPUT_CLASS}
                                 />
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="flex flex-col gap-1.5">
-                                <label className="text-xs font-semibold text-[#43474F] font-iBMPlexSans tracking-wide">NO. WHATSAPP</label>
+                                <label className={FIELD_LABEL}>NO. WHATSAPP</label>
                                 <input 
                                     type="text" 
                                     required
                                     value={formData.phone}
                                     onChange={e => setFormData({...formData, phone: e.target.value})}
-                                    className="px-4 py-2.5 text-sm border border-[#C3C6D1] rounded-md focus:outline-none focus:border-[#1E3A8A] focus:ring-1 focus:ring-[#1E3A8A] transition-shadow text-[#1A1C1E] font-iBMPlexSans"
+                                    className={INPUT_CLASS}
                                 />
                             </div>
                             <div className="flex flex-col gap-1.5">
-                                <label className="text-xs font-semibold text-[#43474F] font-iBMPlexSans tracking-wide">PERAN (ROLE)</label>
+                                <label className={FIELD_LABEL}>PERAN (ROLE)</label>
                                 <select 
                                     value={formData.role}
                                     onChange={e => setFormData({...formData, role: e.target.value})}
-                                    className="px-4 py-2.5 text-sm border border-[#C3C6D1] rounded-md focus:outline-none focus:border-[#1E3A8A] focus:ring-1 focus:ring-[#1E3A8A] transition-shadow bg-white text-[#1A1C1E] font-iBMPlexSans cursor-pointer"
+                                    className={`${INPUT_CLASS} cursor-pointer`}
                                 >
                                     <option value="admin">Administrator</option>
                                     <option value="operator">Operator (Agent)</option>
@@ -248,11 +253,11 @@ export default function StaffDetail({ staffId }: { staffId: string }) {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="flex flex-col gap-1.5">
-                                <label className="text-xs font-semibold text-[#43474F] font-iBMPlexSans tracking-wide">DEPARTEMEN / LAYANAN</label>
+                                <label className={FIELD_LABEL}>DEPARTEMEN / LAYANAN</label>
                                 <select 
                                     value={formData.dept_id}
                                     onChange={e => setFormData({...formData, dept_id: e.target.value})}
-                                    className="px-4 py-2.5 text-sm border border-[#C3C6D1] rounded-md focus:outline-none focus:border-[#1E3A8A] focus:ring-1 focus:ring-[#1E3A8A] transition-shadow bg-white text-[#1A1C1E] font-iBMPlexSans cursor-pointer"
+                                    className={`${INPUT_CLASS} cursor-pointer`}
                                 >
                                     <option value="">Pilih Departemen...</option>
                                     {departments.map((d) => (
@@ -264,76 +269,72 @@ export default function StaffDetail({ staffId }: { staffId: string }) {
                     </div>
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 mt-2">
+                <div className="flex justify-end gap-2 pt-4 border-t border-[var(--rule)]">
                     <button 
                         type="button"
                         onClick={cancelEdit}
                         disabled={isSaving}
-                        className="px-5 py-2 text-sm font-semibold text-[#43474F] border border-[#C3C6D1] bg-white hover:bg-gray-50 rounded-md transition-colors disabled:opacity-50 font-iBMPlexSans cursor-pointer"
+                        className="h-9 px-3 rounded-[4px] border border-[var(--rule-strong)] text-[12px] font-medium text-[var(--fg-dim)] transition-colors hover:bg-[var(--canvas)] hover:text-[var(--fg)] disabled:opacity-50 cursor-pointer"
                     >
                         Batal
                     </button>
                     <button 
                         type="submit"
                         disabled={isSaving}
-                        className="px-5 py-2 text-sm font-semibold text-white bg-[#1E3A8A] hover:bg-blue-900 rounded-md transition-colors disabled:opacity-70 flex items-center gap-2 font-iBMPlexSans shadow-sm cursor-pointer"
+                        className="h-9 px-3 flex items-center gap-2 rounded-[4px] bg-[var(--accent)] text-[12px] font-medium text-white transition-colors hover:bg-[var(--accent-hover)] disabled:opacity-50 cursor-pointer"
                     >
-                        {isSaving ? (
-                            <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Menyimpan...</>
-                        ) : 'Simpan Perubahan'}
+                        {isSaving ? 'Menyimpan...' : 'Simpan Perubahan'}
                     </button>
                 </div>
             </form>
         ) : (
-            <div className="flex flex-col md:flex-row gap-8 w-full">
-                <div className="w-24 h-24 rounded-full bg-[#E5EDFF] text-[#1E3A8A] flex items-center justify-center text-[40px] font-bold shrink-0">
+            <div className="flex flex-col md:flex-row gap-6 w-full">
+                <div className="w-12 h-12 rounded-[4px] border border-[var(--rule)] bg-[var(--canvas)] text-[var(--fg-dim)] flex items-center justify-center text-[15px] font-medium shrink-0">
                     {staff.name?.charAt(0)?.toUpperCase()}
                 </div>
                 
-                <div className="flex flex-col justify-center flex-1 w-full gap-5 pr-4 md:border-r border-gray-100">
-                    <div className="flex flex-col gap-1">
-                        <h2 className="text-2xl font-bold text-[#1A1C1E] font-iBMPlexSans">{staff.name}</h2>
-                        <p className="text-[#43474F] font-medium text-sm font-iBMPlexSans">{staff.email} • {staff.dept?.name || '-'}</p>
+                <div className="flex flex-col flex-1 w-full gap-5 pr-4 md:border-r border-[var(--rule)]">
+                    <div className="flex flex-col gap-1 pb-5 border-b border-[var(--rule)]">
+                        <h2 className="text-[17px] font-medium tracking-[-0.01em] text-[var(--fg)]">{staff.name}</h2>
+                        <p className="text-[12px] text-[var(--fg-dim)]">{staff.email} • {staff.dept?.name || '-'}</p>
                     </div>
                     
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-4 w-full pt-4 border-t border-gray-100">
-                        <div className="flex flex-col gap-1.5">
-                            <span className="text-[11px] text-gray-500 font-bold uppercase tracking-wider font-iBMPlexSans">No. WhatsApp</span>
-                            <span className="text-[15px] font-semibold text-[#1A1C1E] font-iBMPlexSans">{staff.phone || '-'}</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-4 w-full">
+                        <div className="flex flex-col gap-1">
+                            <span className={FIELD_LABEL}>No. WhatsApp</span>
+                            <span className={`${FIELD_VALUE} tabular-nums`}>{staff.phone || '-'}</span>
                         </div>
-                        <div className="flex flex-col gap-1.5">
-                            <span className="text-[11px] text-gray-500 font-bold uppercase tracking-wider font-iBMPlexSans">Peran (Role)</span>
-                            <span className="text-[15px] font-semibold text-[#1A1C1E] font-iBMPlexSans uppercase">{staff.role}</span>
+                        <div className="flex flex-col gap-1">
+                            <span className={FIELD_LABEL}>Peran (Role)</span>
+                            <span className={`${FIELD_VALUE} uppercase`}>{staff.role}</span>
                         </div>
-                        <div className="flex flex-col gap-1.5">
-                            <span className="text-[11px] text-gray-500 font-bold uppercase tracking-wider font-iBMPlexSans">Bergabung Sejak</span>
-                            <span className="text-[15px] font-semibold text-[#1A1C1E] font-iBMPlexSans">{new Date(staff.created_at).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}</span>
+                        <div className="flex flex-col gap-1">
+                            <span className={FIELD_LABEL}>Bergabung Sejak</span>
+                            <span className={`${FIELD_VALUE} tabular-nums`}>{new Date(staff.created_at).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Metric Performa */}
-                <div className="flex flex-col justify-center gap-5 shrink-0 min-w-[200px]">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-gray-500 uppercase tracking-wider font-iBMPlexSans">Tiket Selesai</span>
-                    <span className="text-3xl font-black text-[#1E3A8A] font-iBMPlexSans">{resolvedTickets.length}</span>
-                  </div>
+                <div className="flex flex-col justify-center gap-1 shrink-0 min-w-[160px]">
+                  <span className={FIELD_LABEL}>Tiket Selesai</span>
+                  <span className="text-[30px] leading-none font-medium tabular-nums text-[var(--fg)]">{resolvedTickets.length}</span>
                 </div>
             </div>
         )}
       </div>
 
-      <div className="bg-white rounded-xl border border-[#C3C6D1] shadow-sm flex flex-col overflow-hidden w-full">
-        <div className="flex items-center border-b border-[#C3C6D1] px-2 bg-[#F8F9FA]">
+      <div className="bg-[var(--surface)] rounded-[4px] border border-[var(--rule)] flex flex-col overflow-hidden w-full">
+        <div className="flex items-center border-b border-[var(--rule)] px-4">
           <button 
             onClick={() => setActiveTab('active')}
-            className={`px-6 py-4 text-[14px] font-bold font-iBMPlexSans outline-none transition-colors border-b-2 ${activeTab === 'active' ? 'border-[#1E3A8A] text-[#1E3A8A]' : 'border-transparent text-[#43474F] hover:text-[#1E3A8A]'}`}
+            className={`cursor-pointer whitespace-nowrap px-3 py-2.5 -mb-px border-b text-[12.5px] transition-colors ${activeTab === 'active' ? 'border-[var(--accent)] text-[var(--fg)] font-medium' : 'border-transparent text-[var(--fg-dim)] hover:text-[var(--fg)]'}`}
           >
             Tiket Sedang Ditangani ({activeTickets.length})
           </button>
           <button 
             onClick={() => setActiveTab('resolved')}
-            className={`px-6 py-4 text-[14px] font-bold font-iBMPlexSans outline-none transition-colors border-b-2 ${activeTab === 'resolved' ? 'border-[#1E3A8A] text-[#1E3A8A]' : 'border-transparent text-[#43474F] hover:text-[#1E3A8A]'}`}
+            className={`cursor-pointer whitespace-nowrap px-3 py-2.5 -mb-px border-b text-[12.5px] transition-colors ${activeTab === 'resolved' ? 'border-[var(--accent)] text-[var(--fg)] font-medium' : 'border-transparent text-[var(--fg-dim)] hover:text-[var(--fg)]'}`}
           >
             Tiket Diselesaikan ({resolvedTickets.length})
           </button>
@@ -341,31 +342,31 @@ export default function StaffDetail({ staffId }: { staffId: string }) {
         
         {activeTab === 'active' && (
           activeTickets.length === 0 ? (
-            <div className="p-8 text-center text-[#43474F] font-medium font-iBMPlexSans">Tidak ada tiket yang sedang ditangani.</div>
+            <div className="py-10 text-center text-[12.5px] text-[var(--fg-dim)]">Tidak ada tiket yang sedang ditangani.</div>
           ) : (
             <div className="overflow-x-auto w-full">
               <table className="w-full text-left">
-                <thead className="bg-[#F3F3F6] border-b border-[#C3C6D1]">
+                <thead className="border-b border-[var(--rule)]">
                   <tr>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#43474F] tracking-[0.05em] font-iBMPlexSans select-none">NO. TIKET</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#43474F] tracking-[0.05em] font-iBMPlexSans select-none">SUBJECT</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#43474F] tracking-[0.05em] font-iBMPlexSans select-none">KATEGORI</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#43474F] tracking-[0.05em] font-iBMPlexSans select-none">TANGGAL</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#43474F] tracking-[0.05em] font-iBMPlexSans select-none">STATUS</th>
+                    <th className={TH_CLASS}>NO. TIKET</th>
+                    <th className={TH_CLASS}>SUBJECT</th>
+                    <th className={TH_CLASS}>KATEGORI</th>
+                    <th className={TH_CLASS}>TANGGAL</th>
+                    <th className={TH_CLASS}>STATUS</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody>
                   {activeTickets.map(t => (
-                    <tr key={t.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-6 py-4">
-                        <Link href={`/dashboard/administrasi/tickets/${t.id}`} className="text-sm font-bold text-[#1E3A8A] hover:underline font-iBMPlexSans">
+                    <tr key={t.id} className="border-b border-[var(--rule)] transition-colors hover:bg-[var(--canvas)]">
+                      <td className="px-4 py-3">
+                        <Link href={`/dashboard/administrasi/tickets/${t.id}`} className="text-[12px] font-medium tabular-nums text-[var(--accent)] hover:underline">
                           {t.ticket_num || t.ticket_number || '–'}
                         </Link>
                       </td>
-                      <td className="px-6 py-4 text-sm font-medium text-[#1A1C1E] truncate max-w-[200px] font-iBMPlexSans">{t.subject}</td>
-                      <td className="px-6 py-4 text-sm text-[#43474F] font-iBMPlexSans">{t.category?.name || '-'}</td>
-                      <td className="px-6 py-4 text-sm text-[#43474F] font-iBMPlexSans">{new Date(t.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-3 text-[12.5px] font-medium text-[var(--fg)] truncate max-w-[200px]">{t.subject}</td>
+                      <td className="px-4 py-3 text-[12px] text-[var(--fg-dim)]">{t.category?.name || '-'}</td>
+                      <td className="px-4 py-3 text-[12px] text-[var(--fg-dim)] tabular-nums">{new Date(t.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                      <td className="px-4 py-3">
                         <StatusBadge status={t.status} />
                       </td>
                     </tr>
@@ -378,31 +379,31 @@ export default function StaffDetail({ staffId }: { staffId: string }) {
 
         {activeTab === 'resolved' && (
           resolvedTickets.length === 0 ? (
-            <div className="p-8 text-center text-[#43474F] font-medium font-iBMPlexSans">Belum ada tiket yang diselesaikan.</div>
+            <div className="py-10 text-center text-[12.5px] text-[var(--fg-dim)]">Belum ada tiket yang diselesaikan.</div>
           ) : (
             <div className="overflow-x-auto w-full">
               <table className="w-full text-left">
-                <thead className="bg-[#F3F3F6] border-b border-[#C3C6D1]">
+                <thead className="border-b border-[var(--rule)]">
                   <tr>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#43474F] tracking-[0.05em] font-iBMPlexSans select-none">NO. TIKET</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#43474F] tracking-[0.05em] font-iBMPlexSans select-none">SUBJECT</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#43474F] tracking-[0.05em] font-iBMPlexSans select-none">KATEGORI</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#43474F] tracking-[0.05em] font-iBMPlexSans select-none">TANGGAL</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-[#43474F] tracking-[0.05em] font-iBMPlexSans select-none">STATUS</th>
+                    <th className={TH_CLASS}>NO. TIKET</th>
+                    <th className={TH_CLASS}>SUBJECT</th>
+                    <th className={TH_CLASS}>KATEGORI</th>
+                    <th className={TH_CLASS}>TANGGAL</th>
+                    <th className={TH_CLASS}>STATUS</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody>
                   {resolvedTickets.map(t => (
-                    <tr key={t.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-6 py-4">
-                        <Link href={`/dashboard/administrasi/tickets/${t.id}`} className="text-sm font-bold text-[#1E3A8A] hover:underline font-iBMPlexSans">
+                    <tr key={t.id} className="border-b border-[var(--rule)] transition-colors hover:bg-[var(--canvas)]">
+                      <td className="px-4 py-3">
+                        <Link href={`/dashboard/administrasi/tickets/${t.id}`} className="text-[12px] font-medium tabular-nums text-[var(--accent)] hover:underline">
                           {t.ticket_num || t.ticket_number || '–'}
                         </Link>
                       </td>
-                      <td className="px-6 py-4 text-sm font-medium text-[#1A1C1E] truncate max-w-[200px] font-iBMPlexSans">{t.subject}</td>
-                      <td className="px-6 py-4 text-sm text-[#43474F] font-iBMPlexSans">{t.category?.name || '-'}</td>
-                      <td className="px-6 py-4 text-sm text-[#43474F] font-iBMPlexSans">{new Date(t.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-3 text-[12.5px] font-medium text-[var(--fg)] truncate max-w-[200px]">{t.subject}</td>
+                      <td className="px-4 py-3 text-[12px] text-[var(--fg-dim)]">{t.category?.name || '-'}</td>
+                      <td className="px-4 py-3 text-[12px] text-[var(--fg-dim)] tabular-nums">{new Date(t.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                      <td className="px-4 py-3">
                         <StatusBadge status={t.status} />
                       </td>
                     </tr>

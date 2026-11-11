@@ -22,7 +22,7 @@ export default function PimpinanLayout({ children }: { children: React.ReactNode
     <DashboardShell
       Sidebar={PimpinanSidebar}
       pageTitle={getPageTitle()}
-      className="min-h-screen bg-[#F8FAFC] flex font-sans"
+      className="min-h-screen bg-[var(--canvas)] flex font-sans"
       contentClassName="flex-1 flex flex-col min-w-0 transition-all duration-300 ease-[var(--ease)]"
     >
       {children}

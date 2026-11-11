@@ -70,15 +70,15 @@ export default function DeptModal({ isOpen, onClose, onSuccess, dept, showToast 
       onClose={onClose}
       maxWidth="max-w-[400px]"
     >
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-4">
           <div>
-            <label className="block text-sm text-gray-600 mb-1">{t('staff.department')}</label>
-            <input required type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full border border-gray-300 rounded p-2 text-sm" />
+            <label className="block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5">{t('staff.department')}</label>
+            <input required type="text" value={name} onChange={(e) => setName(e.target.value)} className="h-9 w-full rounded-[4px] border border-[var(--rule-strong)] bg-transparent px-3 text-[12px] text-[var(--fg)] focus:outline-none focus:border-[var(--accent)]" />
           </div>
           
-          <div className="flex justify-end gap-3 mt-4">
+          <div className="flex justify-end gap-2 mt-2">
             <ModalCancelButton onClick={onClose}>{t('staff.cancel')}</ModalCancelButton>
-            <button type="submit" disabled={loading} className="px-4 py-2 text-sm text-white bg-[#001E40] rounded hover:bg-[#00142d] disabled:opacity-50">
+            <button type="submit" disabled={loading} className="h-9 px-3 rounded-[4px] bg-[var(--accent)] text-[12px] font-medium text-white transition-colors hover:bg-[var(--accent-hover)] disabled:opacity-50">
               {loading ? t('staff.saving') : t('staff.save')}
             </button>
           </div>

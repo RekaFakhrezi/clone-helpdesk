@@ -52,10 +52,10 @@ export default function ReportsWorkspace() {
   };
 
   return (
-    <div className="flex p-12 flex-col items-start gap-12 w-full">
+    <div className="flex flex-col items-start gap-6 w-full">
       <ReportsHeader />
       
-      <div className="flex flex-col items-start gap-12 w-full">
+      <div className="flex flex-col items-start gap-6 w-full">
         <ReportsToolbar 
           fromDate={fromDate}
           setFromDate={setFromDate}

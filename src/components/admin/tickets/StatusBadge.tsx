@@ -16,7 +16,7 @@ export default function StatusBadge({ status, overdue = false }: StatusBadgeProp
   // NOTE: 'New' menggantikan status lama 'Open'. Update union type TicketStatus
   // di lib/mock/tickets.ts dari 'Open' menjadi 'New' agar tidak error di TypeScript.
   switch (status) {
-    case 'New' as TicketStatus:
+    case 'New':
       colorClass = 'bg-[rgba(0,45,114,.07)] text-[var(--accent)] border-[rgba(0,45,114,.18)]';
       label = 'NEW';
       break;

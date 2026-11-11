@@ -100,57 +100,41 @@ export default function BotSettingsWorkspace() {
       {/* Toast Notification */}
       <Toast toast={toast} />
 
-      <div className="flex justify-between items-end w-full mb-8">
-        <div className="flex flex-col items-start gap-1 w-fit">
-          <div className="flex items-start gap-2 w-full">
-            <div className="flex flex-col items-start w-fit h-full">
-              <p className="text-[#43474F] font-iBMPlexSans text-xs font-semibold leading-4 w-fit tracking-[0.05em]">
-                {t('topbar.dashboard')}
-              </p>
-            </div>
-            <div className="flex flex-col items-start w-fit h-full">
-              <p className="text-[#43474F] font-iBMPlexSans text-xs font-semibold leading-4 w-fit tracking-[0.05em]">
-                /
-              </p>
-            </div>
-            <div className="flex flex-col items-start w-fit h-full">
-              <p className="text-[#1A1C1E] font-iBMPlexSans text-xs font-semibold leading-4 w-fit tracking-[0.05em]">
-                {t('bot.settings_breadcrumb')}
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-col items-start w-full">
-            <p className="text-[#001E40] font-iBMPlexSans text-[32px] font-semibold leading-10 w-fit tracking-[-0.02em]">
-              {t('bot.settings_title')}
-            </p>
-          </div>
+      <div className="flex justify-between items-end w-full">
+        <div className="flex flex-col items-start gap-1.5 w-fit">
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">
+            {t('topbar.dashboard')} / {t('bot.settings_breadcrumb')}
+          </p>
+          <h1 className="text-[22px] font-medium leading-tight tracking-[-0.01em] text-[var(--fg)] w-fit">
+            {t('bot.settings_title')}
+          </h1>
         </div>
         
         <button
           onClick={handleSave}
           disabled={isSaving || isLoading}
-          className="flex h-9 px-4 items-center gap-2 rounded bg-[#001E40] text-white shadow-sm hover:bg-[#00142d] transition-colors disabled:opacity-50"
+          className="flex h-9 px-3 items-center gap-2 rounded-[4px] bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)] transition-colors duration-150 disabled:opacity-50"
         >
-          {isSaving ? <RefreshCw className="w-4 h-4 text-white animate-spin" /> : <Save className="w-4 h-4 text-white" />}
-          <span className="text-white font-iBMPlexSans text-sm font-medium">{isSaving ? t('bot.saving') : t('bot.save_changes')}</span>
+          {isSaving ? <RefreshCw className="w-4 h-4 animate-spin" strokeWidth={1.75} /> : <Save className="w-4 h-4" strokeWidth={1.75} />}
+          <span className="text-[12px] font-medium">{isSaving ? t('bot.saving') : t('bot.save_changes')}</span>
         </button>
       </div>
 
       {isLoading ? (
         <div className="w-full flex justify-center p-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0059BB]"></div>
+            <div className="animate-spin rounded-[4px] h-5 w-5 border-2 border-[var(--rule)] border-t-[var(--accent)]"></div>
         </div>
       ) : (
-        <div className="flex flex-col lg:flex-row gap-8 w-full">
+        <div className="flex flex-col lg:flex-row gap-5 w-full">
           
           {/* Left Panel: Editor */}
-          <div className="flex-1 flex flex-col gap-6">
-            <div className={`bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-all duration-300`}>
-              <div className="p-5 border-b border-slate-100 bg-slate-50/50">
-                <h3 className="font-semibold text-gray-900 text-lg">{t('bot.trigger_title')}</h3>
-                <p className="text-sm text-gray-500 mt-1">{t('bot.trigger_desc')}</p>
+          <div className="flex-1 flex flex-col gap-4">
+            <div className="bg-[var(--surface)] rounded-[4px] border border-[var(--rule)] flex flex-col">
+              <div className="px-4 py-3 border-b border-[var(--rule)]">
+                <h3 className="text-[13px] font-medium text-[var(--fg)]">{t('bot.trigger_title')}</h3>
+                <p className="text-[11.5px] text-[var(--fg-dim)] mt-1">{t('bot.trigger_desc')}</p>
               </div>
-              <div className="p-5 flex-1">
+              <div className="p-4 flex-1">
                 <input
                   type="text"
                   name="trigger_word"
@@ -158,78 +142,78 @@ export default function BotSettingsWorkspace() {
                   onChange={handleChange}
                   onFocus={() => setActivePreview('trigger_word')}
                   placeholder={language === 'en' ? 'Example: HaloDesk' : 'Misal: HaloDesk'}
-                  className="w-full text-gray-800 text-[15px] p-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-mono"
+                  className="h-9 w-full px-3 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12px] text-[var(--fg)] font-mono outline-none focus:border-[var(--accent)] transition-colors"
                 />
               </div>
             </div>
 
-            <div className={`bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-all duration-300`}>
-              <div className="p-5 border-b border-slate-100 bg-slate-50/50">
-                <h3 className="font-semibold text-gray-900 text-lg">{t('bot.greeting_title')}</h3>
-                <p className="text-sm text-gray-500 mt-1">{t('bot.greeting_desc')}</p>
+            <div className="bg-[var(--surface)] rounded-[4px] border border-[var(--rule)] flex flex-col">
+              <div className="px-4 py-3 border-b border-[var(--rule)]">
+                <h3 className="text-[13px] font-medium text-[var(--fg)]">{t('bot.greeting_title')}</h3>
+                <p className="text-[11.5px] text-[var(--fg-dim)] mt-1">{t('bot.greeting_desc')}</p>
               </div>
-              <div className="p-5 flex-1">
+              <div className="p-4 flex-1">
                 <textarea
                   name="greeting_message"
                   value={settings.greeting_message}
                   onChange={handleChange}
                   onFocus={() => setActivePreview('greeting_message')}
-                  className="w-full h-full min-h-[120px] p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none resize-none"
+                  className="w-full h-full min-h-[120px] px-3 py-2 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors resize-none"
                   placeholder={language === 'en' ? 'Example: Welcome to IT Helpdesk.' : 'Contoh: Selamat datang di IT Helpdesk.'}
                 />
               </div>
-              <div className="px-5 py-3 bg-blue-50/50 border-t border-blue-100 text-xs text-blue-800 flex gap-2">
+              <div className="px-4 py-2.5 border-t border-[var(--rule)] text-[11.5px] text-[var(--fg-dim)] flex gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{t('bot.markdown_help')}</span>
               </div>
             </div>
 
-            <div className={`bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-all duration-300`}>
-              <div className="p-5 border-b border-slate-100 bg-slate-50/50">
-                <h3 className="font-semibold text-gray-900 text-lg">{t('bot.fallback_title')}</h3>
-                <p className="text-sm text-gray-500 mt-1">{t('bot.fallback_desc')}</p>
+            <div className="bg-[var(--surface)] rounded-[4px] border border-[var(--rule)] flex flex-col">
+              <div className="px-4 py-3 border-b border-[var(--rule)]">
+                <h3 className="text-[13px] font-medium text-[var(--fg)]">{t('bot.fallback_title')}</h3>
+                <p className="text-[11.5px] text-[var(--fg-dim)] mt-1">{t('bot.fallback_desc')}</p>
               </div>
-              <div className="p-5 flex-1">
+              <div className="p-4 flex-1">
                 <textarea
                   name="fallback_message"
                   value={settings.fallback_message}
                   onChange={handleChange}
                   onFocus={() => setActivePreview('fallback_message')}
-                  className="w-full h-full min-h-[120px] p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none resize-none"
+                  className="w-full h-full min-h-[120px] px-3 py-2 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors resize-none"
                   placeholder={language === 'en' ? 'Example: Type *HaloDesk* to return to the main menu.' : 'Contoh: Ketik *HaloDesk* untuk kembali ke menu utama.'}
                 />
               </div>
             </div>
 
-            <div className={`bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-all duration-300`}>
-              <div className="p-5 border-b border-slate-100 bg-slate-50/50">
-                <h3 className="font-semibold text-gray-900 text-lg">{t('bot.hours_title')}</h3>
-                <p className="text-sm text-gray-500 mt-1">{t('bot.hours_desc')}</p>
+            <div className="bg-[var(--surface)] rounded-[4px] border border-[var(--rule)] flex flex-col">
+              <div className="px-4 py-3 border-b border-[var(--rule)]">
+                <h3 className="text-[13px] font-medium text-[var(--fg)]">{t('bot.hours_title')}</h3>
+                <p className="text-[11.5px] text-[var(--fg-dim)] mt-1">{t('bot.hours_desc')}</p>
               </div>
-              <div className="p-5 flex-1">
+              <div className="p-4 flex-1">
                 <textarea
                   name="operational_hours"
                   value={settings.operational_hours}
                   onChange={handleChange}
                   onFocus={() => setActivePreview('operational_hours')}
-                  className="w-full h-full min-h-[120px] p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none resize-none"
+                  className="w-full h-full min-h-[120px] px-3 py-2 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors resize-none"
                   placeholder={language === 'en' ? 'Example: Monday - Friday: 08:00 - 16:00 WIB' : 'Contoh: Senin - Jumat: 08:00 - 16:00 WIB'}
                 />
               </div>
             </div>
 
-            <div className={`bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-all duration-300`}>
-              <div className="p-5 border-b border-slate-100 bg-slate-50/50">
-                <h3 className="font-semibold text-gray-900 text-lg">{t('bot.location_title')}</h3>
-                <p className="text-sm text-gray-500 mt-1">{t('bot.location_desc')}</p>
+            <div className="bg-[var(--surface)] rounded-[4px] border border-[var(--rule)] flex flex-col">
+              <div className="px-4 py-3 border-b border-[var(--rule)]">
+                <h3 className="text-[13px] font-medium text-[var(--fg)]">{t('bot.location_title')}</h3>
+                <p className="text-[11.5px] text-[var(--fg-dim)] mt-1">{t('bot.location_desc')}</p>
               </div>
-              <div className="p-5 flex-1">
+              <div className="p-4 flex-1">
                 <textarea
                   name="location_info"
                   value={settings.location_info}
                   onChange={handleChange}
                   onFocus={() => setActivePreview('location_info')}
-                  className="w-full h-full min-h-[120px] p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none resize-none"
+                  className="w-full h-full min-h-[120px] px-3 py-2 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors resize-none"
                   placeholder={language === 'en' ? 'Example: IT Center Building, 1st Floor...' : 'Contoh: Gedung IT Center Lantai 1...'}
                 />
               </div>
@@ -238,24 +222,24 @@ export default function BotSettingsWorkspace() {
 
           {/* Right Panel: Live Preview */}
           <div className="w-full lg:w-[400px] flex-shrink-0">
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden sticky top-24">
-              <div className="p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+            <div className="bg-[var(--surface)] rounded-[4px] border border-[var(--rule)] overflow-hidden sticky top-24">
+              <div className="px-4 py-3 border-b border-[var(--rule)] flex justify-between items-center">
                 <div>
-                  <h3 className="font-semibold text-gray-900 text-lg">{t('bot.preview_title')}</h3>
-                  <p className="text-sm text-gray-500 mt-0.5">{t('bot.preview_desc')}</p>
+                  <h3 className="text-[13px] font-medium text-[var(--fg)]">{t('bot.preview_title')}</h3>
+                  <p className="text-[11.5px] text-[var(--fg-dim)] mt-0.5">{t('bot.preview_desc')}</p>
                 </div>
-                <div className="px-3 py-1 bg-green-100 text-green-700 text-[10px] font-bold uppercase tracking-wider rounded-full">
+                <div className="px-1.5 py-0.5 border border-[var(--rule)] text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] rounded-[3px]">
                   {activePreview.replace('_', ' ')}
                 </div>
               </div>
               
-              <div className="p-6 bg-slate-50 flex justify-center">
+              <div className="p-4 bg-[var(--canvas)] flex justify-center">
                 <WhatsAppMockup 
                   message={getPreviewMessage()} 
                   triggerWord={settings.trigger_word || 'HaloDesk'} 
                 />
               </div>
-              <div className="mt-6 text-center text-xs text-gray-400">
+              <div className="mt-4 pb-4 text-center text-[11px] text-[var(--fg-faint)]">
                 {t('bot.preview_updated')}
               </div>
             </div>

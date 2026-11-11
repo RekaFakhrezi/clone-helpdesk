@@ -14,8 +14,8 @@ type CountBadgeProps = {
 export default function CountBadge({ variant, children }: CountBadgeProps) {
   if (variant === "pill") {
     return (
-      <div className="flex py-0.5 px-2 justify-center items-start rounded-xl bg-[#E2E2E5] w-fit">
-        <p className="text-[#43474F] font-iBMPlexSans text-xs font-medium leading-4 w-fit">
+      <div className="flex py-0.5 px-1.5 justify-center items-start rounded-[3px] border border-[var(--rule)] w-fit">
+        <p className="text-[11px] tabular-nums text-[var(--fg-dim)] leading-4 w-fit">
           {children}
         </p>
       </div>
@@ -23,7 +23,7 @@ export default function CountBadge({ variant, children }: CountBadgeProps) {
   }
 
   return (
-    <p className="text-[#43474F] font-iBMPlexSans text-xs leading-4 w-fit">
+    <p className="text-[11px] tabular-nums text-[var(--fg-faint)] leading-4 w-fit">
       {children}
     </p>
   );

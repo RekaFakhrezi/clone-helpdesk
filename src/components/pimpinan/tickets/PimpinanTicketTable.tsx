@@ -6,6 +6,12 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { translateCategoryName, translateTicketSubject } from '@/lib/translations';
 
+const BADGE_BASE =
+  'inline-flex items-center px-1.5 py-0.5 rounded-[3px] border text-[10.5px] font-medium tracking-[0.02em] whitespace-nowrap';
+
+const MICRO_LABEL =
+  'text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]';
+
 export default function PimpinanTicketTable({ 
   tickets, 
   isEscalatedTab = false, 
@@ -25,30 +31,31 @@ export default function PimpinanTicketTable({
     currentPage * itemsPerPage
   );
 
+  // Warna hanya dipakai untuk status yang membawa makna (menunggu / selesai / eskalasi).
   const getStatusBadge = (status: string) => {
     const s = (status || 'OPEN').toUpperCase();
     switch (s) {
       case 'WAITING VERIFICATION':
-        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">{t('pimpinan.badge_verified', 'Verifikasi')}</span>;
+        return <span className={`${BADGE_BASE} bg-[rgba(178,107,0,.08)] text-[var(--warn)] border-[rgba(178,107,0,.18)]`}>{t('pimpinan.badge_verified', 'Verifikasi')}</span>;
       case 'NEW':
       case 'OPEN':
-        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">{t('pimpinan.badge_new_open', 'Baru / Open')}</span>;
+        return <span className={`${BADGE_BASE} bg-[rgba(0,45,114,.07)] text-[var(--accent)] border-[rgba(0,45,114,.18)]`}>{t('pimpinan.badge_new_open', 'Baru / Open')}</span>;
       case 'IN PROGRESS':
       case 'DIPROSES':
-        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">{t('pimpinan.badge_in_progress', 'Diproses')}</span>;
+        return <span className={`${BADGE_BASE} bg-[var(--canvas)] text-[var(--fg-dim)] border-[var(--rule-strong)]`}>{t('pimpinan.badge_in_progress', 'Diproses')}</span>;
       case 'WAITING CONFIRMATION':
-        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">{t('pimpinan.badge_wait_confirm', 'Konfirmasi Pelapor')}</span>;
+        return <span className={`${BADGE_BASE} bg-[var(--canvas)] text-[var(--fg-dim)] border-[var(--rule-strong)]`}>{t('pimpinan.badge_wait_confirm', 'Konfirmasi Pelapor')}</span>;
       case 'RESOLVED':
-        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">{t('pimpinan.badge_resolved', 'Diselesaikan')}</span>;
+        return <span className={`${BADGE_BASE} bg-[rgba(15,123,79,.08)] text-[var(--ok)] border-[rgba(15,123,79,.18)]`}>{t('pimpinan.badge_resolved', 'Diselesaikan')}</span>;
       case 'CLOSED':
-        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">{t('pimpinan.badge_closed', 'Ditutup')}</span>;
+        return <span className={`${BADGE_BASE} bg-[var(--canvas)] text-[var(--fg-faint)] border-[var(--rule)]`}>{t('pimpinan.badge_closed', 'Ditutup')}</span>;
       case 'ESCALATED':
-        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">{t('pimpinan.badge_escalated', 'Eskalasi')}</span>;
+        return <span className={`${BADGE_BASE} bg-[rgba(179,33,27,.08)] text-[var(--danger)] border-[rgba(179,33,27,.18)]`}>{t('pimpinan.badge_escalated', 'Eskalasi')}</span>;
       case 'DITOLAK':
       case 'REJECTED':
-        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">{t('pimpinan.badge_rejected', 'Ditolak')}</span>;
+        return <span className={`${BADGE_BASE} bg-[rgba(179,33,27,.08)] text-[var(--danger)] border-[rgba(179,33,27,.18)]`}>{t('pimpinan.badge_rejected', 'Ditolak')}</span>;
       default:
-        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700">{status}</span>;
+        return <span className={`${BADGE_BASE} bg-[var(--canvas)] text-[var(--fg-dim)] border-[var(--rule)]`}>{status}</span>;
     }
   };
 
@@ -58,18 +65,18 @@ export default function PimpinanTicketTable({
     switch (p) {
       case 'KRITIS':
       case 'CRITICAL':
-        return <span className="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-red-100 text-red-700">{isEn ? 'CRITICAL' : 'KRITIS'}</span>;
+        return <span className={`${BADGE_BASE} bg-[rgba(179,33,27,.08)] text-[var(--danger)] border-[rgba(179,33,27,.18)]`}>{isEn ? 'CRITICAL' : 'KRITIS'}</span>;
       case 'TINGGI':
       case 'HIGH':
-        return <span className="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-orange-100 text-orange-700">{isEn ? 'HIGH' : 'TINGGI'}</span>;
+        return <span className={`${BADGE_BASE} bg-[rgba(178,107,0,.08)] text-[var(--warn)] border-[rgba(178,107,0,.18)]`}>{isEn ? 'HIGH' : 'TINGGI'}</span>;
       case 'SEDANG':
       case 'MEDIUM':
-        return <span className="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-blue-100 text-blue-700">{isEn ? 'MEDIUM' : 'SEDANG'}</span>;
+        return <span className={`${BADGE_BASE} bg-[var(--canvas)] text-[var(--fg-dim)] border-[var(--rule-strong)]`}>{isEn ? 'MEDIUM' : 'SEDANG'}</span>;
       case 'RENDAH':
       case 'LOW':
-        return <span className="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-100 text-slate-600">{isEn ? 'LOW' : 'RENDAH'}</span>;
+        return <span className={`${BADGE_BASE} bg-[var(--canvas)] text-[var(--fg-faint)] border-[var(--rule)]`}>{isEn ? 'LOW' : 'RENDAH'}</span>;
       default:
-        return <span className="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-100 text-slate-600">{priority}</span>;
+        return <span className={`${BADGE_BASE} bg-[var(--canvas)] text-[var(--fg-faint)] border-[var(--rule)]`}>{priority}</span>;
     }
   };
 
@@ -85,23 +92,23 @@ export default function PimpinanTicketTable({
   return (
     <div className="w-full">
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse text-sm">
+        <table className="w-full text-left">
           <thead>
-            <tr className="bg-slate-50 border-b border-[var(--line)] text-xs font-bold text-[var(--text-dim)] uppercase tracking-wider">
-              <th className="py-3.5 px-4">{t('pimpinan.col_ticket_num', 'No. Tiket')}</th>
-              <th className="py-3.5 px-4">{t('pimpinan.col_time', 'Waktu')}</th>
-              <th className="py-3.5 px-4">{t('pimpinan.col_reporter', 'Pelapor')}</th>
-              <th className="py-3.5 px-4">{t('pimpinan.col_cat_topic', 'Kategori & Topik')}</th>
-              <th className="py-3.5 px-4 text-center">{t('pimpinan.col_priority', 'Prioritas')}</th>
-              <th className="py-3.5 px-4 text-center">{t('pimpinan.col_status', 'Status')}</th>
-              <th className="py-3.5 px-4">{t('pimpinan.col_tech', 'Teknisi / Petugas')}</th>
-              {isEscalatedTab && <th className="py-3.5 px-4 text-center">{t('pimpinan.col_action', 'Aksi Pimpinan')}</th>}
+            <tr className="border-b border-[var(--rule)]">
+              <th className="px-4 py-2.5"><span className={MICRO_LABEL}>{t('pimpinan.col_ticket_num', 'No. Tiket')}</span></th>
+              <th className="px-4 py-2.5"><span className={MICRO_LABEL}>{t('pimpinan.col_time', 'Waktu')}</span></th>
+              <th className="px-4 py-2.5"><span className={MICRO_LABEL}>{t('pimpinan.col_reporter', 'Pelapor')}</span></th>
+              <th className="px-4 py-2.5"><span className={MICRO_LABEL}>{t('pimpinan.col_cat_topic', 'Kategori & Topik')}</span></th>
+              <th className="px-4 py-2.5 text-center"><span className={MICRO_LABEL}>{t('pimpinan.col_priority', 'Prioritas')}</span></th>
+              <th className="px-4 py-2.5 text-center"><span className={MICRO_LABEL}>{t('pimpinan.col_status', 'Status')}</span></th>
+              <th className="px-4 py-2.5"><span className={MICRO_LABEL}>{t('pimpinan.col_tech', 'Teknisi / Petugas')}</span></th>
+              {isEscalatedTab && <th className="px-4 py-2.5 text-center"><span className={MICRO_LABEL}>{t('pimpinan.col_action', 'Aksi Pimpinan')}</span></th>}
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--line)]">
+          <tbody>
             {paginatedTickets.length === 0 ? (
               <tr>
-                <td colSpan={isEscalatedTab ? 8 : 7} className="p-12 text-center text-[var(--text-dim)] font-medium">
+                <td colSpan={isEscalatedTab ? 8 : 7} className="px-4 py-10 text-center text-[12.5px] text-[var(--fg-dim)]">
                   {t('pimpinan.empty_table', 'Tidak ada data tiket yang sesuai kriteria.')}
                 </td>
               </tr>
@@ -115,63 +122,61 @@ export default function PimpinanTicketTable({
                 const technicianName = t.tech?.name || t.technician?.name || t.assigned_technician?.name || '-';
 
                 return (
-                  <tr key={t.id} className="hover:bg-slate-50/80 transition-colors">
+                  <tr key={t.id} className="border-b border-[var(--rule)] transition-colors hover:bg-[var(--canvas)] last:border-b-0">
                     {/* No. Tiket */}
-                    <td className="py-4 px-4 font-mono font-bold text-[var(--ink)]">
+                    <td className="px-4 py-3 whitespace-nowrap font-mono text-[12px] font-medium tabular-nums text-[var(--accent)]">
                       {t.ticket_num || `#${t.id.slice(0, 8)}`}
                     </td>
 
                     {/* Waktu */}
-                    <td className="py-4 px-4 text-[var(--text-dim)] text-xs whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap text-[11.5px] tabular-nums text-[var(--fg-dim)]">
                       {formatDate(t.created_at)}
                     </td>
 
                     {/* Pelapor */}
-                    <td className="py-4 px-4">
-                      <div className="font-semibold text-[var(--ink)]">{reporterName}</div>
-                      {reporterInfo && <div className="text-xs text-[var(--text-dim)]">{reporterInfo}</div>}
+                    <td className="px-4 py-3">
+                      <div className="text-[12.5px] text-[var(--fg)]">{reporterName}</div>
+                      {reporterInfo && <div className="text-[11.5px] text-[var(--fg-faint)]">{reporterInfo}</div>}
                     </td>
 
                     {/* Kategori & Topik */}
-                    <td className="py-4 px-4 max-w-xs">
-                      <div className="font-medium text-[var(--ink)] truncate" title={subject}>{subject}</div>
-                      <div className="text-xs text-[var(--text-dim)]">{categoryName}</div>
+                    <td className="max-w-xs px-4 py-3">
+                      <div className="truncate text-[12.5px] font-medium text-[var(--fg)]" title={subject}>{subject}</div>
+                      <div className="text-[11.5px] text-[var(--fg-faint)]">{categoryName}</div>
                     </td>
 
                     {/* Prioritas */}
-                    <td className="py-4 px-4 text-center">
+                    <td className="px-4 py-3 text-center">
                       {getPriorityBadge(t.priority)}
                     </td>
 
                     {/* Status */}
-                    <td className="py-4 px-4 text-center whitespace-nowrap">
+                    <td className="px-4 py-3 text-center whitespace-nowrap">
                       {getStatusBadge(t.status)}
                     </td>
 
                     {/* Teknisi */}
-                    <td className="py-4 px-4 text-[var(--ink)] text-xs font-medium">
+                    <td className="px-4 py-3 text-[12px] text-[var(--fg-dim)]">
                       {technicianName !== '-' ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 font-semibold text-slate-700">
-                          {technicianName}
-                        </span>
+                        technicianName
                       ) : (
-                        <span className="text-slate-400 italic">{language === 'en' ? 'Unassigned' : 'Belum ditugaskan'}</span>
+                        <span className="text-[var(--fg-faint)] italic">{language === 'en' ? 'Unassigned' : 'Belum ditugaskan'}</span>
                       )}
                     </td>
 
                     {/* Aksi Eskalasi */}
                     {isEscalatedTab && (
-                      <td className="py-4 px-4 text-center whitespace-nowrap">
+                      <td className="px-4 py-3 text-center whitespace-nowrap">
                         <div className="flex items-center justify-center gap-2">
                           <button 
                             onClick={() => onAction && onAction(t.id, 'CLOSE')}
-                            className="px-3 py-1 bg-slate-900 text-white text-xs font-bold rounded-lg hover:bg-black transition-colors shadow-sm"
+                            className="h-9 rounded-[4px] border border-[rgba(179,33,27,.18)] px-3 text-[12px] font-medium text-[var(--danger)] transition-colors hover:bg-[rgba(179,33,27,.08)]"
                           >
                             {language === 'en' ? 'Force Close' : 'Tutup Paksa'}
                           </button>
                           <button 
                             onClick={() => onAction && onAction(t.id, 'RETURN')}
-                            className="px-3 py-1 bg-white border border-slate-300 text-slate-700 text-xs font-bold rounded-lg hover:bg-slate-50 transition-colors shadow-sm"
+                            className="h-9 rounded-[4px] border border-[var(--rule-strong)] px-3 text-[12px] font-medium text-[var(--fg-dim)] transition-colors hover:bg-[var(--canvas)] hover:text-[var(--fg)]"
                           >
                             {language === 'en' ? 'Return' : 'Kembalikan'}
                           </button>
@@ -188,27 +193,27 @@ export default function PimpinanTicketTable({
       
       {/* Pagination Bar */}
       {totalPages > 1 && (
-        <div className="p-4 border-t border-[var(--line)] flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-50/50">
-          <p className="text-xs font-medium text-[var(--text-dim)]">
-            {t('tickets.showing', 'Menampilkan')} <span className="font-bold text-[var(--ink)]">{(currentPage - 1) * itemsPerPage + 1}</span> - <span className="font-bold text-[var(--ink)]">{Math.min(currentPage * itemsPerPage, tickets.length)}</span> {t('tickets.of', 'dari')} <span className="font-bold text-[var(--ink)]">{tickets.length}</span> {t('tickets.tickets_count', 'tiket')}
+        <div className="flex flex-col items-center justify-between gap-3 border-t border-[var(--rule)] px-4 py-3 sm:flex-row">
+          <p className="text-[11.5px] text-[var(--fg-dim)]">
+            {t('tickets.showing', 'Menampilkan')} <span className="tabular-nums text-[var(--fg)]">{(currentPage - 1) * itemsPerPage + 1}</span> - <span className="tabular-nums text-[var(--fg)]">{Math.min(currentPage * itemsPerPage, tickets.length)}</span> {t('tickets.of', 'dari')} <span className="tabular-nums text-[var(--fg)]">{tickets.length}</span> {t('tickets.tickets_count', 'tiket')}
           </p>
           <div className="flex items-center gap-1.5">
             <button 
               disabled={currentPage === 1}
               onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-              className="p-2 border border-[var(--line-dark)] rounded-lg text-sm font-medium text-[var(--ink)] bg-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[var(--paper-2)] transition-colors shadow-sm"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-[4px] border border-[var(--rule-strong)] text-[var(--fg-dim)] transition-colors hover:bg-[var(--canvas)] hover:text-[var(--fg)] disabled:cursor-not-allowed disabled:opacity-40"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="h-4 w-4" strokeWidth={1.75} />
             </button>
-            <span className="text-xs font-semibold px-2 text-[var(--text-dim)]">
+            <span className="px-2 text-[11.5px] tabular-nums text-[var(--fg-dim)]">
               {language === 'en' ? `Page ${currentPage} of ${totalPages}` : `Halaman ${currentPage} dari ${totalPages}`}
             </span>
             <button 
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-              className="p-2 border border-[var(--line-dark)] rounded-lg text-sm font-medium text-[var(--ink)] bg-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[var(--paper-2)] transition-colors shadow-sm"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-[4px] border border-[var(--rule-strong)] text-[var(--fg-dim)] transition-colors hover:bg-[var(--canvas)] hover:text-[var(--fg)] disabled:cursor-not-allowed disabled:opacity-40"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="h-4 w-4" strokeWidth={1.75} />
             </button>
           </div>
         </div>

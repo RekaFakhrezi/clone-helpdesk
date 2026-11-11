@@ -5,6 +5,9 @@ interface BotStatsProps {
   onViewAnalytics?: () => void;
 }
 
+const MICRO_LABEL =
+  "text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]";
+
 export default function BotStats({ onViewAnalytics }: BotStatsProps) {
   const [showModal, setShowModal] = useState(false);
 
@@ -16,43 +19,60 @@ export default function BotStats({ onViewAnalytics }: BotStatsProps) {
     }
   };
 
+  const metrics = [
+    {
+      label: "Pesan Terkirim",
+      value: "1,284",
+      note: "dari 1,540 pesan masuk",
+      tone: "text-[var(--fg)]",
+    },
+    {
+      label: "Penyelesaian Otomatis",
+      value: "64%",
+      note: "tanpa eskalasi ke agen",
+      tone: "text-[var(--ok)]",
+    },
+  ];
+
   return (
-    <div className="flex p-6 flex-col items-start gap-4 rounded-lg border border-[#C3C6D1] bg-[#FFF] w-full">
-      <p className="text-[#43474F] font-iBMPlexSans text-xs font-bold leading-4 tracking-[0.05em]">
-        STATISTIK BOT (24 JAM)
-      </p>
-
-      <div className="flex pb-2 flex-col items-start gap-4 w-full">
-        <div className="flex flex-col items-start gap-1 w-full">
-          <div className="flex justify-between items-start w-full">
-            <p className="text-[#1A1C1E] font-iBMPlexSans text-[13px]">Pesan Terkirim</p>
-            <p className="text-[#1A1C1E] font-iBMPlexSans text-[13px] font-bold">1,284</p>
-          </div>
-          <div className="w-full h-2 bg-[#E8E8EA] rounded-full overflow-hidden">
-            <div className="h-full bg-[#0059BB] rounded-full w-[75%]" />
-          </div>
-        </div>
-
-        <div className="flex flex-col items-start gap-1 w-full">
-          <div className="flex justify-between items-start w-full">
-            <p className="text-[#1A1C1E] font-iBMPlexSans text-[13px]">Penyelesaian Otomatis</p>
-            <p className="text-[#1A1C1E] font-iBMPlexSans text-[13px] font-bold">64%</p>
-          </div>
-          <div className="w-full h-2 bg-[#E8E8EA] rounded-full overflow-hidden">
-            <div className="h-full bg-[#10B981] rounded-full w-[64%]" />
-          </div>
-        </div>
+    <div className="flex w-full flex-col overflow-hidden rounded-[4px] border border-[var(--rule)] bg-[var(--surface)]">
+      <div className="flex items-center gap-2 border-b border-[var(--rule)] px-5 py-3.5">
+        <h2 className="text-[13px] font-medium text-[var(--fg)]">
+          Statistik Bot (24 Jam)
+        </h2>
       </div>
 
-      <button 
-        type="button"
-        onClick={handleClick}
-        className="cursor-pointer flex py-2 px-0 justify-center items-center rounded border border-[#0059BB] w-full hover:bg-[rgba(0,89,187,0.05)] transition-colors"
-      >
-        <span className="text-[#0059BB] font-iBMPlexSans text-xs font-bold tracking-[0.05em]">
+      <div className="flex flex-col gap-4 p-5">
+        <div className="grid grid-cols-2 border-y border-[var(--rule)]">
+          {metrics.map((metric, index) => (
+            <div
+              key={metric.label}
+              className={[
+                "py-4",
+                index > 0 ? "border-l border-[var(--rule)] pl-4" : "pr-4",
+              ].join(" ")}
+            >
+              <div className={MICRO_LABEL}>{metric.label}</div>
+              <div
+                className={`mt-2 text-[30px] leading-none font-medium tabular-nums ${metric.tone}`}
+              >
+                {metric.value}
+              </div>
+              <div className="mt-2 text-[11.5px] leading-[1.5] text-[var(--fg-dim)]">
+                {metric.note}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={handleClick}
+          className="h-9 w-full cursor-pointer rounded-[4px] border border-[var(--rule-strong)] text-[12px] font-medium text-[var(--fg-dim)] transition-colors hover:bg-[var(--canvas)]"
+        >
           Lihat Detail Analytics
-        </span>
-      </button>
+        </button>
+      </div>
 
       {/* Modal Detail Analytics Sederhana */}
       {showModal && (
@@ -64,7 +84,7 @@ export default function BotStats({ onViewAnalytics }: BotStatsProps) {
             <ModalPrimaryButton onClick={() => setShowModal(false)}>Tutup</ModalPrimaryButton>
           }
         >
-          <div className="space-y-2 text-sm text-[#43474F] mb-6">
+          <div className="mb-6 flex flex-col gap-1.5 text-[12.5px] leading-[1.6] text-[var(--fg-dim)]">
             <p>• Total Pesan Masuk: 1,540</p>
             <p>• Total Pesan Terbalas: 1,284</p>
             <p>• Rata-rata Waktu Respon: 1.2 detik</p>

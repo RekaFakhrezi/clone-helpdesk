@@ -32,15 +32,15 @@ export default function AdminChangeStatusModal({ onClose, onSubmit, selectedCoun
         </>
       }
     >
-      <p className="text-sm text-gray-500 mb-5">
-        Changing status of <strong>{selectedCount}</strong> ticket(s).
+      <p className="text-[12.5px] text-[var(--fg-dim)] mb-4">
+        Changing status of <span className="font-medium text-[var(--fg)]">{selectedCount}</span> ticket(s).
       </p>
 
-      <div className="mb-6">
+      <div className="mb-2">
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-800 focus:outline-none focus:border-gray-500"
+          className="h-9 w-full px-2.5 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12.5px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors duration-150 cursor-pointer"
         >
           <option value="" disabled>Select a new status...</option>
           <option value="OPEN">OPEN</option>

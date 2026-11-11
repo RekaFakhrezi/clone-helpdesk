@@ -2,10 +2,8 @@ import UsersWorkspace from "@/components/admin/manajemen-pengguna/UsersWorkspace
 
 export default function UsersPage() {
   return (
-    <div className="w-full h-full text-slate-800 font-sans p-6 md:p-10">
-      <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 fill-mode-both w-full h-full">
-        <UsersWorkspace />
-      </div>
+    <div className="w-full max-w-[1440px] mx-auto animate-in fade-in duration-300">
+      <UsersWorkspace />
     </div>
   );
 }

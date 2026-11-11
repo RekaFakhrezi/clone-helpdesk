@@ -29,8 +29,8 @@ export default function AdminDeleteConfirmModal({ onClose, onConfirm, selectedCo
         </>
       }
     >
-      <p className="text-gray-500 text-sm mb-5">
-        Anda akan menghapus <strong>{selectedCount}</strong> tiket.
+      <p className="text-[12.5px] leading-relaxed text-[var(--fg-dim)] mb-2">
+        Anda akan menghapus <span className="font-medium text-[var(--fg)] tabular-nums">{selectedCount}</span> tiket.
         {isPermanent ? ' Tindakan ini permanen.' : ' Tiket akan dipindahkan ke folder "Dihapus".'}
       </p>
     </Modal>

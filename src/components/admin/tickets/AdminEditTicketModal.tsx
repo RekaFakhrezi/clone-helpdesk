@@ -10,6 +10,10 @@ interface AdminEditTicketModalProps {
   ticketId: string;
 }
 
+const LABEL_CLASS = 'block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5';
+const FIELD_CLASS =
+  'h-9 w-full px-2.5 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12.5px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors duration-150';
+
 export default function AdminEditTicketModal({ onClose, onSaved, ticketId }: AdminEditTicketModalProps) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -72,8 +76,13 @@ export default function AdminEditTicketModal({ onClose, onSaved, ticketId }: Adm
   if (loading) {
     return (
       <Modal title="Edit Ticket" onClose={onClose} maxWidth="max-w-lg">
-        <div className="flex justify-center items-center h-48">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0059BB]"></div>
+        <div className="flex flex-col gap-3 animate-pulse">
+          <div className="h-9 rounded-[4px] bg-[var(--canvas)]" />
+          <div className="h-20 rounded-[4px] bg-[var(--canvas)]" />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="h-9 rounded-[4px] bg-[var(--canvas)]" />
+            <div className="h-9 rounded-[4px] bg-[var(--canvas)]" />
+          </div>
         </div>
       </Modal>
     );
@@ -94,41 +103,41 @@ export default function AdminEditTicketModal({ onClose, onSaved, ticketId }: Adm
           <ModalPrimaryButton onClick={handleSave} disabled={saving}>
             <span className="inline-flex items-center gap-2">
               {saving ? (
-                <><div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></div> Saving...</>
+                <><div className="h-3.5 w-3.5 rounded-[2px] border border-white/50 border-t-white animate-spin"></div> Saving...</>
               ) : "Save Changes"}
             </span>
           </ModalPrimaryButton>
         </>
       }
     >
-      <div className="space-y-4">
+      <div className="flex flex-col gap-4">
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-1">Subject</label>
+          <label className={LABEL_CLASS}>Subject</label>
           <input 
             type="text" 
             value={ticketData.subject} 
             onChange={(e) => setTicketData({...ticketData, subject: e.target.value})}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+            className={FIELD_CLASS}
           />
         </div>
         
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-1">Description</label>
+          <label className={LABEL_CLASS}>Description</label>
           <textarea 
             rows={4}
             value={ticketData.description} 
             onChange={(e) => setTicketData({...ticketData, description: e.target.value})}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+            className="w-full min-h-[76px] px-2.5 py-2 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12.5px] leading-relaxed text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors duration-150 resize-y"
           />
         </div>
         
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Priority</label>
+            <label className={LABEL_CLASS}>Priority</label>
             <select 
               value={ticketData.priority} 
               onChange={(e) => setTicketData({...ticketData, priority: e.target.value})}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+              className={`${FIELD_CLASS} cursor-pointer`}
             >
               <option value="CRITICAL">CRITICAL</option>
               <option value="HIGH">HIGH</option>
@@ -137,11 +146,11 @@ export default function AdminEditTicketModal({ onClose, onSaved, ticketId }: Adm
             </select>
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Status</label>
+            <label className={LABEL_CLASS}>Status</label>
             <select 
               value={ticketData.status} 
               onChange={(e) => setTicketData({...ticketData, status: e.target.value})}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+              className={`${FIELD_CLASS} cursor-pointer`}
             >
               <option value="NEW">OPEN</option>
               <option value="IN PROGRESS">IN PROGRESS</option>

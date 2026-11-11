@@ -18,9 +18,9 @@ type StatusBadgeProps = {
 export default function StatusBadge({ variant, children }: StatusBadgeProps) {
   if (variant === "dot") {
     return (
-      <div className="flex py-0.5 px-2.5 items-center gap-1.5 rounded-xl bg-[#E8F5E9] w-fit">
-        <div className="rounded-xl bg-[#2E7D32] w-1.5 h-1.5"></div>
-        <p className="text-[#2E7D32] font-iBMPlexSans text-[11px] font-bold leading-[16.5px] w-fit">
+      <div className="flex py-0.5 px-1.5 items-center gap-1.5 rounded-[3px] bg-[rgba(15,123,79,.08)] border border-[rgba(15,123,79,.18)] w-fit">
+        <div className="rounded-full bg-[var(--ok)] w-1.5 h-1.5"></div>
+        <p className="text-[var(--ok)] text-[10.5px] font-medium leading-4 w-fit">
           {children}
         </p>
       </div>
@@ -29,8 +29,8 @@ export default function StatusBadge({ variant, children }: StatusBadgeProps) {
 
   if (variant === "button") {
     return (
-      <button className="cursor-pointer text-nowrap flex py-0.5 px-2 justify-center items-center rounded-xl bg-[#E8F5E9] w-fit">
-        <p className="text-[#2E7D32] font-iBMPlexSans text-[10px] font-bold leading-[15px] w-fit">
+      <button className="cursor-pointer text-nowrap flex py-0.5 px-1.5 justify-center items-center rounded-[3px] bg-[rgba(15,123,79,.08)] border border-[rgba(15,123,79,.18)] w-fit">
+        <p className="text-[var(--ok)] text-[10.5px] font-medium leading-4 w-fit">
           {children}
         </p>
       </button>
@@ -39,14 +39,14 @@ export default function StatusBadge({ variant, children }: StatusBadgeProps) {
 
   if (variant === "text-18") {
     return (
-      <p className="text-[#2E7D32] font-iBMPlexSans text-[10px] font-bold leading-[18px] w-fit">
+      <p className="text-[var(--ok)] text-[10.5px] font-medium leading-[18px] w-fit">
         {children}
       </p>
     );
   }
 
   return (
-    <p className="text-[#2E7D32] font-iBMPlexSans text-[10px] font-bold leading-5 w-fit">
+    <p className="text-[var(--ok)] text-[10.5px] font-medium leading-5 w-fit">
       {children}
     </p>
   );

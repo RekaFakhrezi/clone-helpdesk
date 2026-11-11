@@ -250,34 +250,34 @@ export default function UserWorkspace() {
           onClose={() => setIsModalOpen(false)}
           maxWidth="max-w-md"
         >
-            <form onSubmit={handleSaveForm} className="flex flex-col gap-4">
+            <form onSubmit={handleSaveForm} className="mt-5 flex flex-col gap-4">
               <div className="flex flex-col gap-1">
-                <label className="text-sm font-semibold text-gray-700 font-iBMPlexSans">Nomor WA / Telepon</label>
-                <input required type="text" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="border border-gray-300 rounded p-2 text-sm focus:outline-none focus:border-[#0059BB]" placeholder="6281234..." disabled={!!editingUser} />
-                {editingUser && <span className="text-xs text-gray-500">Nomor WA tidak bisa diubah karena terikat riwayat percakapan.</span>}
+                <label className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">Nomor WA / Telepon</label>
+                <input required type="text" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="h-9 w-full rounded-[4px] border border-[var(--rule-strong)] bg-transparent px-3 text-[12px] text-[var(--fg)] focus:outline-none focus:border-[var(--accent)] disabled:opacity-60" placeholder="6281234..." disabled={!!editingUser} />
+                {editingUser && <span className="text-[11.5px] text-[var(--fg-faint)]">Nomor WA tidak bisa diubah karena terikat riwayat percakapan.</span>}
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-sm font-semibold text-gray-700 font-iBMPlexSans">Nama Lengkap</label>
-                <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="border border-gray-300 rounded p-2 text-sm focus:outline-none focus:border-[#0059BB]" placeholder="Masukkan nama..." />
+                <label className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">Nama Lengkap</label>
+                <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="h-9 w-full rounded-[4px] border border-[var(--rule-strong)] bg-transparent px-3 text-[12px] text-[var(--fg)] focus:outline-none focus:border-[var(--accent)] disabled:opacity-60" placeholder="Masukkan nama..." />
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-sm font-semibold text-gray-700 font-iBMPlexSans">NIM / NIP</label>
-                <input required type="text" value={formData.nimNip} onChange={e => setFormData({...formData, nimNip: e.target.value})} className="border border-gray-300 rounded p-2 text-sm focus:outline-none focus:border-[#0059BB]" placeholder="Masukkan NIM / NIP..." />
+                <label className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">NIM / NIP</label>
+                <input required type="text" value={formData.nimNip} onChange={e => setFormData({...formData, nimNip: e.target.value})} className="h-9 w-full rounded-[4px] border border-[var(--rule-strong)] bg-transparent px-3 text-[12px] text-[var(--fg)] focus:outline-none focus:border-[var(--accent)] disabled:opacity-60" placeholder="Masukkan NIM / NIP..." />
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-sm font-semibold text-gray-700 font-iBMPlexSans">Fakultas / Unit Kerja</label>
-                <input required type="text" value={formData.fakultasUnit} onChange={e => setFormData({...formData, fakultasUnit: e.target.value})} className="border border-gray-300 rounded p-2 text-sm focus:outline-none focus:border-[#0059BB]" placeholder="Cth: Fakultas Teknik / UPT TI" />
+                <label className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">Fakultas / Unit Kerja</label>
+                <input required type="text" value={formData.fakultasUnit} onChange={e => setFormData({...formData, fakultasUnit: e.target.value})} className="h-9 w-full rounded-[4px] border border-[var(--rule-strong)] bg-transparent px-3 text-[12px] text-[var(--fg)] focus:outline-none focus:border-[var(--accent)] disabled:opacity-60" placeholder="Cth: Fakultas Teknik / UPT TI" />
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-sm font-semibold text-gray-700 font-iBMPlexSans">Status</label>
-                <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value as 'Aktif'|'Terblokir'})} className="border border-gray-300 rounded p-2 text-sm focus:outline-none focus:border-[#0059BB]">
+                <label className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">Status</label>
+                <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value as 'Aktif'|'Terblokir'})} className="h-9 w-full rounded-[4px] border border-[var(--rule-strong)] bg-transparent px-3 text-[12px] text-[var(--fg)] focus:outline-none focus:border-[var(--accent)] disabled:opacity-60">
                   <option value="Aktif">Aktif</option>
                   <option value="Terblokir">Terblokir</option>
                 </select>
               </div>
-              <div className="mt-4 flex justify-end gap-3">
+              <div className="mt-2 flex justify-end gap-2">
                 <ModalCancelButton onClick={() => setIsModalOpen(false)}>Batal</ModalCancelButton>
-                <button type="submit" className="px-4 py-2 bg-[#0059BB] text-white rounded hover:bg-[#004795] font-iBMPlexSans text-sm">Simpan</button>
+                <button type="submit" className="h-9 px-3 rounded-[4px] bg-[var(--accent)] text-[12px] font-medium text-white transition-colors hover:bg-[var(--accent-hover)]">Simpan</button>
               </div>
             </form>
         </Modal>

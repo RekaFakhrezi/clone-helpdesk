@@ -4,21 +4,21 @@ import { useLanguage } from "@/context/LanguageContext";
 export default function TableSection() {
   const { t } = useLanguage();
   return (
-    <div className="flex flex-col items-start rounded-lg border border-[#C3C6D1] bg-[#FFF] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] w-full overflow-hidden relative">
+    <div className="flex flex-col items-start rounded-[4px] border border-[var(--rule)] bg-[var(--surface)] w-full overflow-hidden relative">
       <div className="flex flex-col items-start w-full overflow-x-auto">
         <div className="min-w-[900px] w-full flex flex-col">
-          <div className="flex px-2 py-4 items-center border-b border-b-[#C3C6D1] bg-[#F3F3F6] w-full text-left">
-            <div className="flex-1 px-4">
-              <p className="text-[#43474F] font-iBMPlexSans text-[11px] font-bold leading-4 tracking-[0.05em]">{t('categories.name')}</p>
+          <div className="flex px-4 py-2.5 items-center border-b border-[var(--rule)] w-full text-left">
+            <div className="flex-1">
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">{t('categories.name')}</p>
             </div>
-            <div className="w-[120px] px-4 text-center">
-              <p className="text-[#43474F] font-iBMPlexSans text-[11px] font-bold leading-4 tracking-[0.05em]">{t('common.status')}</p>
+            <div className="w-[120px] text-right">
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">{t('common.status')}</p>
             </div>
-            <div className="w-[100px] px-4 text-center pr-8">
-              <p className="text-[#43474F] font-iBMPlexSans text-[11px] font-bold leading-4 tracking-[0.05em]">{t('categories.action')}</p>
+            <div className="w-[100px] text-right pr-2">
+              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">{t('categories.action')}</p>
             </div>
           </div>
-          <div className="flex flex-col w-full bg-white relative min-h-[300px]">
+          <div className="flex flex-col w-full relative min-h-[300px]">
             <Tree />
           </div>
         </div>

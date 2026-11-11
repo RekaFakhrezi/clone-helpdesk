@@ -75,21 +75,21 @@ export function AddCategoryModal({ isOpen, onClose, onSuccess }: ModalProps) {
       footer={
         <>
           <ModalCancelButton onClick={onClose}>{t('categories.cancel')}</ModalCancelButton>
-          <button type="submit" form="addCategoryForm" disabled={loading} className="px-4 py-2 text-sm font-semibold text-white bg-[#001E40] hover:bg-[#00142d] rounded transition-colors disabled:opacity-50">{loading ? t('categories.saving') : t('categories.save')}</button>
+          <button type="submit" form="addCategoryForm" disabled={loading} className="h-9 px-3 rounded-[4px] bg-[var(--accent)] text-[12px] font-medium text-white hover:bg-[var(--accent-hover)] transition-colors disabled:opacity-50">{loading ? t('categories.saving') : t('categories.save')}</button>
         </>
       }
     >
         <form id="addCategoryForm" onSubmit={handleSubmit} className="flex flex-col gap-4 overflow-y-auto max-h-[70vh]">
           <div>
-            <label className="block text-sm font-medium text-[#43474F] mb-1">{t('categories.name_label')}</label>
-            <input type="text" value={name} onChange={e => setName(e.target.value)} required className="w-full px-4 py-2 border border-[#C3C6D1] rounded focus:outline-none focus:border-[#0059BB]" placeholder={t('categories.name_label')} />
+            <label className="block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5">{t('categories.name_label')}</label>
+            <input type="text" value={name} onChange={e => setName(e.target.value)} required className="w-full px-3 py-2 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors" placeholder={t('categories.name_label')} />
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#43474F] mb-1">{t('categories.parent_label')}</label>
+            <label className="block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5">{t('categories.parent_label')}</label>
             <select 
               value={parentId} 
               onChange={e => setParentId(e.target.value)} 
-              className="w-full px-4 py-2 border border-[#C3C6D1] rounded focus:outline-none focus:border-[#0059BB] bg-white"
+              className="w-full px-3 py-2 rounded-[4px] border border-[var(--rule-strong)] bg-[var(--surface)] text-[12px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors"
             >
               <option value="">{t('categories.root_option')}</option>
               {categories.map(c => (
@@ -99,12 +99,12 @@ export function AddCategoryModal({ isOpen, onClose, onSuccess }: ModalProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#43474F] mb-1">{t('categories.priority_label')}</label>
-            <p className="text-xs text-slate-500 mb-2">{t('categories.priority_help')}</p>
+            <label className="block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5">{t('categories.priority_label')}</label>
+            <p className="text-[11.5px] text-[var(--fg-faint)] mb-2">{t('categories.priority_help')}</p>
             <select 
               value={defaultPriority} 
               onChange={e => setDefaultPriority(e.target.value)} 
-              className="w-full px-4 py-2 border border-[#C3C6D1] rounded focus:outline-none focus:border-[#0059BB] bg-white"
+              className="w-full px-3 py-2 rounded-[4px] border border-[var(--rule-strong)] bg-[var(--surface)] text-[12px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors"
             >
               <option value="LOW">{t('categories.priority_low')}</option>
               <option value="MEDIUM">{t('categories.priority_medium')}</option>
@@ -114,12 +114,12 @@ export function AddCategoryModal({ isOpen, onClose, onSuccess }: ModalProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#43474F] mb-1">{t('categories.tutorial_label')}</label>
-            <p className="text-xs text-slate-500 mb-2">{t('categories.tutorial_help')}</p>
+            <label className="block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5">{t('categories.tutorial_label')}</label>
+            <p className="text-[11.5px] text-[var(--fg-faint)] mb-2">{t('categories.tutorial_help')}</p>
             <textarea 
               value={botContent} 
               onChange={e => setBotContent(e.target.value)} 
-              className="w-full px-4 py-2 border border-[#C3C6D1] rounded focus:outline-none focus:border-[#0059BB] min-h-[100px]"
+              className="w-full px-3 py-2 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors min-h-[100px]"
               placeholder={t('categories.tutorial_placeholder')}
             />
           </div>
@@ -177,23 +177,23 @@ export function AddSubcategoryModal({ isOpen, onClose, onSuccess, categoryId }: 
       footer={
         <>
           <ModalCancelButton onClick={onClose}>{t('categories.cancel')}</ModalCancelButton>
-          <button type="submit" form="addSubcategoryForm" disabled={loading} className="px-4 py-2 text-sm font-semibold text-white bg-[#001E40] hover:bg-[#00142d] rounded transition-colors disabled:opacity-50">{loading ? t('categories.saving') : t('categories.save')}</button>
+          <button type="submit" form="addSubcategoryForm" disabled={loading} className="h-9 px-3 rounded-[4px] bg-[var(--accent)] text-[12px] font-medium text-white hover:bg-[var(--accent-hover)] transition-colors disabled:opacity-50">{loading ? t('categories.saving') : t('categories.save')}</button>
         </>
       }
     >
         <form id="addSubcategoryForm" onSubmit={handleSubmit} className="flex flex-col gap-4 overflow-y-auto max-h-[70vh]">
           <div>
-            <label className="block text-sm font-medium text-[#43474F] mb-1">{t('categories.sub_name_label')}</label>
-            <input type="text" value={name} onChange={e => setName(e.target.value)} required className="w-full px-4 py-2 border border-[#C3C6D1] rounded focus:outline-none focus:border-[#0059BB]" />
+            <label className="block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5">{t('categories.sub_name_label')}</label>
+            <input type="text" value={name} onChange={e => setName(e.target.value)} required className="w-full px-3 py-2 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors" />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#43474F] mb-1">{t('categories.priority_label')}</label>
-            <p className="text-xs text-slate-500 mb-2">{t('categories.priority_help')}</p>
+            <label className="block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5">{t('categories.priority_label')}</label>
+            <p className="text-[11.5px] text-[var(--fg-faint)] mb-2">{t('categories.priority_help')}</p>
             <select 
               value={defaultPriority} 
               onChange={e => setDefaultPriority(e.target.value)} 
-              className="w-full px-4 py-2 border border-[#C3C6D1] rounded focus:outline-none focus:border-[#0059BB] bg-white"
+              className="w-full px-3 py-2 rounded-[4px] border border-[var(--rule-strong)] bg-[var(--surface)] text-[12px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors"
             >
               <option value="LOW">{t('categories.priority_low')}</option>
               <option value="MEDIUM">{t('categories.priority_medium')}</option>
@@ -203,12 +203,12 @@ export function AddSubcategoryModal({ isOpen, onClose, onSuccess, categoryId }: 
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#43474F] mb-1">{t('categories.tutorial_label')}</label>
-            <p className="text-xs text-slate-500 mb-2">{t('categories.tutorial_help')}</p>
+            <label className="block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5">{t('categories.tutorial_label')}</label>
+            <p className="text-[11.5px] text-[var(--fg-faint)] mb-2">{t('categories.tutorial_help')}</p>
             <textarea 
               value={botContent} 
               onChange={e => setBotContent(e.target.value)} 
-              className="w-full px-4 py-2 border border-[#C3C6D1] rounded focus:outline-none focus:border-[#0059BB] min-h-[100px]"
+              className="w-full px-3 py-2 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors min-h-[100px]"
               placeholder={t('categories.tutorial_placeholder')}
             />
           </div>
@@ -276,23 +276,23 @@ export function EditItemModal({ isOpen, onClose, onSuccess, target }: ModalProps
       footer={
         <>
           <ModalCancelButton onClick={onClose}>{t('categories.cancel')}</ModalCancelButton>
-          <button type="submit" form="editCategoryForm" disabled={loading} className="px-4 py-2 text-sm font-semibold text-white bg-[#001E40] hover:bg-[#00142d] rounded transition-colors disabled:opacity-50">{loading ? t('categories.saving') : t('categories.save')}</button>
+          <button type="submit" form="editCategoryForm" disabled={loading} className="h-9 px-3 rounded-[4px] bg-[var(--accent)] text-[12px] font-medium text-white hover:bg-[var(--accent-hover)] transition-colors disabled:opacity-50">{loading ? t('categories.saving') : t('categories.save')}</button>
         </>
       }
     >
         <form id="editCategoryForm" onSubmit={handleSubmit} className="flex flex-col gap-4 overflow-y-auto max-h-[70vh]">
           <div>
-            <label className="block text-sm font-medium text-[#43474F] mb-1">{t('categories.name_label')}</label>
-            <input type="text" value={name} onChange={e => setName(e.target.value)} required className="w-full px-4 py-2 border border-[#C3C6D1] rounded focus:outline-none focus:border-[#0059BB]" />
+            <label className="block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5">{t('categories.name_label')}</label>
+            <input type="text" value={name} onChange={e => setName(e.target.value)} required className="w-full px-3 py-2 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors" />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-[#43474F] mb-1">{t('categories.priority_label')}</label>
-            <p className="text-xs text-slate-500 mb-2">{t('categories.priority_help')}</p>
+            <label className="block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5">{t('categories.priority_label')}</label>
+            <p className="text-[11.5px] text-[var(--fg-faint)] mb-2">{t('categories.priority_help')}</p>
             <select 
               value={defaultPriority} 
               onChange={e => setDefaultPriority(e.target.value)} 
-              className="w-full px-4 py-2 border border-[#C3C6D1] rounded focus:outline-none focus:border-[#0059BB] bg-white"
+              className="w-full px-3 py-2 rounded-[4px] border border-[var(--rule-strong)] bg-[var(--surface)] text-[12px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors"
             >
               <option value="LOW">{t('categories.priority_low')}</option>
               <option value="MEDIUM">{t('categories.priority_medium')}</option>
@@ -302,12 +302,12 @@ export function EditItemModal({ isOpen, onClose, onSuccess, target }: ModalProps
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#43474F] mb-1">{t('categories.tutorial_label')}</label>
-            <p className="text-xs text-slate-500 mb-2">{t('categories.tutorial_help')}</p>
+            <label className="block text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)] mb-1.5">{t('categories.tutorial_label')}</label>
+            <p className="text-[11.5px] text-[var(--fg-faint)] mb-2">{t('categories.tutorial_help')}</p>
             <textarea 
               value={botContent} 
               onChange={e => setBotContent(e.target.value)} 
-              className="w-full px-4 py-2 border border-[#C3C6D1] rounded focus:outline-none focus:border-[#0059BB] min-h-[100px]"
+              className="w-full px-3 py-2 rounded-[4px] border border-[var(--rule-strong)] bg-transparent text-[12px] text-[var(--fg)] outline-none focus:border-[var(--accent)] transition-colors min-h-[100px]"
               placeholder={t('categories.tutorial_placeholder')}
             />
           </div>
