@@ -156,20 +156,17 @@ export default function TicketTableSection({ activeTab = 'all', tickets = [], se
 
   const renderPriorityBadge = (priority: string) => {
     const p = (priority || 'MEDIUM').toUpperCase();
-    let bg = 'bg-[#E2E2E5]';
-    let text = 'text-[#43474F]';
-    
-    if (p === 'CRITICAL') { bg = 'bg-[#FFDAD6]'; text = 'text-[#93000A]'; }
-    if (p === 'HIGH') { bg = 'bg-[#FEF1D8]'; text = 'text-[#7D5100]'; }
+    let colorClass = 'bg-[var(--canvas)] text-[var(--fg-dim)] border-[var(--rule)]';
+
+    if (p === 'CRITICAL') { colorClass = 'bg-[rgba(179,33,27,.08)] text-[var(--danger)] border-[rgba(179,33,27,.18)]'; }
+    if (p === 'HIGH') { colorClass = 'bg-[rgba(178,107,0,.08)] text-[var(--warn)] border-[rgba(178,107,0,.18)]'; }
 
     return (
-      <div className={`flex py-0.5 px-2 items-center rounded-sm ${bg} w-fit`}>
-        <p className={`${text} font-iBMPlexSans text-[11px] font-bold leading-5 w-fit tracking-[0.025em]`}>
+      <span className={`inline-flex items-center px-1.5 py-0.5 rounded-[3px] text-[10.5px] font-medium border tracking-[0.02em] whitespace-nowrap font-iBMPlexSans ${colorClass}`}>
           {language === 'en'
             ? p
             : ({ URGENT: 'MENDESAK', CRITICAL: 'KRITIS', HIGH: 'TINGGI', MEDIUM: 'SEDANG', LOW: 'RENDAH' } as Record<string, string>)[p] || p}
-        </p>
-      </div>
+      </span>
     );
   };
 
@@ -178,117 +175,117 @@ export default function TicketTableSection({ activeTab = 'all', tickets = [], se
     const isAsc = isActive && sortConfig?.direction === 'asc';
     
     return (
-      <svg className={`w-3 h-3 ml-1 transition-transform ${isActive ? 'text-[#0059BB]' : 'text-gray-400'} ${isAsc ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+      <svg className={`w-3 h-3 ml-1 transition-transform ${isActive ? 'text-[var(--accent)]' : 'text-[var(--fg-faint)]'} ${isAsc ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
       </svg>
     );
   };
 
   return (
-    <div className="flex flex-col rounded-lg border border-[#C3C6D1] bg-[#FFF] shadow-sm w-full overflow-hidden">
+    <div className="flex flex-col rounded-[4px] border border-[var(--rule)] bg-[var(--surface)] w-full overflow-hidden">
       <div className="w-full overflow-x-auto min-h-[400px]">
         <table className="w-full text-left table-auto">
-          <thead className="bg-[#F3F3F6] border-b border-[#C3C6D1]">
+          <thead className="border-b border-[var(--rule)]">
             <tr>
-              <th className="px-4 py-4 w-12 text-center">
+              <th className="px-4 py-2.5 w-12 text-center">
                 <input 
                   type="checkbox" 
-                  className="rounded border-gray-300 w-4 h-4 text-[#1E3A8A] focus:ring-[#1E3A8A]"
+                  className="h-[14px] w-[14px] cursor-pointer accent-[var(--accent)]"
                   checked={paginatedTickets.length > 0 && selectedTickets.length === paginatedTickets.length}
                   onChange={handleSelectAll}
                 />
               </th>
-              <th className="px-4 py-4 select-none hover:bg-gray-200 transition-colors cursor-pointer" onClick={() => handleSort('ticket_num')}>
+              <th className="px-4 py-2.5 select-none hover:bg-[var(--canvas)] transition-colors cursor-pointer" onClick={() => handleSort('ticket_num')}>
                 <div className="flex items-center group">
-                  <span className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-wider">{t('tickets.col_ticket_num', 'NO. TIKET')}</span>
+                  <span className="font-iBMPlexSans text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">{t('tickets.col_ticket_num', 'NO. TIKET')}</span>
                   <SortIcon columnKey="ticket_num" />
                 </div>
               </th>
-              <th className="px-4 py-4 select-none hover:bg-gray-200 transition-colors cursor-pointer" onClick={() => handleSort('updated_at')}>
+              <th className="px-4 py-2.5 select-none hover:bg-[var(--canvas)] transition-colors cursor-pointer" onClick={() => handleSort('updated_at')}>
                 <div className="flex items-center group">
-                  <span className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-wider">{t('tickets.col_last_update', 'LAST UPDATE')}</span>
+                  <span className="font-iBMPlexSans text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">{t('tickets.col_last_update', 'LAST UPDATE')}</span>
                   <SortIcon columnKey="updated_at" />
                 </div>
               </th>
-              <th className="px-4 py-4 select-none hover:bg-gray-200 transition-colors cursor-pointer" onClick={() => handleSort('subject')}>
+              <th className="px-4 py-2.5 select-none hover:bg-[var(--canvas)] transition-colors cursor-pointer" onClick={() => handleSort('subject')}>
                 <div className="flex items-center group">
-                  <span className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-wider">{t('tickets.col_subject', 'SUBJECT')}</span>
+                  <span className="font-iBMPlexSans text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">{t('tickets.col_subject', 'SUBJECT')}</span>
                   <SortIcon columnKey="subject" />
                 </div>
               </th>
-              <th className="px-4 py-4 select-none hover:bg-gray-200 transition-colors cursor-pointer" onClick={() => handleSort('reporter_name')}>
+              <th className="px-4 py-2.5 select-none hover:bg-[var(--canvas)] transition-colors cursor-pointer" onClick={() => handleSort('reporter_name')}>
                 <div className="flex items-center group">
-                  <span className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-wider">{t('tickets.col_from', 'FROM')}</span>
+                  <span className="font-iBMPlexSans text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">{t('tickets.col_from', 'FROM')}</span>
                   <SortIcon columnKey="reporter_name" />
                 </div>
               </th>
-              <th className="px-4 py-4 select-none">
+              <th className="px-4 py-2.5 select-none">
                 <div className="flex items-center group">
-                  <span className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-wider">{t('tickets.col_category', 'KATEGORI')}</span>
+                  <span className="font-iBMPlexSans text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">{t('tickets.col_category', 'KATEGORI')}</span>
                 </div>
               </th>
-              <th className="px-4 py-4 select-none hover:bg-gray-200 transition-colors cursor-pointer" onClick={() => handleSort('priority')}>
+              <th className="px-4 py-2.5 select-none hover:bg-[var(--canvas)] transition-colors cursor-pointer" onClick={() => handleSort('priority')}>
                 <div className="flex items-center group">
-                  <span className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-wider">{t('tickets.col_priority', 'PRIORITY')}</span>
+                  <span className="font-iBMPlexSans text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">{t('tickets.col_priority', 'PRIORITY')}</span>
                   <SortIcon columnKey="priority" />
                 </div>
               </th>
-              <th className="px-4 py-4 select-none">
+              <th className="px-4 py-2.5 select-none">
                 <div className="flex items-center group">
-                  <span className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-wider">{t('tickets.col_assigned_to', 'ASSIGN TO')}</span>
+                  <span className="font-iBMPlexSans text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">{t('tickets.col_assigned_to', 'ASSIGN TO')}</span>
                 </div>
               </th>
-              <th className="px-4 py-4 select-none w-20 text-center">
-                <span className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-wider">{t('tickets.col_action', 'ACTION')}</span>
+              <th className="px-4 py-2.5 select-none w-20 text-center">
+                <span className="font-iBMPlexSans text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">{t('tickets.col_action', 'ACTION')}</span>
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#C3C6D1]">
+          <tbody>
             {paginatedTickets.length === 0 ? (
-              <tr><td colSpan={9} className="py-10 text-center text-sm text-[#43474F]">{t('tickets.empty_filter', 'Tidak ada tiket pada filter ini.')}</td></tr>
+              <tr><td colSpan={9} className="py-10 text-center text-[12.5px] text-[var(--fg-dim)]">{t('tickets.empty_filter', 'Tidak ada tiket pada filter ini.')}</td></tr>
             ) : (
-              paginatedTickets.map((ticket, index) => (
-                <tr key={ticket.id} className={`hover:bg-slate-50 transition-colors ${index % 2 === 1 ? 'bg-[#F9F9FC]' : ''}`}>
-                  <td className="px-4 py-4 text-center">
+              paginatedTickets.map((ticket) => (
+                <tr key={ticket.id} className="border-b border-[var(--rule)] transition-colors hover:bg-[var(--canvas)]">
+                  <td className="px-4 py-3 text-center">
                     <input 
                       type="checkbox" 
-                      className="rounded border-gray-300 w-4 h-4 text-[#1E3A8A] focus:ring-[#1E3A8A]"
+                      className="h-[14px] w-[14px] cursor-pointer accent-[var(--accent)]"
                       checked={selectedTickets.includes(ticket.id)}
                       onChange={(e) => handleSelectRow(ticket.id, e.target.checked)}
                     />
                   </td>
-                  <td className="px-4 py-4 text-[#1E3A8A] font-liberationSerif text-sm font-semibold whitespace-nowrap">
+                  <td className="px-4 py-3 tabular-nums text-[12px] font-medium text-[var(--accent)] whitespace-nowrap">
                     <Link href={`/dashboard/administrasi/tickets/${ticket.id}`} className="hover:underline">
                       {ticket.ticket_num || ticket.ticketNumber}
                     </Link>
                   </td>
-                  <td className="px-4 py-4 text-[#43474F] font-iBMPlexSans text-sm whitespace-nowrap">
+                  <td className="px-4 py-3 tabular-nums text-[12px] text-[var(--fg-dim)] font-iBMPlexSans whitespace-nowrap">
                     {formatTimeAgo(ticket.updated_at || ticket.created_at, language)}
                   </td>
-                  <td className="px-4 py-4 max-w-xs">
+                  <td className="px-4 py-3 max-w-xs">
                     <Link href={`/dashboard/administrasi/tickets/${ticket.id}`} className="block">
-                      <p className="text-[#1A1C1E] font-iBMPlexSans text-sm font-medium truncate mb-0.5 hover:text-[#1E3A8A]">
+                      <p className="font-iBMPlexSans text-[12.5px] font-medium text-[var(--fg)] truncate mb-0.5 hover:text-[var(--accent)]">
                         {translateTicketSubject((ticket.subject || '').replace(/\s*>\s*/g, ' / '), language)}
                       </p>
                     </Link>
                   </td>
-                  <td className="px-4 py-4">
+                  <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-[#1A1C1E] font-iBMPlexSans text-sm truncate max-w-[120px]">
+                      <span className="font-iBMPlexSans text-[12px] text-[var(--fg-dim)] truncate max-w-[120px]">
                         {ticket.reporter_name || 'Unknown User'}
                       </span>
                     </div>
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <span className="text-[#43474F] font-iBMPlexSans text-[13px] font-medium truncate max-w-[160px] block">
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <span className="font-iBMPlexSans text-[12px] text-[var(--fg-dim)] truncate max-w-[160px] block">
                       {categories.find(c => String(c.id) === String(ticket.category_id))?.name || 'N/A'}
                     </span>
                   </td>
-                  <td className="px-4 py-4">
+                  <td className="px-4 py-3">
                     {renderPriorityBadge(ticket.priority)}
                   </td>
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <span className="text-[#43474F] font-iBMPlexSans text-[13px] font-medium truncate max-w-[120px] block">
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <span className="font-iBMPlexSans text-[12px] text-[var(--fg-dim)] truncate max-w-[120px] block">
                       {ticket.dept_id
                         ? (ticket.department?.name || departments.find(d => String(d.id) === String(ticket.dept_id))?.name || 'Department')
                         : ticket.tech_id
@@ -296,32 +293,32 @@ export default function TicketTableSection({ activeTab = 'all', tickets = [], se
                         : '-'}
                     </span>
                   </td>
-                  <td className="px-4 py-4 text-center">
+                  <td className="px-4 py-3 text-center">
                     <div className="flex items-center justify-center gap-1">
                       {ticket.status === 'WAITING VERIFICATION' && (
                         <>
                           <button 
                             onClick={() => onAcceptTicket && onAcceptTicket(ticket.id)}
-                            className="p-1.5 text-green-600 hover:bg-green-50 rounded transition-colors inline-flex" 
+                            className="p-1.5 inline-flex items-center justify-center rounded-[4px] text-[var(--ok)] transition-colors hover:bg-[var(--canvas)]" 
                             title="Terima Tiket"
                           >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" d="M5 13l4 4L19 7"></path></svg>
                           </button>
                           <button 
                             onClick={() => onRejectTicket && onRejectTicket(ticket.id)}
-                            className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors inline-flex" 
+                            className="p-1.5 inline-flex items-center justify-center rounded-[4px] text-[var(--danger)] transition-colors hover:bg-[var(--canvas)]" 
                             title="Tolak Tiket"
                           >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" d="M6 18L18 6M6 6l12 12"></path></svg>
                           </button>
                         </>
                       )}
                       <button 
                         onClick={() => onEditTicket && onEditTicket(ticket.id)}
-                        className="p-1.5 text-[#1E3A8A] hover:bg-slate-100 rounded transition-colors inline-flex" 
+                        className="p-1.5 inline-flex items-center justify-center rounded-[4px] text-[var(--accent)] transition-colors hover:bg-[var(--canvas)]" 
                         title="Edit Ticket"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                       </button>
                     </div>
                   </td>

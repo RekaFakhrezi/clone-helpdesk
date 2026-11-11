@@ -12,22 +12,22 @@ export default function PriorityBadge({ priority }: PriorityBadgeProps) {
 
   switch (priority) {
     case 'Critical':
-      colorClass = 'bg-red-50 text-red-700 border-red-100';
+      colorClass = 'bg-[rgba(179,33,27,.08)] text-[var(--danger)] border-[rgba(179,33,27,.18)]';
       break;
     case 'High':
-      colorClass = 'bg-amber-50 text-amber-700 border-amber-100';
+      colorClass = 'bg-[rgba(178,107,0,.08)] text-[var(--warn)] border-[rgba(178,107,0,.18)]';
       break;
     case 'Medium':
-      colorClass = 'bg-slate-100 text-slate-600 border-slate-200';
+      colorClass = 'bg-[var(--canvas)] text-[var(--fg-dim)] border-[var(--rule-strong)]';
       break;
     case 'Low':
     default:
-      colorClass = 'bg-slate-50 text-slate-500 border-slate-200';
+      colorClass = 'bg-[var(--canvas)] text-[var(--fg-faint)] border-[var(--rule)]';
       break;
   }
 
   return (
-    <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-bold border tracking-wide whitespace-nowrap ${colorClass}`}>
+    <span className={`inline-flex items-center px-1.5 py-0.5 rounded-[3px] text-[10.5px] font-medium border tracking-[0.02em] whitespace-nowrap ${colorClass}`}>
       {language === 'en'
         ? priority.toUpperCase()
         : ({ Urgent: 'MENDESAK', Critical: 'KRITIS', High: 'TINGGI', Medium: 'SEDANG', Low: 'RENDAH' } as Record<string, string>)[priority] || priority.toUpperCase()}

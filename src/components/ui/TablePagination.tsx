@@ -36,8 +36,8 @@ export default function TablePagination({
       key={n}
       type="button"
       onClick={() => onPage(n)}
-      className={`cursor-pointer rounded w-8 h-8 flex items-center justify-center font-semibold text-xs ${
-        current === n ? 'bg-[#1E3A8A] text-white' : 'hover:bg-gray-100 text-black'
+      className={`cursor-pointer rounded-[4px] w-7 h-7 flex items-center justify-center font-medium tabular-nums text-[12px] ${
+        current === n ? 'bg-[var(--accent)] text-white' : 'hover:bg-[var(--canvas)] text-[var(--fg)]'
       }`}
     >
       {n}
@@ -45,7 +45,7 @@ export default function TablePagination({
   );
 
   return (
-    <div className="flex flex-col sm:flex-row py-4 px-6 justify-between items-center border-t border-t-[#C3C6D1] bg-[#FFF] w-full mt-auto gap-4">
+    <div className="flex flex-col sm:flex-row py-3 px-4 justify-between items-center border-t border-[var(--rule)] bg-[var(--surface)] w-full mt-auto gap-4">
       <div className="flex items-center gap-2">
         <select
           value={perPage}
@@ -53,7 +53,7 @@ export default function TablePagination({
             onPerPage(Number(e.target.value));
             onPage(1);
           }}
-          className="text-[13px] border border-[#C3C6D1] rounded px-2 py-1 outline-none focus:border-[#1E3A8A] text-[#1A1C1E]"
+          className="text-[12px] border border-[var(--rule-strong)] rounded-[4px] bg-transparent px-2 py-1 outline-none focus:border-[var(--accent)] text-[var(--fg)]"
         >
           {options.map((n) => (
             <option key={n} value={n}>
@@ -61,7 +61,7 @@ export default function TablePagination({
             </option>
           ))}
         </select>
-        <p className="text-[#1A1C1E] font-iBMPlexSans text-[13px]">
+        <p className="text-[var(--fg-dim)] text-[12px]">
           {t('tickets.showing', 'Showing')} {from} - {to} {t('tickets.of', 'of')} {total} {t('tickets.tickets_count', 'tickets')}
         </p>
       </div>
@@ -70,8 +70,8 @@ export default function TablePagination({
           type="button"
           onClick={() => onPage(Math.max(1, current - 1))}
           disabled={current === 1}
-          className={`flex justify-center items-center rounded border border-[#C3C6D1] w-8 h-8 ${
-            current === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-50'
+          className={`flex justify-center items-center rounded-[4px] border border-[var(--rule)] w-7 h-7 ${
+            current === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-[var(--canvas)]'
           }`}
         >
           <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,8 +89,8 @@ export default function TablePagination({
           type="button"
           onClick={() => onPage(Math.min(totalPages, current + 1))}
           disabled={current === totalPages}
-          className={`flex justify-center items-center rounded border border-[#C3C6D1] w-8 h-8 ${
-            current === totalPages ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-50'
+          className={`flex justify-center items-center rounded-[4px] border border-[var(--rule)] w-7 h-7 ${
+            current === totalPages ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-[var(--canvas)]'
           }`}
         >
           <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg">

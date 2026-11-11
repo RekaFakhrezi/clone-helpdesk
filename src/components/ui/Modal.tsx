@@ -31,12 +31,12 @@ export default function Modal({
   zIndex = 'z-50',
 }: ModalProps) {
   return (
-    <div className={`fixed inset-0 ${zIndex} flex items-center justify-center bg-black/50 backdrop-blur-sm`}>
-      <div className={`bg-white rounded p-6 w-full ${maxWidth} shadow-md animate-in fade-in zoom-in-95`}>
-        <h2 className="text-lg font-bold text-gray-900 mb-1">{title}</h2>
-        {subtitle ? <p className="text-sm text-gray-500 mb-5">{subtitle}</p> : null}
+    <div className={`fixed inset-0 ${zIndex} flex items-center justify-center bg-[rgba(11,21,36,0.55)] p-4`}>
+      <div className={`bg-[var(--surface)] rounded-[4px] border border-[var(--rule-strong)] p-6 w-full ${maxWidth} shadow-[var(--shadow-pop)] animate-in fade-in duration-150`}>
+        <h2 className="text-[15px] font-medium tracking-[-0.01em] text-[var(--fg)] mb-1">{title}</h2>
+        {subtitle ? <p className="text-[12.5px] text-[var(--fg-dim)] mb-5">{subtitle}</p> : null}
         {children}
-        {footer ? <div className="flex justify-end gap-2">{footer}</div> : null}
+        {footer ? <div className="flex justify-end gap-2 mt-6">{footer}</div> : null}
       </div>
     </div>
   );
@@ -48,7 +48,7 @@ export function ModalCancelButton({ onClick, children = 'Cancel' }: { onClick: (
     <button
       type="button"
       onClick={onClick}
-      className="px-4 py-2 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded transition-colors"
+      className="h-9 px-3 rounded-[4px] border border-[var(--rule-strong)] text-[12px] font-medium text-[var(--fg-dim)] hover:bg-[var(--canvas)] hover:text-[var(--fg)] transition-colors duration-150"
     >
       {children}
     </button>
@@ -70,7 +70,7 @@ export function ModalPrimaryButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="px-4 py-2 text-sm font-semibold text-white bg-gray-900 hover:bg-black rounded transition-colors disabled:opacity-50"
+      className="h-9 px-3 rounded-[4px] bg-[var(--accent)] text-[12px] font-medium text-white hover:bg-[var(--accent-hover)] transition-colors duration-150 disabled:opacity-50"
     >
       {children}
     </button>

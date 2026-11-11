@@ -34,8 +34,8 @@ export default function Toast({ toast }: { toast: ToastState | null }) {
   return (
     <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[100] animate-in fade-in slide-in-from-top-4 duration-300">
       <div
-        className={`px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 font-medium text-white ${
-          toast.type === 'error' ? 'bg-red-500' : toast.type === 'warning' ? 'bg-amber-500' : 'bg-[#10B981]'
+        className={`px-4 py-2.5 rounded-[4px] shadow-[var(--shadow-pop)] flex items-center gap-2.5 text-[12.5px] font-medium text-white ${
+          toast.type === 'error' ? 'bg-[var(--danger)]' : toast.type === 'warning' ? 'bg-[var(--warn)]' : 'bg-[var(--ok)]'
         }`}
       >
         {toast.type === 'success' && (
