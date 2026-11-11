@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
-export type ToastType = 'success' | 'error';
+export type ToastType = 'success' | 'error' | 'warning';
 
 export interface ToastState {
   message: string;
@@ -35,7 +35,7 @@ export default function Toast({ toast }: { toast: ToastState | null }) {
     <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[100] animate-in fade-in slide-in-from-top-4 duration-300">
       <div
         className={`px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 font-medium text-white ${
-          toast.type === 'error' ? 'bg-red-500' : 'bg-[#10B981]'
+          toast.type === 'error' ? 'bg-red-500' : toast.type === 'warning' ? 'bg-amber-500' : 'bg-[#10B981]'
         }`}
       >
         {toast.type === 'success' && (

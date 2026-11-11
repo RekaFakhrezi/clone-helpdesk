@@ -127,11 +127,7 @@ export default function UserWorkspace() {
   const router = useRouter();
 
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-  const { toast, showToast: pushToast } = useToast();
-
-  const showToast = (message: string, type: 'success' | 'error' | 'warning' = 'success') => {
-      pushToast(message, type === 'warning' ? 'error' : type);
-  };
+  const { toast, showToast } = useToast();
 
   const handleEditClick = useCallback((user: UserItem) => {
     router.push(`/dashboard/administrasi/users/${user.id}?edit=true`);

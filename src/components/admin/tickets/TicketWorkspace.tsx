@@ -284,7 +284,7 @@ export default function TicketWorkspace() {
         onCategoryChange={(catId) => setFilters((prev: any) => ({ ...prev, category: catId }))}
         onBulkAction={(action) => {
           if (selectedTickets.length === 0) {
-            showToast('Belum ada tiket yang dipilih!', 'error');
+            showToast('Belum ada tiket yang dipilih!', 'warning');
             return;
           }
           if (action === 'Change Status') setIsChangeStatusModalOpen(true);
