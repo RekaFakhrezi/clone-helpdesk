@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { fetchClient, API_BASE_URL } from '@/lib/apiClient';
+import { fetchClient } from '@/lib/apiClient';
+import { API_BASE_URL } from '@/lib/http';
 
 export default function TicketConfirmationPage() {
     const params = useParams();

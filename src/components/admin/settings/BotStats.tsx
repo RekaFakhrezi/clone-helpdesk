@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Modal, { ModalPrimaryButton } from "@/components/ui/Modal";
 
 interface BotStatsProps {
   onViewAnalytics?: () => void;
@@ -55,23 +56,21 @@ export default function BotStats({ onViewAnalytics }: BotStatsProps) {
 
       {/* Modal Detail Analytics Sederhana */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-lg font-bold mb-4 text-[#1A1C1E]">Detail Analytics Bot</h3>
-            <div className="space-y-2 text-sm text-[#43474F] mb-6">
-              <p>• Total Pesan Masuk: 1,540</p>
-              <p>• Total Pesan Terbalas: 1,284</p>
-              <p>• Rata-rata Waktu Respon: 1.2 detik</p>
-              <p>• Pengguna Unik: 412 Pelapor</p>
-            </div>
-            <button
-              onClick={() => setShowModal(false)}
-              className="w-full py-2 bg-[#0059BB] text-white font-semibold rounded hover:bg-blue-700 transition"
-            >
-              Tutup
-            </button>
+        <Modal
+          title="Detail Analytics Bot"
+          onClose={() => setShowModal(false)}
+          maxWidth="max-w-md"
+          footer={
+            <ModalPrimaryButton onClick={() => setShowModal(false)}>Tutup</ModalPrimaryButton>
+          }
+        >
+          <div className="space-y-2 text-sm text-[#43474F] mb-6">
+            <p>• Total Pesan Masuk: 1,540</p>
+            <p>• Total Pesan Terbalas: 1,284</p>
+            <p>• Rata-rata Waktu Respon: 1.2 detik</p>
+            <p>• Pengguna Unik: 412 Pelapor</p>
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

@@ -17,7 +17,6 @@ const LanguageContext = createContext<LanguageContextType>({
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>('id');
-  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     // Read from localStorage on mount
@@ -28,13 +27,11 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     } else {
       document.documentElement.lang = 'id';
     }
-    setIsInitialized(true);
   }, []);
 
   const setLanguage = (newLang: Language) => {
     setLanguageState(newLang);
     localStorage.setItem('preferred_language', newLang);
-    document.cookie = `preferred_language=${newLang}; path=/; max-age=31536000; SameSite=Lax`;
     document.documentElement.lang = newLang;
   };
 

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { SLAItem } from "./SLAWorkspace";
 
 interface SLATableSectionProps {
-  slaData?: SLAItem[];
+  slaData: SLAItem[];
   onUpdateSLA?: (item: SLAItem) => void;
 }
 
@@ -17,40 +17,7 @@ interface RowState {
 }
 
 export default function SLATableSection({
-  slaData = [
-    {
-      id: "kritis",
-      priority: "KRITIS",
-      badgeBg: "bg-[#FFDAD6]",
-      badgeTextColor: "text-[#93000A]",
-      responseTime: 30,
-      resolutionTime: 240,
-    },
-    {
-      id: "tinggi",
-      priority: "TINGGI",
-      badgeBg: "bg-[#FFEDD5]",
-      badgeTextColor: "text-[#9A3412]",
-      responseTime: 60,
-      resolutionTime: 480,
-    },
-    {
-      id: "sedang",
-      priority: "SEDANG",
-      badgeBg: "bg-[#DBEAFE]",
-      badgeTextColor: "text-[#1E40AF]",
-      responseTime: 120,
-      resolutionTime: 1440,
-    },
-    {
-      id: "rendah",
-      priority: "RENDAH",
-      badgeBg: "bg-[#DCFCE7]",
-      badgeTextColor: "text-[#166534]",
-      responseTime: 240,
-      resolutionTime: 2880,
-    },
-  ],
+  slaData,
   onUpdateSLA,
 }: SLATableSectionProps) {
   const [formState, setFormState] = useState<Record<string, RowState>>({});

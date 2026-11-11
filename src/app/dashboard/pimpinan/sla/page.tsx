@@ -6,11 +6,7 @@ import { useLanguage } from '@/context/LanguageContext';
 
 export default function PimpinanSlaPage() {
   const { t, language } = useLanguage();
-  const [slaHealth, setSlaHealth] = useState<any[]>([
-    { name: 'Within SLA', value: 85, fill: '#34D399' },
-    { name: 'Near Deadline', value: 10, fill: '#FBBF24' },
-    { name: 'Overdue', value: 5, fill: '#EF4444' },
-  ]);
+  const [slaHealth, setSlaHealth] = useState<any[]>([]);
 
   useEffect(() => {
     fetchClient('/admin/dashboard')

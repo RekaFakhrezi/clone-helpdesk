@@ -6,6 +6,8 @@ import { fetchClient } from '@/lib/apiClient';
 import StatusBadge from '@/components/admin/tickets/StatusBadge';
 import PriorityBadge from '@/components/admin/tickets/PriorityBadge';
 import { FaWhatsapp } from 'react-icons/fa';
+import Modal, { ModalCancelButton, ModalPrimaryButton } from '@/components/ui/Modal';
+import Toast, { useToast } from '@/components/ui/Toast';
 import { useLanguage } from '@/context/LanguageContext';
 
 type Ticket = {
@@ -41,6 +43,30 @@ type Message = {
   tech?: { name?: string };
 };
 
+/** Baris select standar di panel Informasi Tiket. */
+function RowSelect({
+  value,
+  onChange,
+  disabled,
+  children,
+}: {
+  value: string | number;
+  onChange: (value: string) => void;
+  disabled?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      disabled={disabled}
+      className={`flex-1 min-w-0 py-1.5 px-2 -ml-2 rounded-lg border border-transparent text-[13.5px] font-semibold text-gray-900 bg-transparent hover:bg-gray-50 hover:border-gray-200 outline-none transition-all focus:border-[#1E3A8A] focus:ring-1 focus:ring-[#1E3A8A] truncate ${disabled ? 'opacity-90 cursor-not-allowed hover:bg-transparent hover:border-transparent appearance-none' : 'cursor-pointer'}`}
+    >
+      {children}
+    </select>
+  );
+}
+
 export default function SharedTicketDetail({ ticketId }: { ticketId: string }) {
   const { t } = useLanguage();
   const [ticket, setTicket] = useState<Ticket | null>(null);
@@ -49,6 +75,8 @@ export default function SharedTicketDetail({ ticketId }: { ticketId: string }) {
 
   
   const isTeknisi = typeof window !== 'undefined' && window.location.pathname.includes('/teknisi');
+  const isOperator = typeof window !== 'undefined' && window.location.pathname.includes('/operator');
+  const ticketApiUrl = isOperator ? `/operator/tickets/${ticketId}` : `/admin/tickets/${ticketId}`;
   
   // Disposisi state
   const [technicians, setTechnicians] = useState<any[]>([]);
@@ -57,7 +85,7 @@ export default function SharedTicketDetail({ ticketId }: { ticketId: string }) {
   const [selectedTechId, setSelectedTechId] = useState<string>('');
   const [isAssigning, setIsAssigning] = useState(false);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
-  const [toasts, setToasts] = useState<{id: number, message: string, type: 'success' | 'error'}[]>([]);
+  const { toast, showToast } = useToast(5000);
 
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
@@ -71,19 +99,11 @@ export default function SharedTicketDetail({ ticketId }: { ticketId: string }) {
     onConfirm: () => {},
   });
 
-  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
-      const id = Date.now();
-      setToasts(prev => [...prev, { id, message, type }]);
-      setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 5000);
-  };
-
   useEffect(() => {
     async function loadTicket() {
       setIsLoading(true);
 
       try {
-        const isOperator = typeof window !== 'undefined' && window.location.pathname.includes('/operator');
-        
         let foundTicket = null;
         if (isOperator) {
           const detailResponse = await fetchClient(`/operator/tickets/${ticketId}`);
@@ -139,8 +159,7 @@ export default function SharedTicketDetail({ ticketId }: { ticketId: string }) {
       onConfirm: async () => {
         setIsUpdatingStatus(true);
         try {
-          const isOperator = typeof window !== 'undefined' && window.location.pathname.includes('/operator');
-          await fetchClient(isOperator ? `/operator/tickets/${ticketId}` : `/admin/tickets/${ticketId}`, {
+          await fetchClient(ticketApiUrl, {
             method: 'PATCH',
             body: JSON.stringify({ status: 'Open' })
           });
@@ -164,8 +183,7 @@ export default function SharedTicketDetail({ ticketId }: { ticketId: string }) {
       onConfirm: async () => {
         setIsUpdatingStatus(true);
         try {
-          const isOperator = typeof window !== 'undefined' && window.location.pathname.includes('/operator');
-          await fetchClient(isOperator ? `/operator/tickets/${ticketId}` : `/admin/tickets/${ticketId}`, {
+          await fetchClient(ticketApiUrl, {
             method: 'PATCH',
             body: JSON.stringify({ status: 'REJECTED' })
           });
@@ -186,8 +204,7 @@ export default function SharedTicketDetail({ ticketId }: { ticketId: string }) {
     
     setIsAssigning(true);
     try {
-      const isOperator = typeof window !== 'undefined' && window.location.pathname.includes('/operator');
-      await fetchClient(isOperator ? `/operator/tickets/${ticketId}` : `/admin/tickets/${ticketId}`, {
+      await fetchClient(ticketApiUrl, {
         method: 'PATCH',
         body: JSON.stringify({ 
           tech_id: selectedTechId || null, 
@@ -218,8 +235,7 @@ export default function SharedTicketDetail({ ticketId }: { ticketId: string }) {
       onConfirm: async () => {
         setIsUpdatingStatus(true);
         try {
-          const isOperator = typeof window !== 'undefined' && window.location.pathname.includes('/operator');
-          await fetchClient(isOperator ? `/operator/tickets/${ticketId}` : `/admin/tickets/${ticketId}`, {
+          await fetchClient(ticketApiUrl, {
             method: 'PATCH',
             body: JSON.stringify({ status: newStatus })
           });
@@ -243,8 +259,7 @@ export default function SharedTicketDetail({ ticketId }: { ticketId: string }) {
       message: t('ticket_detail.confirm_msg_change', 'Apakah Anda yakin ingin mengubah data ini?'),
       onConfirm: async () => {
         try {
-          const isOperator = typeof window !== 'undefined' && window.location.pathname.includes('/operator');
-          await fetchClient(isOperator ? `/operator/tickets/${ticketId}` : `/admin/tickets/${ticketId}`, {
+          await fetchClient(ticketApiUrl, {
             method: 'PATCH',
             body: JSON.stringify({ [field]: value })
           });
@@ -408,25 +423,23 @@ export default function SharedTicketDetail({ ticketId }: { ticketId: string }) {
                 </div>
                 <div className="flex items-center px-6 py-3 hover:bg-gray-50/50 transition-colors">
                   <span className="w-28 text-[13.5px] font-medium text-gray-500 shrink-0">{t('ticket_detail.dept_label', 'Departemen')}</span>
-                  <select
+                  <RowSelect
                     value={ticket.dept_id || ''}
-                    onChange={(e) => handleUpdateField('dept_id', e.target.value ? Number(e.target.value) : null)}
+                    onChange={(v) => handleUpdateField('dept_id', v ? Number(v) : null)}
                     disabled={isTeknisi}
-                    className={`flex-1 min-w-0 py-1.5 px-2 -ml-2 rounded-lg border border-transparent text-[13.5px] font-semibold text-gray-900 bg-transparent hover:bg-gray-50 hover:border-gray-200 outline-none transition-all focus:border-[#1E3A8A] focus:ring-1 focus:ring-[#1E3A8A] truncate ${isTeknisi ? 'opacity-90 cursor-not-allowed hover:bg-transparent hover:border-transparent appearance-none' : 'cursor-pointer'}`}
                   >
                     <option value="">{t('ticket_detail.select_dept', '-- Pilih Departemen --')}</option>
                     {departments.map((d: any) => (
                       <option key={d.id} value={d.id}>{d.name}</option>
                     ))}
-                  </select>
+                  </RowSelect>
                 </div>
                 <div className="flex items-center px-6 py-3 hover:bg-gray-50/50 transition-colors">
                   <span className="w-28 text-[13.5px] font-medium text-gray-500 shrink-0">{t('ticket_detail.assigned_label', 'Ditugaskan ke')}</span>
-                  <select
+                  <RowSelect
                     value={ticket.tech_id || ''}
-                    onChange={(e) => handleUpdateField('tech_id', e.target.value || null)}
+                    onChange={(v) => handleUpdateField('tech_id', v || null)}
                     disabled={isTeknisi}
-                    className={`flex-1 min-w-0 py-1.5 px-2 -ml-2 rounded-lg border border-transparent text-[13.5px] font-semibold text-gray-900 bg-transparent hover:bg-gray-50 hover:border-gray-200 outline-none transition-all focus:border-[#1E3A8A] focus:ring-1 focus:ring-[#1E3A8A] truncate ${isTeknisi ? 'opacity-90 cursor-not-allowed hover:bg-transparent hover:border-transparent appearance-none' : 'cursor-pointer'}`}
                   >
                     <option value="">{t('ticket_detail.not_assigned', '-- Belum Ditugaskan --')}</option>
                     {technicians.map((tech: any) => (
@@ -434,29 +447,27 @@ export default function SharedTicketDetail({ ticketId }: { ticketId: string }) {
                         {tech.name} {tech.dept?.name ? `(${tech.dept.name})` : (tech.role ? `(${tech.role})` : '')}
                       </option>
                     ))}
-                  </select>
+                  </RowSelect>
                 </div>
                 <div className="flex items-center px-6 py-3 hover:bg-gray-50/50 transition-colors">
                   <span className="w-28 text-[13.5px] font-medium text-gray-500 shrink-0">{t('ticket_detail.priority_label', 'Prioritas')}</span>
-                  <select 
+                  <RowSelect 
                     value={ticket.priority || ''}
-                    onChange={(e) => handleUpdateField('priority', e.target.value)}
+                    onChange={(v) => handleUpdateField('priority', v)}
                     disabled={isTeknisi}
-                    className={`flex-1 min-w-0 py-1.5 px-2 -ml-2 rounded-lg border border-transparent text-[13.5px] font-semibold text-gray-900 bg-transparent hover:bg-gray-50 hover:border-gray-200 outline-none transition-all focus:border-[#1E3A8A] focus:ring-1 focus:ring-[#1E3A8A] truncate ${isTeknisi ? 'opacity-90 cursor-not-allowed hover:bg-transparent hover:border-transparent appearance-none' : 'cursor-pointer'}`}
                   >
                     <option value="CRITICAL">CRITICAL</option>
                     <option value="HIGH">HIGH</option>
                     <option value="MEDIUM">MEDIUM</option>
                     <option value="LOW">LOW</option>
-                  </select>
+                  </RowSelect>
                 </div>
                 <div className="flex items-center px-6 py-3 hover:bg-gray-50/50 transition-colors">
                   <span className="w-28 text-[13.5px] font-medium text-gray-500 shrink-0">{t('ticket_detail.category_label', 'Kategori')}</span>
-                  <select
+                  <RowSelect
                     value={ticket.category_id || ''}
-                    onChange={(e) => handleUpdateField('category_id', Number(e.target.value))}
+                    onChange={(v) => handleUpdateField('category_id', Number(v))}
                     disabled={isTeknisi}
-                    className={`flex-1 min-w-0 py-1.5 px-2 -ml-2 rounded-lg border border-transparent text-[13.5px] font-semibold text-gray-900 bg-transparent hover:bg-gray-50 hover:border-gray-200 outline-none transition-all focus:border-[#1E3A8A] focus:ring-1 focus:ring-[#1E3A8A] truncate ${isTeknisi ? 'opacity-90 cursor-not-allowed hover:bg-transparent hover:border-transparent appearance-none' : 'cursor-pointer'}`}
                   >
                     <option value="">{t('ticket_detail.select_category', '-- Pilih --')}</option>
                     {categories.map(cat => {
@@ -468,7 +479,7 @@ export default function SharedTicketDetail({ ticketId }: { ticketId: string }) {
                       }
                       return <option key={cat.id} value={cat.id}>{path}</option>;
                     })}
-                  </select>
+                  </RowSelect>
                 </div>
               </div>
 
@@ -601,47 +612,32 @@ export default function SharedTicketDetail({ ticketId }: { ticketId: string }) {
       
       {/* Confirmation Modal */}
       {confirmModal.isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200">
-            <div className="p-6">
-              <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-[#1E3A8A]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-              </div>
-              <h3 className="text-[17px] font-bold text-gray-900 mb-2">{confirmModal.title}</h3>
-              <p className="text-[14px] text-gray-600 leading-relaxed">{confirmModal.message}</p>
-            </div>
-            <div className="px-6 py-4 bg-gray-50/80 border-t border-gray-100 flex justify-end gap-3">
-              <button
-                onClick={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
-                className="px-4 py-2.5 text-[13px] font-bold text-gray-600 hover:text-gray-900 hover:bg-gray-200 bg-gray-100 rounded-xl transition-colors"
-              >
+        <Modal
+          title={confirmModal.title}
+          onClose={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+          zIndex="z-[100]"
+          footer={
+            <>
+              <ModalCancelButton onClick={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}>
                 {t('common.cancel', 'Batal')}
-              </button>
-              <button
+              </ModalCancelButton>
+              <ModalPrimaryButton
                 onClick={() => {
                   setConfirmModal(prev => ({ ...prev, isOpen: false }));
                   confirmModal.onConfirm();
                 }}
-                className="px-4 py-2.5 text-[13px] font-bold text-white bg-[#1E3A8A] hover:bg-blue-900 rounded-xl transition-colors shadow-sm flex items-center justify-center"
               >
                 {t('ticket_detail.confirm_yes', 'Ya, Lanjutkan')}
-              </button>
-            </div>
-          </div>
-        </div>
+              </ModalPrimaryButton>
+            </>
+          }
+        >
+          <p className="text-[14px] text-gray-600 leading-relaxed mb-6">{confirmModal.message}</p>
+        </Modal>
       )}
 
       {/* Toast Notifications */}
-      <div className="fixed top-24 right-8 flex flex-col gap-3 z-50 pointer-events-none">
-          {toasts.map(toast => (
-              <div key={toast.id} className={`px-5 py-3.5 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border text-[13.5px] font-bold animate-in slide-in-from-right-8 fade-in duration-300 pointer-events-auto flex items-center gap-2 ${
-                  toast.type === 'success' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-red-50 text-red-700 border-red-200'
-              }`}>
-                  {toast.type === 'success' && <svg className="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
-                  {toast.message}
-              </div>
-          ))}
-      </div>
+      <Toast toast={toast} />
     </div>
   );
 }

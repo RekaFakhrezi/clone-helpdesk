@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { API_BASE_URL } from '@/lib/http';
 
 interface SimMessage {
   phone: string;
@@ -52,7 +53,7 @@ export default function SimulatorPage() {
     if (activeNumber) {
       const fetchMsgs = async () => {
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api'}/simulator/messages/${activeNumber}`);
+          const res = await fetch(`${API_BASE_URL}/simulator/messages/${activeNumber}`);
           const json = await res.json();
           if (json.success) {
             setMessages(json.data);
@@ -101,7 +102,7 @@ export default function SimulatorPage() {
     setInputText('');
 
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api'}/simulator/send`, {
+      await fetch(`${API_BASE_URL}/simulator/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

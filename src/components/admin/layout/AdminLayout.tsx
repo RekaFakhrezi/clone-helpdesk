@@ -3,12 +3,11 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { fetchClient } from '@/lib/apiClient';
 import AdminSidebar from './AdminSidebar';
-import AdminTopbar from './AdminTopbar';
+import DashboardShell from '@/components/shared/layout/DashboardShell';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [userProfile, setUserProfile] = useState<any>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const pathname = usePathname();
   const { t } = useLanguage();
 
@@ -44,32 +43,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   return (
-    <div className="min-h-screen bg-[var(--paper)] flex">
-      {/* Sidebar */}
-      <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-
-      {/* Main Content Wrapper */}
-      <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${
-        isSidebarOpen ? 'lg:pl-72' : 'lg:pl-[80px]'
-      }`}>
-        
-        {/* Topbar */}
-        <AdminTopbar 
-          onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          pageTitle={getPageTitle()}
-          breadcrumbParent={getBreadcrumbParent()}
-          userName={userProfile?.name}
-          userRole={userProfile?.role}
-          showMenuButtonOnDesktop={true}
-        />
-
-        {/* Main Content (Area yang berubah-ubah saat pindah menu) */}
-        <main className="flex-1 p-4 lg:p-8 overflow-y-auto">
-          <div className="w-full">
-            {children}
-          </div>
-        </main>
-      </div>
-    </div>
+    <DashboardShell
+      Sidebar={AdminSidebar}
+      pageTitle={getPageTitle()}
+      breadcrumbParent={getBreadcrumbParent()}
+      userName={userProfile?.name}
+      userRole={userProfile?.role}
+    >
+      {children}
+    </DashboardShell>
   );
 }

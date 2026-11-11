@@ -5,8 +5,6 @@ import TopHelpTopicsPieChart from "@/components/admin/dashboard/TopHelpTopicsPie
 import { fetchServer } from "@/lib/apiServer";
 import DashboardHeader from "@/components/common/DashboardHeader";
 
-export const dynamic = 'force-dynamic';
-
 export default async function PimpinanDashboard() {
   let dashboardData: any = {};
   

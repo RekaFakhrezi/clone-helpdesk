@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import AuthCard from '@/components/auth/AuthCard';
 import { loginUser } from '@/lib/AuthService';
+import { roleHome } from '@/lib/roleHome';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -43,9 +44,7 @@ export default function LoginPage() {
 
         // Cek role untuk routing
         const role = combinedUser.role || combinedUser.user_metadata?.role || '';
-        let targetPath = '/dashboard/operator'; // Default fallback
-        if (role === 'pimpinan') targetPath = '/dashboard/pimpinan';
-        else if (role === 'admin') targetPath = '/dashboard/administrasi';
+        const targetPath = roleHome(role);
 
         // Set exit state for animation before redirect
         setIsExiting(true);

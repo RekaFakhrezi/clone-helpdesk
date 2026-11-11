@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import TicketHeader from "./TicketHeader";
 import TicketToolbar, { TabFilter } from "./TicketToolbar";
 import TicketTableSection from "./TicketTableSection";
-
-type Ticket = any;
+import Toast, { useToast } from '@/components/ui/Toast';
+import { downloadCsv } from '@/lib/download';
+import { matchesTab } from '@/lib/ticketTabs';
 import NewTicketModal from "./NewTicketModal";
 import AdminFilterModal from './AdminFilterModal';
 import AdminChangeStatusModal from './AdminChangeStatusModal';
@@ -17,8 +18,7 @@ import { supabase } from '@/lib/supabase';
 export default function TicketWorkspace() {
   const [isNewTicketModalOpen, setIsNewTicketModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabFilter>('all');
-  const [newlyAddedTicket, setNewlyAddedTicket] = useState<Ticket | null>(null);
-  
+
   // Real data state
   const [tickets, setTickets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,15 +34,8 @@ export default function TicketWorkspace() {
   const [isEditTicketModalOpen, setIsEditTicketModalOpen] = useState(false);
   const [selectedTicketToEdit, setSelectedTicketToEdit] = useState<string | null>(null);
   
-  // Toast Notification state
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [toastType, setToastType] = useState<'success' | 'error' | 'warning'>('success');
-
-  const showToast = (message: string, type: 'success' | 'error' | 'warning' = 'success') => {
-      setToastMessage(message);
-      setToastType(type);
-      setTimeout(() => setToastMessage(null), 3000);
-  };
+  // Toast Notification
+  const { toast, showToast } = useToast();
   
   const [filters, setFilters] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -111,43 +104,25 @@ export default function TicketWorkspace() {
   const handleNewTicket = () => setIsNewTicketModalOpen(true);
   
   const handleExportCsv = () => {
-    let filteredTickets = [...tickets];
-    
-    // 1. Filter by Status (Active Tab)
-    if (activeTab !== 'all') {
-      const statusMap: Record<string, string> = {
-        'open': 'OPEN',
-        'in_progress': 'IN PROGRESS',
-        'waiting_verification': 'WAITING VERIFICATION',
-        'rejected': 'DITOLAK',
-        'deleted': 'DELETED'
-      };
-      
-      if (activeTab === 'resolved') {
-        filteredTickets = filteredTickets.filter(t => ['RESOLVED', 'RESOLVED_BY_SYSTEM'].includes((t.status || '').toUpperCase()));
-      } else if (activeTab === 'my_tickets') {
-        filteredTickets = filteredTickets.filter(t => t.tech_id === currentUser?.id && !['RESOLVED', 'CLOSED', 'RESOLVED_BY_SYSTEM'].includes((t.status || '').toUpperCase()));
-      } else {
-        filteredTickets = filteredTickets.filter(t => (t.status || '').toUpperCase() === statusMap[activeTab]);
-      }
-    }
+    const filteredTickets = activeTab === 'all'
+      ? [...tickets]
+      : tickets.filter(t => matchesTab(t, activeTab, currentUser?.id));
 
     if (filteredTickets.length === 0) return;
 
     const header = ["Ticket Num", "Subject", "Status", "Priority", "Created At"];
-    const csvContent = [
-      header.join(","),
-      ...filteredTickets.map(t => `"${t.ticket_num || t.ticketNumber || ''}","${(t.subject || '').replace(/"/g, '""')}","${t.status || ''}","${t.priority || ''}","${t.created_at || ''}"`)
-    ].join("\n");
-    
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", `tickets_admin_${activeTab}_${new Date().getTime()}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const rows = [
+      header,
+      ...filteredTickets.map(t => [
+        `"${t.ticket_num || t.ticketNumber || ''}"`,
+        `"${(t.subject || '').replace(/"/g, '""')}"`,
+        `"${t.status || ''}"`,
+        `"${t.priority || ''}"`,
+        `"${t.created_at || ''}"`,
+      ]),
+    ];
+
+    downloadCsv(rows, `tickets_admin_${activeTab}_${new Date().getTime()}.csv`);
   };
   
   const handleOpenFilters = () => setIsFilterModalOpen(true);
@@ -264,17 +239,31 @@ export default function TicketWorkspace() {
     }
   };
 
-  // Kalkulasi counts
-  const counts = {
-    all: tickets.length,
-    myTickets: tickets.filter(t => t.tech_id === currentUser?.id && !['RESOLVED', 'CLOSED', 'RESOLVED_BY_SYSTEM'].includes((t.status || '').toUpperCase())).length,
-    open: tickets.filter(t => (t.status || '').toUpperCase() === 'OPEN').length,
-    inProgress: tickets.filter(t => (t.status || '').toUpperCase() === 'IN PROGRESS').length,
-    waitingVerification: tickets.filter(t => (t.status || '').toUpperCase() === 'WAITING VERIFICATION').length,
-    resolved: tickets.filter(t => ['RESOLVED', 'RESOLVED_BY_SYSTEM'].includes((t.status || '').toUpperCase())).length,
-    rejected: tickets.filter(t => (t.status || '').toUpperCase() === 'DITOLAK').length,
-    deleted: tickets.filter(t => (t.status || '').toUpperCase() === 'DELETED').length,
-  };
+  // Kalkulasi counts (satu lintasan per render, memoized)
+  const counts = useMemo(() => {
+    const next = {
+      all: tickets.length,
+      myTickets: 0,
+      open: 0,
+      inProgress: 0,
+      waitingVerification: 0,
+      resolved: 0,
+      rejected: 0,
+      deleted: 0,
+    };
+
+    for (const ticket of tickets) {
+      if (matchesTab(ticket, 'my_tickets', currentUser?.id)) next.myTickets++;
+      if (matchesTab(ticket, 'open')) next.open++;
+      if (matchesTab(ticket, 'in_progress')) next.inProgress++;
+      if (matchesTab(ticket, 'waiting_verification')) next.waitingVerification++;
+      if (matchesTab(ticket, 'resolved')) next.resolved++;
+      if (matchesTab(ticket, 'rejected')) next.rejected++;
+      if (matchesTab(ticket, 'deleted')) next.deleted++;
+    }
+
+    return next;
+  }, [tickets, currentUser]);
 
   return (
     <div className="flex flex-col items-start gap-6 w-full relative">
@@ -295,7 +284,7 @@ export default function TicketWorkspace() {
         onCategoryChange={(catId) => setFilters((prev: any) => ({ ...prev, category: catId }))}
         onBulkAction={(action) => {
           if (selectedTickets.length === 0) {
-            showToast('Belum ada tiket yang dipilih!', 'warning');
+            showToast('Belum ada tiket yang dipilih!', 'error');
             return;
           }
           if (action === 'Change Status') setIsChangeStatusModalOpen(true);
@@ -311,7 +300,6 @@ export default function TicketWorkspace() {
         <TicketTableSection 
           activeTab={activeTab} 
           tickets={tickets}
-          newlyAddedTicket={newlyAddedTicket} 
           selectedTickets={selectedTickets}
           onSelectionChange={setSelectedTickets}
           filters={filters}
@@ -370,26 +358,7 @@ export default function TicketWorkspace() {
         />
       )}
 
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className={`fixed top-6 left-1/2 -translate-x-1/2 px-5 py-3.5 rounded-xl shadow-lg flex items-center gap-3 z-[100] animate-in slide-in-from-top-5 duration-300 ${
-            toastType === 'success' ? 'bg-[#10B981] text-white border border-[#059669]' : 
-            toastType === 'error' ? 'bg-red-50 text-red-700 border border-red-200' : 
-            'bg-amber-50 text-amber-800 border border-amber-300 shadow-[0_8px_30px_rgb(251,191,36,0.2)]'
-        }`}>
-            {toastType === 'success' ? (
-                <svg className="w-5 h-5 text-white shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-            ) : toastType === 'error' ? (
-                <svg className="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            ) : (
-                <svg className="w-5 h-5 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            )}
-            <span className="text-[14px] font-bold tracking-tight">{toastMessage}</span>
-            <button onClick={() => setToastMessage(null)} className="ml-2 hover:opacity-75 transition-opacity">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-        </div>
-      )}
+      <Toast toast={toast} />
 
     </div>
   );

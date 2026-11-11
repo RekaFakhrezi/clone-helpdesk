@@ -7,31 +7,19 @@ import {
   getTicketMessages,
   sendStaffResponse,
   sendWaMessage,
-  confirmTicketPublic,
   deleteTicketPermanently
 } from '../controllers/ticketController';
 
 const router = Router();
 
-// Public Endpoint: Konfirmasi Penyelesaian Tiket (Tanpa Auth)
-router.post('/public/:ticketId/confirm', confirmTicketPublic);
-
 // Semua endpoint tiket di bawah mewajibkan header "Authorization: Bearer <token>"
 router.use(requireAuth);
 
 // 1. GET /api/admin/tickets - Ambil daftar tiket
-router.get(
-  '/',
-  requireRole(['admin', 'pimpinan', 'operator', 'teknisi']),
-  getTicketsForDashboard
-);
+router.get('/', getTicketsForDashboard);
 
 // 2. GET /api/admin/tickets/:ticketNum - Ambil detail tiket berdasarkan nomor tiket
-router.get(
-  '/:ticketNum',
-  requireRole(['admin', 'pimpinan', 'operator', 'teknisi']),
-  getTicketByNum
-);
+router.get('/:ticketNum', getTicketByNum);
 
 // 3. PATCH /api/admin/tickets/:id - Ubah status / disposisi tiket
 router.patch(
@@ -41,11 +29,7 @@ router.patch(
 );
 
 // 4. GET /api/admin/tickets/:ticketId/messages - Ambil riwayat pesan tiket
-router.get(
-  '/:ticketId/messages',
-  requireRole(['admin', 'pimpinan', 'operator', 'teknisi']),
-  getTicketMessages
-);
+router.get('/:ticketId/messages', getTicketMessages);
 
 // 5. POST /api/admin/tickets/:ticketId/messages - Kirim balasan pesan tiket
 router.post(

@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { User } from '@supabase/supabase-js';
 import { supabase } from '../config/supabase';
 
 // Mengembangkan (extend) Express Request agar bisa menyimpan data user
@@ -9,6 +10,10 @@ export interface AuthRequest extends Request {
     role: 'operator' | 'teknisi' | 'admin' | 'pimpinan';
     dept_id: number | null;
   };
+  /** User Supabase Auth lengkap (dipakai endpoint profil). */
+  authUser?: User;
+  /** Bearer token yang sudah diverifikasi (dipakai AuthService). */
+  token?: string;
 }
 
 // ============================================================================
@@ -53,6 +58,8 @@ export const requireAuth = async (req: AuthRequest, res: Response, next: NextFun
       role: profile.role,
       dept_id: profile.dept_id,
     };
+    req.authUser = user;
+    req.token = token;
 
     next(); // Lanjut ke proses berikutnya
   } catch (error) {

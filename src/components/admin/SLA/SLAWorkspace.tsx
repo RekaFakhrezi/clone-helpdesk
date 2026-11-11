@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import SLAHeader from "./SLAHeader";
 import SLAToolbar from "./SLAToolbar";
 import SLATableSection from "./SLATableSection";
+import Toast, { useToast } from "@/components/ui/Toast";
 import { supabase } from "@/lib/supabase";
 
 export interface SLAItem {
@@ -54,20 +55,7 @@ export default function SLAWorkspace() {
   const [slaData, setSlaData] = useState<SLAItem[]>([]);
   
   // Toast state
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [toastType, setToastType] = useState<'success' | 'error'>('success');
-
-  useEffect(() => {
-    if (toastMessage) {
-      const timer = setTimeout(() => setToastMessage(null), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [toastMessage]);
-
-  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
-    setToastMessage(message);
-    setToastType(type);
-  };
+  const { toast, showToast } = useToast();
 
   useEffect(() => {
     fetchSlas();
@@ -132,21 +120,7 @@ export default function SLAWorkspace() {
       </div>
       
       {/* Toast Notification */}
-      {toastMessage && (
-        <div className={`fixed top-6 left-1/2 -translate-x-1/2 px-5 py-3.5 rounded-xl shadow-lg flex items-center gap-3 z-[100] animate-in slide-in-from-top-5 duration-300 ${
-            toastType === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-red-50 text-red-700 border border-red-200'
-        }`}>
-            {toastType === 'success' ? (
-                <svg className="w-5 h-5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-            ) : (
-                <svg className="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            )}
-            <span className="text-[14px] font-bold tracking-tight">{toastMessage}</span>
-            <button onClick={() => setToastMessage(null)} className="ml-2 hover:opacity-75 transition-opacity">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-        </div>
-      )}
+      <Toast toast={toast} />
     </div>
   );
 }

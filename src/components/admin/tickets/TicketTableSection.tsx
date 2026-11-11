@@ -4,14 +4,15 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import { translateTicketSubject } from '@/lib/translations';
+import TablePagination from '@/components/ui/TablePagination';
+import { formatTimeAgo } from '@/lib/format';
+import { matchesTab } from '@/lib/ticketTabs';
 
-export type PriorityLevel = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
 export type TicketStatus = 'NEW' | 'IN PROGRESS' | 'WAITING VERIFICATION' | 'RESOLVED' | 'CLOSED';
 
 interface TicketTableSectionProps {
   activeTab?: string;
   tickets?: any[];
-  newlyAddedTicket?: any | null;
   selectedTickets?: string[];
   onSelectionChange?: (selectedIds: string[]) => void;
   filters?: {
@@ -30,7 +31,7 @@ interface TicketTableSectionProps {
   currentUserId?: string;
 }
 
-export default function TicketTableSection({ activeTab = 'all', tickets = [], newlyAddedTicket, selectedTickets = [], onSelectionChange, filters, searchQuery = '', categories = [], technicians = [], departments = [], onEditTicket, onAcceptTicket, onRejectTicket, currentUserId }: TicketTableSectionProps) {
+export default function TicketTableSection({ activeTab = 'all', tickets = [], selectedTickets = [], onSelectionChange, filters, searchQuery = '', categories = [], technicians = [], departments = [], onEditTicket, onAcceptTicket, onRejectTicket, currentUserId }: TicketTableSectionProps) {
   const { t, language } = useLanguage();
   const [currentPage, setCurrentPage] = useState(1);
   const [displayTickets, setDisplayTickets] = useState<any[]>([]);
@@ -44,23 +45,7 @@ export default function TicketTableSection({ activeTab = 'all', tickets = [], ne
     let filteredData = [...tickets];
     
     // 1. Filter by Status
-    if (activeTab === 'my_tickets') {
-      filteredData = filteredData.filter(t => t.tech_id === currentUserId);
-    } else if (activeTab !== 'all') {
-      const statusMap: Record<string, string> = {
-        'open': 'OPEN',
-        'in_progress': 'IN PROGRESS',
-        'waiting_verification': 'WAITING VERIFICATION',
-        'rejected': 'DITOLAK',
-        'deleted': 'DELETED'
-      };
-      
-      if (activeTab === 'resolved') {
-        filteredData = filteredData.filter(t => ['RESOLVED', 'RESOLVED_BY_SYSTEM'].includes((t.status || '').toUpperCase()));
-      } else {
-        filteredData = filteredData.filter(t => (t.status || '').toUpperCase() === statusMap[activeTab]);
-      }
-    }
+    filteredData = filteredData.filter(t => matchesTab(t, activeTab, currentUserId));
 
     // 1.5 Filter by Advanced Filters
     if (filters) {
@@ -95,13 +80,6 @@ export default function TicketTableSection({ activeTab = 'all', tickets = [], ne
       );
     }
     
-    // 2. Terapkan data baru jika ada di sesi lokal (opsional untuk efek instan)
-    if (newlyAddedTicket) {
-      if (!filteredData.some(t => t.id === newlyAddedTicket.id)) {
-          filteredData.unshift(newlyAddedTicket);
-      }
-    }
-
     // 3. Sorting
     if (sortConfig) {
       filteredData.sort((a, b) => {
@@ -141,11 +119,10 @@ export default function TicketTableSection({ activeTab = 'all', tickets = [], ne
 
     setDisplayTickets(filteredData);
     setCurrentPage(1); // Reset ke halaman 1 tiap kali data/sort/tab berubah
-  }, [activeTab, tickets, newlyAddedTicket, sortConfig]);
+  }, [activeTab, tickets, sortConfig]);
 
   const totalItems = displayTickets.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
-  
+
   // Data untuk halaman saat ini
   const paginatedTickets = displayTickets.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
@@ -194,29 +171,6 @@ export default function TicketTableSection({ activeTab = 'all', tickets = [], ne
         </p>
       </div>
     );
-  };
-
-  // Helper mendapatkan inisial dari nama
-  const getInitials = (name: string) => {
-    if (!name) return 'U';
-    const parts = name.trim().split(' ');
-    if (parts.length > 1) return (parts[0][0] + parts[1][0]).toUpperCase();
-    return name.substring(0, 2).toUpperCase();
-  };
-
-  const formatTimeAgo = (dateStr: string) => {
-    if (!dateStr) return t('time.unknown', 'Unknown');
-    const date = new Date(dateStr);
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-    
-    if (diffInSeconds < 60) return `${diffInSeconds} ${t('time.secs_ago', 'secs ago')}`;
-    const diffInMinutes = Math.floor(diffInSeconds / 60);
-    if (diffInMinutes < 60) return `${diffInMinutes} ${t('time.mins_ago', 'mins ago')}`;
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) return `${diffInHours} ${t('time.hrs_ago', 'hrs ago')}`;
-    const diffInDays = Math.floor(diffInHours / 24);
-    return `${diffInDays} ${t('time.days_ago', 'days ago')}`;
   };
 
   const SortIcon = ({ columnKey }: { columnKey: string }) => {
@@ -309,7 +263,7 @@ export default function TicketTableSection({ activeTab = 'all', tickets = [], ne
                     </Link>
                   </td>
                   <td className="px-4 py-4 text-[#43474F] font-iBMPlexSans text-sm whitespace-nowrap">
-                    {formatTimeAgo(ticket.updated_at || ticket.created_at)}
+                    {formatTimeAgo(ticket.updated_at || ticket.created_at, language)}
                   </td>
                   <td className="px-4 py-4 max-w-xs">
                     <Link href={`/dashboard/administrasi/tickets/${ticket.id}`} className="block">
@@ -378,50 +332,13 @@ export default function TicketTableSection({ activeTab = 'all', tickets = [], ne
         </table>
       </div>
 
-      {/* Pagination */}
-      <div className="flex flex-col sm:flex-row py-4 px-6 justify-between items-center border-t border-t-[#C3C6D1] bg-[#FFF] w-full mt-auto gap-4">
-        <div className="flex items-center gap-2">
-            <select 
-                value={itemsPerPage} 
-                onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                className="text-[13px] border border-[#C3C6D1] rounded px-2 py-1 outline-none focus:border-[#1E3A8A] text-[#1A1C1E]"
-            >
-                <option value={8}>8 / {t('tickets.per_page', 'page')}</option>
-                <option value={10}>10 / {t('tickets.per_page', 'page')}</option>
-                <option value={15}>15 / {t('tickets.per_page', 'page')}</option>
-                <option value={25}>25 / {t('tickets.per_page', 'page')}</option>
-                <option value={50}>50 / {t('tickets.per_page', 'page')}</option>
-            </select>
-            <p className="text-[#1A1C1E] font-iBMPlexSans text-[13px]">
-                {t('tickets.showing', 'Showing')} {totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, totalItems)} {t('tickets.of', 'of')} {totalItems} {t('tickets.tickets_count', 'tickets')}
-            </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className={`flex justify-center items-center rounded border border-[#C3C6D1] w-8 h-8 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-50'}`}>
-            <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 10L0 5L5 0L6.16667 1.16667L2.33333 5L6.16667 8.83333L5 10Z" fill="black" /></svg>
-          </button>
-          
-          <button onClick={() => setCurrentPage(1)} className={`cursor-pointer rounded w-8 h-8 flex items-center justify-center font-semibold text-xs ${currentPage === 1 ? 'bg-[#1E3A8A] text-white' : 'hover:bg-gray-100 text-black'}`}>1</button>
-          
-          {totalPages > 1 && (
-              <button onClick={() => setCurrentPage(2)} className={`cursor-pointer rounded w-8 h-8 flex items-center justify-center font-semibold text-xs ${currentPage === 2 ? 'bg-[#1E3A8A] text-white' : 'hover:bg-gray-100 text-black'}`}>2</button>
-          )}
-
-          {totalPages > 2 && (
-              <button onClick={() => setCurrentPage(3)} className={`cursor-pointer rounded w-8 h-8 flex items-center justify-center font-semibold text-xs ${currentPage === 3 ? 'bg-[#1E3A8A] text-white' : 'hover:bg-gray-100 text-black'}`}>3</button>
-          )}
-          
-          {totalPages > 4 && <span className="px-1 text-base">...</span>}
-          
-          {totalPages > 3 && (
-            <button onClick={() => setCurrentPage(totalPages)} className={`cursor-pointer rounded w-8 h-8 flex items-center justify-center font-semibold text-xs ${currentPage === totalPages ? 'bg-[#1E3A8A] text-white' : 'hover:bg-gray-100 text-black'}`}>{totalPages}</button>
-          )}
-          
-          <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className={`flex justify-center items-center rounded border border-[#C3C6D1] w-8 h-8 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-50'}`}>
-            <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.83333 5L0 1.16667L1.16667 0L6.16667 5L1.16667 10L0 8.83333L3.83333 5Z" fill="black" /></svg>
-          </button>
-        </div>
-      </div>
+      <TablePagination
+        page={currentPage}
+        perPage={itemsPerPage}
+        total={totalItems}
+        onPage={setCurrentPage}
+        onPerPage={setItemsPerPage}
+      />
     </div>
   );
 }

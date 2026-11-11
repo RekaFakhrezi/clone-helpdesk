@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { supabase, supabaseAdmin } from '../config/supabase';
+import { applySortOrders } from './metadataController';
 
 export const getBotMenus = async (req: Request, res: Response) => {
   try {
@@ -59,11 +60,7 @@ export const reorderBotMenus = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Format updates tidak valid' });
     }
 
-    const results = await Promise.all(
-      updates.map((u: any) => supabaseAdmin.from('bot_menus').update({ sort_order: u.sort_order }).eq('id', u.id))
-    );
-
-    const errors = results.filter(r => r.error);
+    const errors = await applySortOrders('bot_menus', updates);
     if (errors.length > 0) {
       console.error("Errors reordering bot menus:", errors);
       return res.status(500).json({ success: false, message: 'Gagal memperbarui beberapa urutan' });

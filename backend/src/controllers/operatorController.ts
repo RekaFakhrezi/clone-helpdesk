@@ -1,25 +1,19 @@
 import { Request, Response } from 'express';
 import { supabase } from '../config/supabase';
-import { sendMessage } from '../services/wasender';
+import { notifyStatusChange } from '../services/wasender';
+import { TICKET_SELECT, loadTicketFilterMeta } from '../services/ticketQueries';
 
 export const getOperatorDashboard = async (req: Request, res: Response) => {
   try {
     const { data: tickets, error: ticketsError } = await supabase
       .from('tickets')
-      .select('*, category:categories(name), dept:departments(name), tech:staff_profiles!tickets_tech_id_fkey(name)')
+      .select(TICKET_SELECT)
       .order('created_at', { ascending: false });
 
     if (ticketsError) throw ticketsError;
 
     const { data: ticketLogs } = await supabase.from('ticket_logs').select('*');
-    const { data: categories } = await supabase.from('categories').select('*');
-    const { data: slaConfigs } = await supabase.from('sla_configs').select('*');
-    const { data: departments } = await supabase.from('departments').select('*');
-
-    const formattedCategories = (categories || []).map(cat => ({
-      ...cat,
-      slaData: (slaConfigs || []).find(sla => sla.category_id === cat.id)
-    }));
+    const { categories: formattedCategories, departments } = await loadTicketFilterMeta();
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -75,7 +69,7 @@ export const getTicketById = async (req: Request, res: Response) => {
 
     const { data: ticket, error: ticketError } = await supabase
       .from('tickets')
-      .select('*, category:categories(name), dept:departments(name), tech:staff_profiles!tickets_tech_id_fkey(name), attachments:ticket_attachments(*)')
+      .select(`${TICKET_SELECT}, attachments:ticket_attachments(*)`)
       .eq('id', id)
       .single();
 
@@ -118,31 +112,11 @@ export const updateTicket = async (req: Request, res: Response) => {
       if (updates.status) {
         await supabase.from('ticket_logs').insert({ ticket_id: id, action: 'CHANGE_STATUS', notes: 'Status changed to ' + updates.status });
         
-        // Auto WA Notif
-        if (updatedTicket?.phone) {
-          if (updates.status === 'WAITING CONFIRMATION') {
-            const confirmLink = `${process.env.FRONTEND_URL || 'https://helpdesk-it-jet.vercel.app'}/ticket/confirm/${updatedTicket.id}`;
-            const msg = `Halo ${updatedTicket.reporter_name || 'Pelapor'},\n\nTiket pengaduan Anda dengan nomor *${updatedTicket.ticket_num || updatedTicket.id}* telah selesai ditangani oleh teknisi kami.\n\nMohon konfirmasi apakah masalah sudah benar-benar teratasi melalui tautan berikut:\n${confirmLink}\n\n*ATAU balas pesan ini* dengan mengetik kata _selesai_, _ok_, atau _terimakasih_.\n\nTerima kasih.`;
-            sendMessage(updatedTicket.phone, msg).catch(e => console.error('Gagal kirim WA konfirmasi operator:', e));
-          } else {
-            let msg = `Halo ${updatedTicket.reporter_name || 'Pelapor'},\n\nStatus tiket pengaduan Anda (*${updatedTicket.ticket_num || updatedTicket.id}*) telah diperbarui menjadi: *${updates.status}*.`;
-            if (updates.status === 'Open' || updates.status === 'OPEN') {
-              msg += '\n\nTiket Anda telah berhasil diverifikasi oleh operator dan akan segera diteruskan ke departemen/teknisi terkait.';
-            } else if (updates.status === 'IN PROGRESS' || updates.status === 'Diproses') {
-              msg += '\n\nTeknisi kami saat ini sedang mengerjakan dan menangani kendala Anda.';
-            } else if (updates.status === 'RESOLVED' || updates.status === 'CLOSED') {
-              await supabase.from('wa_sessions').upsert({
-                phone: updatedTicket.phone,
-                step: 'WAITING_RATING',
-                data: { ticket_id: updatedTicket.id },
-                updated_at: new Date().toISOString()
-              });
-              msg = `Halo ${updatedTicket.reporter_name || 'Pelapor'},\n\nTiket pengaduan Anda (*${updatedTicket.ticket_num || updatedTicket.id}*) telah resmi diselesaikan oleh tim IT Helpdesk kami. ✅\n\nBantu kami meningkatkan layanan dengan memberikan *RATING (1-5)* beserta ulasan Anda dalam 1 pesan balasan.\n\nContoh balasan:\n_5 Pelayanan sangat cepat dan teknisi ramah_`;
-            } else if (updates.status === 'REJECTED' || updates.status === 'Ditolak') {
-              msg += '\n\nMohon maaf, tiket Anda ditolak karena alasan tertentu. Silakan cek detail tiket atau hubungi Helpdesk.';
-            }
-            sendMessage(updatedTicket.phone, msg).catch(e => console.error('Gagal kirim WA auto notif operator:', e));
-          }
+        // Auto WA Notif (tidak menahan respons endpoint)
+        if (updatedTicket) {
+          notifyStatusChange(updatedTicket, updates.status, { confirmWord: 'terimakasih' }).catch(e =>
+            console.error('Gagal kirim WA auto notif:', e)
+          );
         }
       }
     }
@@ -157,20 +131,12 @@ export const getAllOperatorTickets = async (req: Request, res: Response) => {
   try {
     const { data: tickets, error: ticketsError } = await supabase
       .from('tickets')
-      .select('*, category:categories(name), dept:departments(name), tech:staff_profiles!tickets_tech_id_fkey(name)')
+      .select(TICKET_SELECT)
       .order('created_at', { ascending: false });
 
     if (ticketsError) throw ticketsError;
 
-    const { data: categories } = await supabase.from('categories').select('*');
-    const { data: slaConfigs } = await supabase.from('sla_configs').select('*');
-    const { data: departments } = await supabase.from('departments').select('*');
-    const { data: technicians } = await supabase.from('staff_profiles').select('id, name, role').in('role', ['teknisi', 'agent']);
-
-    const formattedCategories = (categories || []).map(cat => ({
-      ...cat,
-      slaData: (slaConfigs || []).find(sla => sla.category_id === cat.id)
-    }));
+    const { categories: formattedCategories, departments, technicians } = await loadTicketFilterMeta();
 
     return res.status(200).json({
       success: true,

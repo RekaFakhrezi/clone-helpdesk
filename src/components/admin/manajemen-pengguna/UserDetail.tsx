@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import StatusBadge from '@/components/admin/tickets/StatusBadge';
 import { useSearchParams, useRouter } from 'next/navigation';
+import Toast, { useToast } from '@/components/ui/Toast';
 import { fetchClient } from '@/lib/apiClient';
 
 export default function UserDetail({ userId }: { userId: string }) {
@@ -15,12 +16,7 @@ export default function UserDetail({ userId }: { userId: string }) {
   const [tickets, setTickets] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  
-  const showToast = (message: string) => {
-    setToastMessage(message);
-    setTimeout(() => setToastMessage(null), 3000);
-  };
+  const { toast, showToast } = useToast();
   
   const [isEditing, setIsEditing] = useState(searchParams?.get('edit') === 'true');
   
@@ -357,15 +353,7 @@ export default function UserDetail({ userId }: { userId: string }) {
       </div>
 
       {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 px-5 py-3.5 rounded-xl shadow-lg flex items-center gap-3 z-[100] animate-in slide-in-from-top-5 duration-300 bg-emerald-50 text-emerald-700 border border-emerald-200">
-            <svg className="w-5 h-5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-            <span className="text-[14px] font-bold tracking-tight">{toastMessage}</span>
-            <button onClick={() => setToastMessage(null)} className="ml-2 hover:opacity-75 transition-opacity">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-        </div>
-      )}
+      <Toast toast={toast} />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from '@/context/LanguageContext';
+import Modal, { ModalCancelButton } from '@/components/ui/Modal';
 
 interface AgentModalProps {
   isOpen: boolean;
@@ -86,9 +87,11 @@ export default function AgentModal({ isOpen, onClose, onSuccess, showToast, agen
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-lg p-6 w-[500px] border border-[#C3C6D1] shadow-xl">
-        <h2 className="text-lg font-bold mb-4 text-[#001E40]">{agent ? t('staff.edit_agent_title') : t('staff.add_agent_title')}</h2>
+    <Modal
+      title={agent ? t('staff.edit_agent_title') : t('staff.add_agent_title')}
+      onClose={onClose}
+      maxWidth="max-w-[500px]"
+    >
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
             <label className="block text-sm text-gray-600 mb-1">{t('profile.full_name')}</label>
@@ -146,13 +149,12 @@ export default function AgentModal({ isOpen, onClose, onSuccess, showToast, agen
           </div>
           
           <div className="flex justify-end gap-3 mt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-100">{t('staff.cancel')}</button>
+            <ModalCancelButton onClick={onClose}>{t('staff.cancel')}</ModalCancelButton>
             <button type="submit" disabled={loading} className="px-4 py-2 text-sm text-white bg-[#001E40] rounded hover:bg-[#00142d] disabled:opacity-50">
               {loading ? t('staff.saving') : t('staff.save')}
             </button>
           </div>
         </form>
-      </div>
-    </div>
+    </Modal>
   );
 }

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Save, AlertCircle, RefreshCw } from 'lucide-react';
 import { fetchClient } from '@/lib/apiClient';
 import WhatsAppMockup from './WhatsAppMockup';
+import Toast, { useToast } from '@/components/ui/Toast';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function BotSettingsWorkspace() {
@@ -18,15 +19,10 @@ export default function BotSettingsWorkspace() {
   
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const { toast, showToast } = useToast();
   
   // Track which input is focused to update the mockup preview
   const [activePreview, setActivePreview] = useState<keyof typeof settings>('greeting_message');
-
-  const showToast = (message: string) => {
-    setToastMessage(message);
-    setTimeout(() => setToastMessage(null), 3000);
-  };
 
   const translatePreviewContent = (content: string) => {
     if (language === 'id' || !content) return content;
@@ -102,15 +98,7 @@ export default function BotSettingsWorkspace() {
   return (
     <div className="flex flex-col items-start gap-6 w-full relative">
       {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 px-5 py-3.5 rounded-xl shadow-lg flex items-center gap-3 z-[100] animate-in slide-in-from-top-5 duration-300 bg-[#10B981] text-white border border-[#059669]">
-          <svg className="w-5 h-5 text-white shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-          <span className="text-[14px] font-bold tracking-tight">{toastMessage}</span>
-          <button onClick={() => setToastMessage(null)} className="ml-2 hover:opacity-75 transition-opacity">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-          </button>
-        </div>
-      )}
+      <Toast toast={toast} />
 
       <div className="flex justify-between items-end w-full mb-8">
         <div className="flex flex-col items-start gap-1 w-fit">

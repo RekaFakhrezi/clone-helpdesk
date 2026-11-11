@@ -3,6 +3,28 @@ import { supabase, supabaseAdmin } from '../config/supabase';
 import fs from 'fs';
 import path from 'path';
 
+interface SortOrderUpdate {
+  id: number;
+  sort_order: number;
+  parent_id?: number | null;
+}
+
+/**
+ * Terapkan urutan (dan parent opsional) untuk tabel yang punya kolom sort_order.
+ * Mengembalikan daftar update yang gagal.
+ */
+export async function applySortOrders(table: 'categories' | 'bot_menus', updates: SortOrderUpdate[]) {
+  const results = await Promise.all(
+    updates.map((u) => {
+      const payload: Record<string, unknown> = { sort_order: u.sort_order };
+      if (u.parent_id !== undefined) payload.parent_id = u.parent_id;
+      return supabaseAdmin.from(table).update(payload).eq('id', u.id);
+    })
+  );
+
+  return results.filter((r) => r.error);
+}
+
 /**
  * GET /api/admin/departments
  */
@@ -49,15 +71,7 @@ export const reorderCategories = async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: 'Updates array is required' });
     }
 
-    const results = await Promise.all(
-      updates.map(u => {
-        const payload: any = { sort_order: u.sort_order };
-        if (u.parent_id !== undefined) payload.parent_id = u.parent_id;
-        return supabaseAdmin.from('categories').update(payload).eq('id', u.id);
-      })
-    );
-
-    const errors = results.filter(r => r.error);
+    const errors = await applySortOrders('categories', updates);
     if (errors.length > 0) {
       console.error("Errors reordering:", errors);
       return res.status(500).json({ success: false, message: 'Partial failure updating sort orders' });
@@ -118,9 +132,6 @@ export const deleteCategory = async (req: Request, res: Response) => {
 export const getBotTemplates = async (req: Request, res: Response) => {
   try {
     const filePath = path.join(__dirname, '../bot_settings.json');
-    if (!fs.existsSync(filePath)) {
-      fs.writeFileSync(filePath, JSON.stringify({}));
-    }
     const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
     res.status(200).json({ success: true, data });
   } catch (error: any) {

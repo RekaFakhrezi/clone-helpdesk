@@ -1041,16 +1041,58 @@ export function translateTicketSubject(subject: string, language: Language): str
   return subject.replace(prefix, translatedPrefix);
 }
 
+const CATEGORY_TRANSLATIONS: Array<[string, string]> = [
+  ['Aplikasi', 'Applications'],
+  ['Cyber dan Security', 'Cyber and Security'],
+  ['Jaringan dan Internet', 'Network and Internet'],
+  ['Website dan Email', 'Website and Email'],
+  ['Email', 'Email'],
+  ['Website', 'Website'],
+  ['Domain', 'Domain'],
+  ['Keamanan Sistem', 'System Security'],
+  ['E-office', 'E-office'],
+  ['VM', 'Virtual Machine'],
+  ['Licensi', 'License'],
+  ['Lupa Password', 'Forgot Password'],
+  ['SIAP', 'SIAP'],
+  ['Gentayu', 'Gentayu'],
+  ['SSO', 'SSO'],
+  ['Mandala', 'Mandala'],
+  ['Wifi', 'Wifi'],
+  ['Gagal TTE (Tanda Tangan Elektronik)', 'Failed TTE (Electronic Signature)'],
+  ['Ubah Email Recovery', 'Change Recovery Email'],
+  ['Aplikasi Down / Error 500', 'Application Down / Error 500'],
+  ['Backdoor', 'Backdoor'],
+  ['Data Tidak Sinkron', 'Data Not Synced'],
+  ['Tidak Kompatibel di Browser', 'Browser Incompatible'],
+  ['Gagal Sinkronisasi Pembayaran', 'Payment Sync Failed'],
+  ['Error Sinkronisasi KRS', 'KRS Sync Error'],
+  ['Aplikasi Crash / White Screen', 'App Crash / White Screen'],
+  ['Indikasi Malware / Script Ilegal', 'Malware Indication / Illegal Script'],
+  ['Akses Tidak Dikenal', 'Unknown Access'],
+  ['Serangan DDoS', 'DDoS Attack'],
+  ['Kebocoran Data (Data Breach)', 'Data Breach'],
+  ['Tidak Bisa Connect (Auth Error)', 'Cannot Connect (Auth Error)'],
+  ['Sering Putus / Disconnect', 'Frequent Disconnects'],
+  ['Gagal Login VPN', 'VPN Login Failed'],
+  ['Aplikasi Internal Tidak Bisa Diakses', 'Internal App Inaccessible'],
+  ['Server Tidak Bisa Diremote (RDP/SSH)', 'Server Cannot be Remoted (RDP/SSH)'],
+  ['Setting DNS (A Record/CNAME)', 'DNS Setting (A Record/CNAME)'],
+  ['Request SSL Certificate', 'Request SSL Certificate'],
+  ['Permintaan Pembuatan Subdomain', 'Subdomain Creation Request'],
+  ['Inbox Penuh / Bouncing', 'Inbox Full / Bouncing'],
+  ['Terkena Spam / Phishing', 'Spam / Phishing Target'],
+  ['Request Lisensi Zoom / Office 365', 'Zoom / Office 365 License Request'],
+  ['Halaman Website Error / Blank', 'Website Error / Blank Page'],
+];
+
+/** Entri terpanjang lebih dulu supaya nama gabungan tidak terpotong oleh entri pendeknya. */
+const CATEGORY_TRANSLATIONS_SORTED = [...CATEGORY_TRANSLATIONS].sort((a, b) => b[0].length - a[0].length);
+
 export function translateCategoryName(name: string, language: Language): string {
   if (!name || language === 'id') return name;
 
-  const categoryTranslations: Array<[string, string]> = [
-    ['Akses Tidak Dikenal', 'Unknown Access'],
-    ['Akses Not Dikenal', 'Unknown Access'],
-    ['Access Not Dikenal', 'Unknown Access'],
-  ];
-
-  return categoryTranslations.reduce((translated, [source, target]) => (
+  return CATEGORY_TRANSLATIONS_SORTED.reduce((translated, [source, target]) => (
     translated.replace(new RegExp(source.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), target)
   ), name);
 }

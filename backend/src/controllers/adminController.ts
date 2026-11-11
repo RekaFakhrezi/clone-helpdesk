@@ -121,9 +121,13 @@ export const getAdminDashboard = async (req: Request, res: Response): Promise<vo
     }
 
     const trendData: { name: string; value: number }[] = [];
+    const trendIndexByDay = new Map<string, number>();
+    const dayKey = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+
     for (let i = 29; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
+      trendIndexByDay.set(dayKey(d), trendData.length);
       trendData.push({ name: d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }), value: 0 });
     }
 
@@ -136,9 +140,8 @@ export const getAdminDashboard = async (req: Request, res: Response): Promise<vo
 
     if (trendTickets) {
       trendTickets.forEach(t => {
-        const dateStr = new Date(t.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-        const item = trendData.find(x => x.name === dateStr);
-        if (item) item.value++;
+        const index = trendIndexByDay.get(dayKey(new Date(t.created_at)));
+        if (index !== undefined) trendData[index].value++;
       });
     }
 
@@ -303,22 +306,13 @@ export const updateDepartment = async (req: Request, res: Response) => {
 export const updateSLA = async (req: Request, res: Response) => {
   try {
     const payload = req.body;
-    const { data: existing } = await supabaseAdmin.from('sla_configs').select('id').eq('priority', payload.priority).maybeSingle();
-    let result, error;
-    if (existing) {
-      const res = await supabaseAdmin.from('sla_configs').update({
-        response_target_hours: payload.response_target_hours,
-        resolution_target_hours: payload.resolution_target_hours,
-      }).eq('id', existing.id).select().single();
-      result = res.data;
-      error = res.error;
-    } else {
-      const res = await supabaseAdmin.from('sla_configs').insert([payload]).select().single();
-      result = res.data;
-      error = res.error;
-    }
+    const { data, error } = await supabaseAdmin
+      .from('sla_configs')
+      .upsert(payload, { onConflict: 'priority' })
+      .select()
+      .single();
     if (error) throw error;
-    res.json(result);
+    res.json(data);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

@@ -1,12 +1,10 @@
 'use client';
-import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import OperatorSidebar from './OperatorSidebar';
-import AdminTopbar from '@/components/admin/layout/AdminTopbar';
+import DashboardShell from '@/components/shared/layout/DashboardShell';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function OperatorLayout({ children }: { children: React.ReactNode }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const pathname = usePathname();
   const { t } = useLanguage();
 
@@ -22,32 +20,9 @@ export default function OperatorLayout({ children }: { children: React.ReactNode
     return t('topbar.dashboard_operator');
   };
 
-  const isHideableOnDesktop = pathname?.includes('/tickets') || false;
-
   return (
-    <div className="min-h-screen bg-[var(--paper)] flex">
-      {/* Sidebar (Kiri) */}
-      <OperatorSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-
-      {/* Main Content Wrapper (Kanan) */}
-      <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${
-        isSidebarOpen ? 'lg:pl-72' : 'lg:pl-[80px]'
-      }`}>
-        {/* Topbar (Atas) */}
-        <AdminTopbar
-          onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          breadcrumbParent="Dashboard"
-          pageTitle={getPageTitle()}
-          showMenuButtonOnDesktop={true}
-        />
-
-        {/* Main Content */}
-        <main className="flex-1 p-4 lg:p-8 overflow-y-auto">
-          <div className="w-full">
-            {children}
-          </div>
-        </main>
-      </div>
-    </div>
+    <DashboardShell Sidebar={OperatorSidebar} pageTitle={getPageTitle()}>
+      {children}
+    </DashboardShell>
   );
 }

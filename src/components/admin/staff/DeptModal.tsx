@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useLanguage } from '@/context/LanguageContext';
+import Modal, { ModalCancelButton } from '@/components/ui/Modal';
 
 interface DeptModalProps {
   isOpen: boolean;
@@ -64,11 +65,11 @@ export default function DeptModal({ isOpen, onClose, onSuccess, dept, showToast 
   };
 
   return (
-    <>
-      <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none p-4">
-        <div className="bg-white rounded-lg shadow-xl p-6 w-[400px] pointer-events-auto border border-[#C3C6D1]">
-          <h2 className="text-lg font-bold mb-4">{dept ? t('staff.edit_dept_title') : t('staff.add_dept_title')}</h2>
+    <Modal
+      title={dept ? t('staff.edit_dept_title') : t('staff.add_dept_title')}
+      onClose={onClose}
+      maxWidth="max-w-[400px]"
+    >
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
             <label className="block text-sm text-gray-600 mb-1">{t('staff.department')}</label>
@@ -76,14 +77,12 @@ export default function DeptModal({ isOpen, onClose, onSuccess, dept, showToast 
           </div>
           
           <div className="flex justify-end gap-3 mt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-100">{t('staff.cancel')}</button>
+            <ModalCancelButton onClick={onClose}>{t('staff.cancel')}</ModalCancelButton>
             <button type="submit" disabled={loading} className="px-4 py-2 text-sm text-white bg-[#001E40] rounded hover:bg-[#00142d] disabled:opacity-50">
               {loading ? t('staff.saving') : t('staff.save')}
             </button>
           </div>
         </form>
-      </div>
-    </div>
-    </>
+    </Modal>
   );
 }

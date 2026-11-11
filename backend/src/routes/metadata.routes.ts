@@ -6,8 +6,8 @@ const router = Router();
 
 router.use(requireAuth);
 
-router.get('/departments', requireRole(['admin', 'pimpinan', 'operator', 'teknisi']), getDepartments);
-router.get('/categories', requireRole(['admin', 'pimpinan', 'operator', 'teknisi']), getCategories);
+router.get('/departments', getDepartments);
+router.get('/categories', getCategories);
 router.post('/categories', requireRole(['admin']), createCategory);
 router.put('/categories/reorder', requireRole(['admin']), reorderCategories);
 router.put('/categories/:id', requireRole(['admin']), updateCategory);

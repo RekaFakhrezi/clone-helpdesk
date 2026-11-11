@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 // 1. Import fungsi loginStaff dari file authService kamu (sesuaikan path-nya jika perlu)
 import { loginStaff, updateStaffProfile } from '../services/AuthService';
 import { supabase } from '../config/supabase';
+import { AuthRequest } from '../middleware/authMiddleware';
 
 /**
  * POST /api/auth/login
@@ -38,21 +39,11 @@ export const loginHandler = async (req: Request, res: Response) => {
  * PUT /api/auth/profile
  * Handler untuk update profil staf (dan password)
  */
-export const updateProfileHandler = async (req: Request, res: Response) => {
+export const updateProfileHandler = async (req: AuthRequest, res: Response) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Token tidak valid atau tidak ditemukan.' });
-    }
-    const token = authHeader.split(' ')[1];
+    const { name, phone, ext, mobile, username, password } = req.body;
 
-    const { userId, name, phone, ext, mobile, username, password } = req.body;
-
-    if (!userId) {
-      return res.status(400).json({ error: 'User ID wajib disertakan.' });
-    }
-
-    await updateStaffProfile(token, userId, { name, phone, ext, mobile, username, password });
+    await updateStaffProfile(req.token!, req.user!.id, { name, phone, ext, mobile, username, password });
 
     return res.status(200).json({
       success: true,
@@ -70,16 +61,9 @@ export const updateProfileHandler = async (req: Request, res: Response) => {
  * GET /api/auth/me
  * Mendapatkan data user saat ini berdasarkan token
  */
-export const getMe = async (req: Request, res: Response) => {
+export const getMe = async (req: AuthRequest, res: Response) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) return res.status(401).json({ error: 'Token tidak ditemukan.' });
-
-    const { data: { user }, error } = await supabase.auth.getUser(token);
-
-    if (error || !user) {
-      return res.status(401).json({ error: 'Token tidak valid.' });
-    }
+    const user = req.authUser!;
 
     // Ambil profile
     const { data: profile } = await supabase

@@ -7,6 +7,10 @@ import { fetchClient } from '@/lib/apiClient';
 import { supabase } from '@/lib/supabase';
 import { useLanguage } from '@/context/LanguageContext';
 import { translateCategoryName, translateTicketSubject } from '@/lib/translations';
+import TablePagination from '@/components/ui/TablePagination';
+import Toast, { useToast } from '@/components/ui/Toast';
+import { downloadCsv } from '@/lib/download';
+import { formatTimeAgo } from '@/lib/format';
 
 type Ticket = any; // simplified for this example
 type Category = { id: string | number, name: string };
@@ -20,7 +24,6 @@ export default function OperatorTicketTable({
     departments,
     technicians,
     actionType = 'verify',
-    assignToHeader,
     assignToType,
     tabsNode,
     currentUserId
@@ -31,7 +34,6 @@ export default function OperatorTicketTable({
     departments: Department[],
     technicians?: Technician[],
     actionType?: 'verify' | 'rollback' | 'readonly' | 'resolve',
-    assignToHeader?: string,
     assignToType?: 'dept' | 'tech' | 'resolver',
     tabsNode?: React.ReactNode,
     currentUserId?: string
@@ -64,14 +66,8 @@ export default function OperatorTicketTable({
     // States for sorting
     const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>({ key: 'priority', direction: 'desc' });
 
-    // Toast notification state
-    const [toasts, setToasts] = useState<{id: number, message: string, type: 'success' | 'error'}[]>([]);
-
-    const showToast = (message: string, type: 'success' | 'error' = 'success') => {
-        const id = Date.now();
-        setToasts(prev => [...prev, { id, message, type }]);
-        setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 5000);
-    };
+    // Toast notification
+    const { toast, showToast } = useToast();
 
     // Action handler for Terima / Tolak / Rollback / Resolve
     const handleTicketAction = async (ticketId: string, ticketNum: string, action: 'accept' | 'reject' | 'rollback' | 'resolve') => {
@@ -121,16 +117,6 @@ export default function OperatorTicketTable({
             console.error('Error ticket action:', err);
             showToast('Gagal memproses tiket.', 'error');
         }
-    };
-
-    // Reset handler
-    const handleReset = () => {
-        setSearchQuery('');
-        setSelectedCategory('');
-        setStartDate('');
-        setEndDate('');
-        setSortConfig(null);
-        setSelectedTickets([]);
     };
 
     // Inline update handler
@@ -248,16 +234,7 @@ export default function OperatorTicketTable({
             t.is_overdue ? 'Ya' : 'Tidak'
         ]);
 
-        const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-        
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.setAttribute('href', url);
-        link.setAttribute('download', `export_tiket_operator_${new Date().toISOString().split('T')[0]}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        downloadCsv([headers, ...rows], `export_tiket_operator_${new Date().toISOString().split('T')[0]}.csv`);
     };
 
     // Filter and Sort Logic
@@ -334,7 +311,6 @@ export default function OperatorTicketTable({
     }, [processedTickets.length]);
 
     const totalItems = processedTickets.length;
-    const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
     const paginatedTickets = processedTickets.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     const getSortArrow = (key: string) => {
@@ -365,28 +341,6 @@ export default function OperatorTicketTable({
             </p>
           </div>
         );
-    };
-
-    const getInitials = (name: string) => {
-        if (!name) return 'U';
-        const parts = name.trim().split(' ');
-        if (parts.length > 1) return (parts[0][0] + parts[1][0]).toUpperCase();
-        return name.substring(0, 2).toUpperCase();
-    };
-
-    const formatTimeAgo = (dateStr: string) => {
-        if (!dateStr) return 'Unknown';
-        const date = new Date(dateStr);
-        const now = new Date();
-        const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-        
-        if (diffInSeconds < 60) return `${diffInSeconds} secs ago`;
-        const diffInMinutes = Math.floor(diffInSeconds / 60);
-        if (diffInMinutes < 60) return `${diffInMinutes} mins ago`;
-        const diffInHours = Math.floor(diffInMinutes / 60);
-        if (diffInHours < 24) return `${diffInHours} hrs ago`;
-        const diffInDays = Math.floor(diffInHours / 24);
-        return `${diffInDays} days ago`;
     };
 
     return (
@@ -575,7 +529,7 @@ export default function OperatorTicketTable({
                                 </div>
                             </th>
                             <th className="px-4 py-4 select-none w-44">
-                                <span className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-wider">{assignToHeader || t('tickets.col_assigned_to', 'ASSIGN TO')}</span>
+                                <span className="text-[#43474F] font-iBMPlexSans text-xs font-semibold tracking-wider">{t('tickets.col_assigned_to', 'ASSIGN TO')}</span>
                             </th>
                             {actionType !== 'readonly' && (
                                 <th className="px-4 py-4 select-none text-right w-40">
@@ -616,7 +570,7 @@ export default function OperatorTicketTable({
                                         </Link>
                                     </td>
                                     <td className="px-4 py-4 text-[#43474F] font-iBMPlexSans text-sm whitespace-nowrap" suppressHydrationWarning>
-                                        {formatTimeAgo(ticket.updated_at || ticket.created_at)}
+                                        {formatTimeAgo(ticket.updated_at || ticket.created_at, language)}
                                     </td>
                                     <td className="px-4 py-4 max-w-xs">
                                         <Link href={`/dashboard/operator/tickets/${ticket.id}`} className="block">
@@ -732,62 +686,16 @@ export default function OperatorTicketTable({
                 </table>
             </div>
 
-            {/* Pagination */}
-            <div className="flex flex-col sm:flex-row py-4 px-6 justify-between items-center border-t border-t-[#C3C6D1] bg-[#FFF] w-full mt-auto gap-4">
-                <div className="flex items-center gap-2">
-                    <select 
-                        value={itemsPerPage} 
-                        onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-                        className="text-[13px] border border-[#C3C6D1] rounded px-2 py-1 outline-none focus:border-[#1E3A8A] text-[#1A1C1E]"
-                    >
-                        <option value={8}>8 / {t('tickets.per_page', 'page')}</option>
-                        <option value={10}>10 / {t('tickets.per_page', 'page')}</option>
-                        <option value={15}>15 / {t('tickets.per_page', 'page')}</option>
-                        <option value={25}>25 / {t('tickets.per_page', 'page')}</option>
-                        <option value={50}>50 / {t('tickets.per_page', 'page')}</option>
-                    </select>
-                    <p className="text-[#1A1C1E] font-iBMPlexSans text-[13px]">
-                        {t('tickets.showing', 'Showing')} {totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, totalItems)} {t('tickets.of', 'of')} {totalItems} {t('tickets.tickets_count', 'tickets')}
-                    </p>
-                </div>
-                <div className="flex items-center gap-2">
-                <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className={`flex justify-center items-center rounded border border-[#C3C6D1] w-8 h-8 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-50'}`}>
-                    <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 10L0 5L5 0L6.16667 1.16667L2.33333 5L6.16667 8.83333L5 10Z" fill="black" /></svg>
-                </button>
-                
-                <button onClick={() => setCurrentPage(1)} className={`cursor-pointer rounded w-8 h-8 flex items-center justify-center font-semibold text-xs ${currentPage === 1 ? 'bg-[#1E3A8A] text-white' : 'hover:bg-gray-100 text-black'}`}>1</button>
-                
-                {totalPages > 1 && (
-                    <button onClick={() => setCurrentPage(2)} className={`cursor-pointer rounded w-8 h-8 flex items-center justify-center font-semibold text-xs ${currentPage === 2 ? 'bg-[#1E3A8A] text-white' : 'hover:bg-gray-100 text-black'}`}>2</button>
-                )}
-
-                {totalPages > 2 && (
-                    <button onClick={() => setCurrentPage(3)} className={`cursor-pointer rounded w-8 h-8 flex items-center justify-center font-semibold text-xs ${currentPage === 3 ? 'bg-[#1E3A8A] text-white' : 'hover:bg-gray-100 text-black'}`}>3</button>
-                )}
-                
-                {totalPages > 4 && <span className="px-1 text-base">...</span>}
-                
-                {totalPages > 3 && (
-                    <button onClick={() => setCurrentPage(totalPages)} className={`cursor-pointer rounded w-8 h-8 flex items-center justify-center font-semibold text-xs ${currentPage === totalPages ? 'bg-[#1E3A8A] text-white' : 'hover:bg-gray-100 text-black'}`}>{totalPages}</button>
-                )}
-                
-                <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className={`flex justify-center items-center rounded border border-[#C3C6D1] w-8 h-8 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-50'}`}>
-                    <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.83333 5L0 1.16667L1.16667 0L6.16667 5L1.16667 10L0 8.83333L3.83333 5Z" fill="black" /></svg>
-                </button>
-                </div>
-            </div>
+            <TablePagination
+                page={currentPage}
+                perPage={itemsPerPage}
+                total={totalItems}
+                onPage={setCurrentPage}
+                onPerPage={setItemsPerPage}
+            />
         </div>
 
-            {/* Toast Notifications */}
-            <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none">
-                {toasts.map(toast => (
-                    <div key={toast.id} className={`px-5 py-3 rounded-xl shadow-lg border text-sm font-bold animate-in slide-in-from-bottom-5 fade-in duration-300 pointer-events-auto ${
-                        toast.type === 'success' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-red-50 text-red-700 border-red-200'
-                    }`}>
-                        {toast.message}
-                    </div>
-                ))}
-            </div>
+            <Toast toast={toast} />
         </div>
     );
 }

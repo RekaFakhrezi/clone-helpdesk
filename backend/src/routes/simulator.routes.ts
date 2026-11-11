@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { simulatorLogs } from '../services/wasender';
+import { pushSimulatorLog, simulatorLogs } from '../services/wasender';
 import { handleIncomingMessage } from '../services/botService';
 
 const router = Router();
@@ -23,15 +23,14 @@ router.post('/send', async (req: Request, res: Response) => {
     }
 
     // Simpan pesan user ke memory agar muncul di UI simulator
-    simulatorLogs.push({ 
-      phone, 
-      message: message || '', 
-      timestamp: new Date().toISOString(), 
+    pushSimulatorLog({
+      phone,
+      message: message || '',
+      timestamp: new Date().toISOString(),
       sender: 'user',
       mediaUrl,
       mediaType
     });
-    if (simulatorLogs.length > 100) simulatorLogs.shift();
 
     // Trigger logika bot secara async (gabungkan mediaUrl ke text jika ada, agar botService sederhana)
     let combinedMessage = message || '';

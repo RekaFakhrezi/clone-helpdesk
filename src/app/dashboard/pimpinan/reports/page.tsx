@@ -7,6 +7,44 @@ import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { fetchClient } from '@/lib/apiClient';
 
+type ReportTicket = {
+  id?: string | number;
+  ticket_num?: string;
+  reporter_name?: string;
+  reporters?: { name?: string };
+  phone?: string;
+  reporter_phone?: string;
+  category?: { name?: string };
+  categories?: { name?: string };
+  dept?: { name?: string };
+  departments?: { name?: string };
+  priority?: string;
+  status?: string;
+  created_at?: string;
+};
+
+type ReportRowKind = 'whatsapp' | 'ticket';
+
+/** Satu baris tabel ekspor (kolom berbeda sesuai jenis rekap). */
+function toRow(ticket: ReportTicket, kind: ReportRowKind): (string | number)[] {
+  const identity = [
+    ticket.ticket_num || `#${ticket.id}`,
+    ticket.reporter_name || ticket.reporters?.name || 'Pelapor',
+  ];
+  const category = ticket.category?.name || ticket.categories?.name || '-';
+  const department = ticket.dept?.name || ticket.departments?.name || '-';
+  const status = ticket.status || 'Open';
+  const createdAt = ticket.created_at ? new Date(ticket.created_at).toLocaleDateString('id-ID') : '-';
+
+  if (kind === 'whatsapp') {
+    const phone = ticket.phone || ticket.reporter_phone || '-';
+    return [...identity, phone, category, department, status, createdAt];
+  }
+
+  return [...identity, category, department, ticket.priority || 'SEDANG', status, createdAt];
+}
+
+
 export default function PimpinanReportsPage() {
   const { t } = useLanguage();
   const [downloading, setDownloading] = useState<string | null>(null);
@@ -109,15 +147,7 @@ export default function PimpinanReportsPage() {
         const waData = data.filter((t: any) => t.phone || t.reporter_phone);
         const targetList = waData.length > 0 ? waData : data;
         headers = ['No Tiket', 'Pelapor', 'No WhatsApp', 'Kategori', 'Departemen', 'Status Tiket', 'Tanggal Dibuat'];
-        tableData = targetList.map((t: any) => [
-          t.ticket_num || `#${t.id}`,
-          t.reporter_name || t.reporters?.name || 'Pelapor',
-          t.phone || t.reporter_phone || '-',
-          t.category?.name || t.categories?.name || '-',
-          t.dept?.name || t.departments?.name || '-',
-          t.status || 'Open',
-          t.created_at ? new Date(t.created_at).toLocaleDateString('id-ID') : '-'
-        ]);
+        tableData = targetList.map((ticket: ReportTicket) => toRow(ticket, 'whatsapp'));
 
       } else {
         // weekly / monthly
@@ -134,15 +164,7 @@ export default function PimpinanReportsPage() {
         }
 
         headers = ['No Tiket', 'Pelapor', 'Kategori', 'Departemen', 'Prioritas', 'Status Tiket', 'Tanggal Dibuat'];
-        tableData = data.map((t: any) => [
-          t.ticket_num || `#${t.id}`,
-          t.reporter_name || t.reporters?.name || 'Pelapor',
-          t.category?.name || t.categories?.name || '-',
-          t.dept?.name || t.departments?.name || '-',
-          t.priority || 'SEDANG',
-          t.status || 'Open',
-          t.created_at ? new Date(t.created_at).toLocaleDateString('id-ID') : '-'
-        ]);
+        tableData = data.map((ticket: ReportTicket) => toRow(ticket, 'ticket'));
       }
 
       if (format === 'PDF') {

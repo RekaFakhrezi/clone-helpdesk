@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import { roleHome } from '@/lib/roleHome';
 
 export async function proxy(request: NextRequest) {
   const url = request.nextUrl.clone();
@@ -17,9 +18,7 @@ export async function proxy(request: NextRequest) {
   if (isLoggedIn && url.pathname.startsWith('/dashboard')) {
     // Tangani root /dashboard redirect sesuai role
     if (url.pathname === '/dashboard') {
-      if (userRole === 'admin' || userRole === 'administrasi') url.pathname = '/dashboard/administrasi';
-      else if (userRole === 'pimpinan') url.pathname = '/dashboard/pimpinan';
-      else url.pathname = '/dashboard/operator';
+      url.pathname = roleHome(userRole);
       return NextResponse.redirect(url);
     }
 
@@ -30,12 +29,9 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // C. Jika user SUDAH login tapi mencoba kembali ke halaman login/register
-  if ((url.pathname.startsWith('/login') || url.pathname.startsWith('/register')) && isLoggedIn) {
-    if (userRole === 'admin' || userRole === 'administrasi') url.pathname = '/dashboard/administrasi';
-    else if (userRole === 'pimpinan') url.pathname = '/dashboard/pimpinan';
-    else url.pathname = '/dashboard/operator';
-    
+  // C. Jika user SUDAH login tapi mencoba kembali ke halaman login
+  if (url.pathname.startsWith('/login') && isLoggedIn) {
+    url.pathname = roleHome(userRole);
     return NextResponse.redirect(url);
   }
 
@@ -45,7 +41,6 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     '/dashboard/:path*',
-    '/login',
-    '/register'
+    '/login'
   ],
 };

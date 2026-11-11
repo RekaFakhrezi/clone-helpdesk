@@ -1,7 +1,6 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { setTimeout as sleep } from 'node:timers/promises';
+import { supabase } from '../config/supabase';
 
 interface SendMessageResponse {
   success: boolean;
@@ -10,7 +9,22 @@ interface SendMessageResponse {
 }
 
 // Memory untuk Simulator
-export const simulatorLogs: { phone: string; message: string; timestamp: string; sender: 'bot' | 'user'; mediaUrl?: string; mediaType?: string; }[] = [];
+export interface SimulatorLogEntry {
+  phone: string;
+  message: string;
+  timestamp: string;
+  sender: 'bot' | 'user';
+  mediaUrl?: string;
+  mediaType?: string;
+}
+
+export const simulatorLogs: SimulatorLogEntry[] = [];
+
+/** Simpan pesan ke memory simulator (maks 100 pesan). */
+export function pushSimulatorLog(entry: SimulatorLogEntry) {
+  simulatorLogs.push(entry);
+  if (simulatorLogs.length > 100) simulatorLogs.shift();
+}
 
 /**
  * Kirim pesan via WASender API dengan retry otomatis.
@@ -23,9 +37,7 @@ export async function sendMessage(to: string, text: string): Promise<SendMessage
   console.log(`Pesan    :\n${text}`);
   console.log('===========================================================\n');
 
-  // Simpan ke memory simulator (maks 100 pesan)
-  simulatorLogs.push({ phone: to, message: text, timestamp: new Date().toISOString(), sender: 'bot' });
-  if (simulatorLogs.length > 100) simulatorLogs.shift();
+  pushSimulatorLog({ phone: to, message: text, timestamp: new Date().toISOString(), sender: 'bot' });
 
   const MAX_RETRIES = 3;
   const BASE_DELAY_MS = 1000; // 1 detik, berlipat setiap retry
@@ -62,7 +74,7 @@ export async function sendMessage(to: string, text: string): Promise<SendMessage
       if (attempt < MAX_RETRIES && isRetryable) {
         const delay = BASE_DELAY_MS * Math.pow(2, attempt - 1); // 1s, 2s, 4s
         console.warn(`[WASender] Mencoba ulang dalam ${delay}ms...`);
-        await new Promise(res => setTimeout(res, delay));
+        await sleep(delay);
         continue;
       }
 
@@ -76,4 +88,58 @@ export async function sendMessage(to: string, text: string): Promise<SendMessage
   }
 
   return undefined;
+}
+
+interface NotifiableTicket {
+  id: string;
+  phone?: string | null;
+  ticket_num?: string | null;
+  reporter_name?: string | null;
+}
+
+/**
+ * Kirim notifikasi WhatsApp saat status tiket berubah.
+ * Bila status menjadi RESOLVED/CLOSED, sesi pelapor diarahkan ke WAITING_RATING.
+ */
+export async function notifyStatusChange(
+  ticket: NotifiableTicket,
+  status: string,
+  opts: { isReopen?: boolean; confirmWord?: string } = {}
+) {
+  const { phone } = ticket;
+  if (!phone) return;
+
+  const { isReopen = false, confirmWord = 'thanks' } = opts;
+  const ticketLabel = ticket.ticket_num || ticket.id;
+  const reporter = ticket.reporter_name || 'Pelapor';
+
+  if (status === 'WAITING CONFIRMATION') {
+    const confirmLink = `${process.env.FRONTEND_URL || 'https://helpdesk-it-jet.vercel.app'}/ticket/confirm/${ticket.id}`;
+    const msg = `Halo ${reporter},\n\nTiket pengaduan Anda dengan nomor *${ticketLabel}* telah selesai ditangani oleh teknisi kami.\n\nMohon konfirmasi apakah masalah sudah benar-benar teratasi melalui tautan berikut:\n${confirmLink}\n\n*ATAU balas pesan ini* dengan mengetik kata _selesai_, _ok_, atau _${confirmWord}_.\n\nTerima kasih.`;
+    await sendMessage(phone, msg).catch(e => console.error('Gagal kirim WA konfirmasi:', e));
+    return;
+  }
+
+  let msg = `Halo ${reporter},\n\nStatus tiket pengaduan Anda (*${ticketLabel}*) telah diperbarui menjadi: *${status}*.`;
+  if (status === 'Open' || status === 'OPEN') {
+    if (isReopen) {
+      msg += '\n\nTiket Anda telah dibuka kembali dan akan segera ditangani ulang oleh teknisi kami.';
+    } else {
+      msg += '\n\nTiket Anda telah berhasil diverifikasi oleh operator dan akan segera diteruskan ke departemen/teknisi terkait.';
+    }
+  } else if (status === 'IN PROGRESS' || status === 'Diproses') {
+    msg += '\n\nTeknisi kami saat ini sedang mengerjakan dan menangani kendala Anda.';
+  } else if (status === 'RESOLVED' || status === 'CLOSED') {
+    await supabase.from('wa_sessions').upsert({
+      phone,
+      step: 'WAITING_RATING',
+      data: { ticket_id: ticket.id },
+      updated_at: new Date().toISOString(),
+    });
+    msg = `Halo ${reporter},\n\nTiket pengaduan Anda (*${ticketLabel}*) telah resmi diselesaikan oleh tim IT HelpDesk kami. ✅\n\nBantu kami meningkatkan layanan dengan memberikan *RATING (1-5)* beserta ulasan Anda dalam 1 pesan balasan.\n\nContoh balasan:\n_5 Pelayanan sangat cepat dan teknisi ramah_`;
+  } else if (status === 'REJECTED' || status === 'Ditolak') {
+    msg += '\n\nMohon maaf, tiket Anda ditolak karena alasan tertentu. Silakan cek detail tiket atau hubungi Helpdesk.';
+  }
+
+  await sendMessage(phone, msg).catch(e => console.error('Gagal kirim WA notif status:', e));
 }

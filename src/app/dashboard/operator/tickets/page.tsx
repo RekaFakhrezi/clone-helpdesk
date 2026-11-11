@@ -3,8 +3,6 @@ import OperatorTicketWorkspace from '@/components/operator/tickets/OperatorTicke
 import { calculateIsOverdue } from '@/lib/utils/sla';
 import { fetchServer } from '@/lib/apiServer';
 
-export const dynamic = 'force-dynamic';
-
 export default async function OperatorTicketsPage() {
     let apiData;
     try {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { fetchClient } from '@/lib/apiClient';
 import { TreeContext } from './Workspace';
+import Modal, { ModalCancelButton } from '@/components/ui/Modal';
 import { useLanguage } from '@/context/LanguageContext';
 
 interface ModalProps {
@@ -67,18 +68,18 @@ export function AddCategoryModal({ isOpen, onClose, onSuccess }: ModalProps) {
   };
 
   return (
-    <>
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" onClick={onClose} />
-      <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-xl shadow-xl z-50 overflow-hidden flex flex-col max-h-[90vh]">
-        <div className="flex justify-between items-center p-6 border-b border-[#C3C6D1]">
-          <h2 className="text-xl font-bold text-[#1A1C1E]">{t('categories.add')}</h2>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" fill="#1A1C1E"/>
-            </svg>
-          </button>
-        </div>
-        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4 overflow-y-auto">
+    <Modal
+      title={t('categories.add')}
+      onClose={onClose}
+      maxWidth="max-w-lg"
+      footer={
+        <>
+          <ModalCancelButton onClick={onClose}>{t('categories.cancel')}</ModalCancelButton>
+          <button type="submit" form="addCategoryForm" disabled={loading} className="px-4 py-2 text-sm font-semibold text-white bg-[#001E40] hover:bg-[#00142d] rounded transition-colors disabled:opacity-50">{loading ? t('categories.saving') : t('categories.save')}</button>
+        </>
+      }
+    >
+        <form id="addCategoryForm" onSubmit={handleSubmit} className="flex flex-col gap-4 overflow-y-auto max-h-[70vh]">
           <div>
             <label className="block text-sm font-medium text-[#43474F] mb-1">{t('categories.name_label')}</label>
             <input type="text" value={name} onChange={e => setName(e.target.value)} required className="w-full px-4 py-2 border border-[#C3C6D1] rounded focus:outline-none focus:border-[#0059BB]" placeholder={t('categories.name_label')} />
@@ -123,13 +124,8 @@ export function AddCategoryModal({ isOpen, onClose, onSuccess }: ModalProps) {
             />
           </div>
 
-          <div className="flex justify-end gap-3 mt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-semibold text-[#43474F] hover:bg-gray-100 rounded transition-colors">{t('categories.cancel')}</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 text-sm font-semibold text-white bg-[#001E40] hover:bg-[#00142d] rounded transition-colors disabled:opacity-50">{loading ? t('categories.saving') : t('categories.save')}</button>
-          </div>
         </form>
-      </div>
-    </>
+    </Modal>
   );
 }
 
@@ -174,18 +170,18 @@ export function AddSubcategoryModal({ isOpen, onClose, onSuccess, categoryId }: 
   };
 
   return (
-    <>
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" onClick={onClose} />
-      <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-xl shadow-xl z-50 overflow-hidden flex flex-col max-h-[90vh]">
-        <div className="flex justify-between items-center p-6 border-b border-[#C3C6D1]">
-          <h2 className="text-xl font-bold text-[#1A1C1E]">{t('categories.add_sub')}</h2>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" fill="#1A1C1E"/>
-            </svg>
-          </button>
-        </div>
-        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4 overflow-y-auto">
+    <Modal
+      title={t('categories.add_sub')}
+      onClose={onClose}
+      maxWidth="max-w-lg"
+      footer={
+        <>
+          <ModalCancelButton onClick={onClose}>{t('categories.cancel')}</ModalCancelButton>
+          <button type="submit" form="addSubcategoryForm" disabled={loading} className="px-4 py-2 text-sm font-semibold text-white bg-[#001E40] hover:bg-[#00142d] rounded transition-colors disabled:opacity-50">{loading ? t('categories.saving') : t('categories.save')}</button>
+        </>
+      }
+    >
+        <form id="addSubcategoryForm" onSubmit={handleSubmit} className="flex flex-col gap-4 overflow-y-auto max-h-[70vh]">
           <div>
             <label className="block text-sm font-medium text-[#43474F] mb-1">{t('categories.sub_name_label')}</label>
             <input type="text" value={name} onChange={e => setName(e.target.value)} required className="w-full px-4 py-2 border border-[#C3C6D1] rounded focus:outline-none focus:border-[#0059BB]" />
@@ -217,13 +213,8 @@ export function AddSubcategoryModal({ isOpen, onClose, onSuccess, categoryId }: 
             />
           </div>
 
-          <div className="flex justify-end gap-3 mt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-semibold text-[#43474F] hover:bg-gray-100 rounded transition-colors">{t('categories.cancel')}</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 text-sm font-semibold text-white bg-[#001E40] hover:bg-[#00142d] rounded transition-colors disabled:opacity-50">{loading ? t('categories.saving') : t('categories.save')}</button>
-          </div>
         </form>
-      </div>
-    </>
+    </Modal>
   );
 }
 
@@ -278,18 +269,18 @@ export function EditItemModal({ isOpen, onClose, onSuccess, target }: ModalProps
   };
 
   return (
-    <>
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" onClick={onClose} />
-      <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-xl shadow-xl z-50 overflow-hidden flex flex-col max-h-[90vh]">
-        <div className="flex justify-between items-center p-6 border-b border-[#C3C6D1]">
-          <h2 className="text-xl font-bold text-[#1A1C1E]">{t('categories.edit_title').replace('{type}', target.type === 'category' ? t('categories.name_label') : t('categories.sub_name_label'))}</h2>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" fill="#1A1C1E"/>
-            </svg>
-          </button>
-        </div>
-        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4 overflow-y-auto">
+    <Modal
+      title={t('categories.edit_title').replace('{type}', target.type === 'category' ? t('categories.name_label') : t('categories.sub_name_label'))}
+      onClose={onClose}
+      maxWidth="max-w-lg"
+      footer={
+        <>
+          <ModalCancelButton onClick={onClose}>{t('categories.cancel')}</ModalCancelButton>
+          <button type="submit" form="editCategoryForm" disabled={loading} className="px-4 py-2 text-sm font-semibold text-white bg-[#001E40] hover:bg-[#00142d] rounded transition-colors disabled:opacity-50">{loading ? t('categories.saving') : t('categories.save')}</button>
+        </>
+      }
+    >
+        <form id="editCategoryForm" onSubmit={handleSubmit} className="flex flex-col gap-4 overflow-y-auto max-h-[70vh]">
           <div>
             <label className="block text-sm font-medium text-[#43474F] mb-1">{t('categories.name_label')}</label>
             <input type="text" value={name} onChange={e => setName(e.target.value)} required className="w-full px-4 py-2 border border-[#C3C6D1] rounded focus:outline-none focus:border-[#0059BB]" />
@@ -321,12 +312,7 @@ export function EditItemModal({ isOpen, onClose, onSuccess, target }: ModalProps
             />
           </div>
 
-          <div className="flex justify-end gap-3 mt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-semibold text-[#43474F] hover:bg-gray-100 rounded transition-colors">{t('categories.cancel')}</button>
-            <button type="submit" disabled={loading} className="px-4 py-2 text-sm font-semibold text-white bg-[#001E40] hover:bg-[#00142d] rounded transition-colors disabled:opacity-50">{loading ? t('categories.saving') : t('categories.save')}</button>
-          </div>
         </form>
-      </div>
-    </>
+    </Modal>
   );
 }

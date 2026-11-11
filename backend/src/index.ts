@@ -1,6 +1,3 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
 import express from 'express';
 import { supabase } from './config/supabase';
 import authRoutes from './routes/auth.routes';
@@ -11,6 +8,7 @@ import adminRoutes from './routes/admin.routes';
 import webhookRoutes from './routes/webhook.routes';
 import reporterRoutes from './routes/reporter.routes';
 import simulatorRoutes from './routes/simulator.routes';
+import { confirmTicketPublic } from './controllers/ticketController';
 const app = express();
 
 app.use((req, res, next) => {
@@ -35,8 +33,9 @@ app.use(express.json());
 app.use('/webhook', webhookRoutes);
 app.use('/api/simulator', simulatorRoutes); // Rute untuk simulasi testing
 app.use('/api/auth', authRoutes);
-app.use('/api/tickets', ticketRoutes);
 app.use('/api/admin/tickets', ticketRoutes);
+// Endpoint publik: konfirmasi penyelesaian tiket dari pelapor (tanpa auth)
+app.post('/api/tickets/public/:ticketId/confirm', confirmTicketPublic);
 app.use('/api/admin/reporters', reporterRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin', metadataRoutes);

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { supabase } from '../config/supabase';
-import { sendMessage } from '../services/wasender';
+import { notifyStatusChange, sendMessage } from '../services/wasender';
+import { TICKET_SELECT } from '../services/ticketQueries';
 
 /**
  * 1. Mengambil semua tiket untuk Dashboard (Admin/Staf)
@@ -10,7 +11,7 @@ export const getTicketsForDashboard = async (req: Request, res: Response) => {
   try {
     const { data, error } = await supabase
       .from('tickets')
-      .select('*, category:categories(name), dept:departments(name), tech:staff_profiles!tickets_tech_id_fkey(name)')
+      .select(TICKET_SELECT)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -33,7 +34,7 @@ export const getTicketByNum = async (req: Request, res: Response) => {
 
     const { data, error } = await supabase
       .from('tickets')
-      .select('*, category:categories(name), dept:departments(name), tech:staff_profiles!tickets_tech_id_fkey(name), attachments:ticket_attachments(*)')
+      .select(`${TICKET_SELECT}, attachments:ticket_attachments(*)`)
       .eq('ticket_num', ticketNum)
       .single();
 
@@ -77,35 +78,11 @@ export const updateTicketByStaff = async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: error.message });
     }
 
-    // Auto send WhatsApp for status changes
+    // Auto send WhatsApp for status changes (tidak menahan respons endpoint)
     if (status && data.phone) {
-      if (status === 'WAITING CONFIRMATION') {
-        const confirmLink = `${process.env.FRONTEND_URL || 'https://helpdesk-it-jet.vercel.app'}/ticket/confirm/${data.id}`;
-        const msg = `Halo ${data.reporter_name || 'Pelapor'},\n\nTiket pengaduan Anda dengan nomor *${data.ticket_num || data.id}* telah selesai ditangani oleh teknisi kami.\n\nMohon konfirmasi apakah masalah sudah benar-benar teratasi melalui tautan berikut:\n${confirmLink}\n\n*ATAU balas pesan ini* dengan mengetik kata _selesai_, _ok_, atau _thanks_.\n\nTerima kasih.`;
-        sendMessage(data.phone, msg).catch(e => console.error('Gagal kirim WA konfirmasi:', e));
-      } else {
-        let msg = `Halo ${data.reporter_name || 'Pelapor'},\n\nStatus tiket pengaduan Anda (*${data.ticket_num || data.id}*) telah diperbarui menjadi: *${status}*.`;
-        if (status === 'Open' || status === 'OPEN') {
-           if (isReopen) {
-               msg += '\n\nTiket Anda telah dibuka kembali dan akan segera ditangani ulang oleh teknisi kami.';
-           } else {
-               msg += '\n\nTiket Anda telah berhasil diverifikasi oleh operator dan akan segera diteruskan ke departemen/teknisi terkait.';
-           }
-        } else if (status === 'IN PROGRESS' || status === 'Diproses') {
-           msg += '\n\nTeknisi kami saat ini sedang mengerjakan dan menangani kendala Anda.';
-        } else if (status === 'RESOLVED' || status === 'CLOSED') {
-           await supabase.from('wa_sessions').upsert({
-             phone: data.phone,
-             step: 'WAITING_RATING',
-             data: { ticket_id: data.id },
-             updated_at: new Date().toISOString()
-           });
-           msg = `Halo ${data.reporter_name || 'Pelapor'},\n\nTiket pengaduan Anda (*${data.ticket_num || data.id}*) telah resmi diselesaikan oleh tim IT Helpdesk kami. ✅\n\nBantu kami meningkatkan layanan dengan memberikan *RATING (1-5)* beserta ulasan Anda dalam 1 pesan balasan.\n\nContoh balasan:\n_5 Pelayanan sangat cepat dan teknisi ramah_`;
-        } else if (status === 'REJECTED' || status === 'Ditolak') {
-           msg += '\n\nMohon maaf, tiket Anda ditolak karena alasan tertentu. Silakan cek detail tiket atau hubungi Helpdesk.';
-        }
-        sendMessage(data.phone, msg).catch(e => console.error('Gagal kirim WA notif status:', e));
-      }
+      notifyStatusChange(data, status, { isReopen, confirmWord: 'thanks' }).catch(e =>
+        console.error('Gagal kirim WA notif status:', e)
+      );
     }
 
     return res.status(200).json({ success: true, data });

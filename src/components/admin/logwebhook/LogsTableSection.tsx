@@ -55,7 +55,7 @@ export default function LogsTableSection({
   isFilterActive = false,
 }: LogsTableSectionProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const totalLogs = 1248;
+  const totalLogs = DUMMY_LOGS.length;
   const logsPerPage = 4;
 
   const displayedLogs = useMemo(() => {

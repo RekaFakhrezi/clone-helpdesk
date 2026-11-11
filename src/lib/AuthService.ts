@@ -1,24 +1,34 @@
-import { API_BASE_URL } from './apiClient';
+import { requestJson } from './http';
 
-export const loginUser = async (email: string, password: string) => {
+export interface LoginAuthUser {
+  id?: string;
+  email?: string;
+  role?: string;
+  user_metadata?: { role?: string };
+  [key: string]: unknown;
+}
+
+export interface LoginResult {
+  user?: LoginAuthUser;
+  profile?: Record<string, unknown>;
+  session?: { access_token?: string };
+}
+
+export const loginUser = async (email: string, password: string): Promise<LoginResult | undefined> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    const { res, data } = await requestJson('/auth/login', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({ email, password }),
     });
 
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.error || 'Login gagal');
+    if (!res.ok) {
+      const body = data as { error?: string } | null;
+      throw new Error(body?.error || 'Login gagal');
     }
 
-    return result.data;
-  } catch (error: any) {
-    console.error('Error in loginUser:', error.message);
+    return (data as { data?: LoginResult } | null)?.data;
+  } catch (error) {
+    console.error('Error in loginUser:', error instanceof Error ? error.message : error);
     throw error;
   }
 };

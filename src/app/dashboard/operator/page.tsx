@@ -7,8 +7,6 @@ import DashboardHeader from '@/components/common/DashboardHeader';
 
 import OperatorStatCards from '@/components/operator/OperatorStatCards';
 
-export const dynamic = 'force-dynamic';
-
 export default async function OperatorDashboard() {
     // Ambil data dashboard dari Express API
     let dashboardData;
