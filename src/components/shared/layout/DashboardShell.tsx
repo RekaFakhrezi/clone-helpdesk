@@ -61,7 +61,7 @@ export default function DashboardShell({
           showMenuButtonOnDesktop={true}
         />
 
-        <main className="flex-1 p-4 lg:p-8 overflow-y-auto">
+        <main className="flex-1 px-4 lg:px-10 py-6 lg:py-8 overflow-y-auto">
           <div className="w-full">
             {children}
           </div>

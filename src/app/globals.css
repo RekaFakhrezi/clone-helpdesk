@@ -1,53 +1,96 @@
 @import "tailwindcss";
 
-:root {
-  /* Warna Dasar / Ink (Untuk teks gelap & background gelap) */
-  --ink: #0F172A;
-  --ink-2: #1E293B;
-  --ink-3: #334155;
+/* Token peran (lihat docs/DESIGN.md). Nilai literal agar bisa dipakai
+   sebagai utility Tailwind v4: bg-surface, text-fg-dim, border-rule, dst. */
+@theme {
+  --color-bg: #ffffff;
+  --color-canvas: #f6f7f9;
+  --color-surface: #ffffff;
+  --color-fg: #0b1524;
+  --color-fg-dim: #4a5568;
+  --color-fg-faint: #7c8898;
+  --color-rule: rgba(11, 21, 36, 0.1);
+  --color-rule-strong: rgba(11, 21, 36, 0.18);
+  --color-accent: #002d72;
+  --color-accent-hover: #0059bb;
+  --color-rail: #0b1b2e;
+  --color-ok: #0f7b4f;
+  --color-warn: #b26b00;
+  --color-danger: #b3211b;
 
-  /* --- PALET BIRU UNDIP --- */
-  --gold: #002D72;      /* Mengganti gold -> Biru Utama Undip */
-  --gold-soft: #ffffff;  /* Mengganti gold-soft -> Biru Muda (Hover/Accent) */
-  --gold-dim: #001C46;   /* Mengganti gold-dim -> Biru Sangat Gelap (Text/Border) */
-  
-  /* Warna Pendukung */
-  --red: #9c2b23;        /* Tetap merah untuk error/alert */
-  --paper: #F8FAFC;      /* Background putih bersih (kebiruan tipis) */
-  --paper-2: #E2E8F0;    /* Background abu-abu muda */
-  
-  --text: #0F172A;       /* Teks utama */
-  --text-dim: #475569;   /* Teks abu-abu */
-  
-  /* Sisanya tetap sama */
-  --line: rgba(15, 23, 42, 0.12);
-  --line-dark: rgba(248, 250, 252, 0.14);
-  --radius-lg: 22px;
-  --radius-md: 14px;
-  --radius-sm: 9px;
-  --shadow-soft: 0 14px 34px -18px rgba(15, 23, 42, 0.2);
-  --ease: cubic-bezier(.22,.68,.12,1);
+  --radius-card: 4px;
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+
+:root {
+  /* Peran (sumber kebenaran baru) */
+  --bg: #ffffff;
+  --canvas: #f6f7f9;
+  --surface: #ffffff;
+  --fg: #0b1524;
+  --fg-dim: #4a5568;
+  --fg-faint: #7c8898;
+  --rule: rgba(11, 21, 36, 0.1);
+  --rule-strong: rgba(11, 21, 36, 0.18);
+  --accent: #002d72;
+  --accent-hover: #0059bb;
+  --accent-dim: #001c46;
+  --rail: #0b1b2e;
+  --ok: #0f7b4f;
+  --warn: #b26b00;
+  --danger: #b3211b;
+  --radius: 4px;
+  --shadow-pop: 0 8px 24px -12px rgba(11, 21, 36, 0.28);
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur: 0.15s;
+
+  /* Alias nama lama — masih dipakai ~120 file, dimigrasikan bertahap
+     ke nama peran di atas, lalu dihapus. */
+  --ink: var(--fg);
+  --ink-2: #16233a;
+  --ink-3: var(--fg-dim);
+  --gold: var(--accent);
+  --gold-soft: var(--accent-hover);
+  --gold-dim: var(--accent-dim);
+  --red: var(--danger);
+  --paper: var(--canvas);
+  --paper-2: var(--rule);
+  --text: var(--fg);
+  --text-dim: var(--fg-dim);
+  --line: var(--rule);
+  --line-dark: rgba(255, 255, 255, 0.14);
+  --radius-lg: var(--radius);
+  --radius-md: var(--radius);
+  --radius-sm: var(--radius);
+  --shadow-soft: none;
 }
 
 *,*::before,*::after{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{
   margin:0;
-  background:var(--paper);
-  color:var(--text);
+  background:var(--canvas);
+  color:var(--fg);
   font-family:var(--font-poppins), sans-serif;
   -webkit-font-smoothing:antialiased;
   line-height:1.5;
+  caret-color:var(--accent);
 }
 h1,h2,h3{font-family:inherit;}
+h1,h2{font-weight:500; letter-spacing:-0.02em;}
 p{margin:0;}
 a{color:inherit; text-decoration:none;}
 ul{list-style:none; margin:0; padding:0;}
 button{font-family:inherit; cursor:pointer;}
 img,svg{display:block; max-width:100%;}
-::selection{background:var(--gold-soft); color:var(--ink);}
+table{font-variant-numeric:tabular-nums;}
+::selection{background:rgba(0,45,114,0.16); color:var(--fg);}
 
-:focus-visible{outline:2.5px solid var(--gold); outline-offset:3px; border-radius:4px;}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:var(--radius);}
+
+*{scrollbar-width:thin; scrollbar-color:var(--rule-strong) transparent;}
 
 .container{
   width:100%;

@@ -177,7 +177,7 @@ export default function AdminTopbar({
     : (breadcrumbParent === 'Dashboard' ? t('topbar.dashboard') : breadcrumbParent);
 
   return (
-    <div className="sticky top-0 z-40 h-20 w-full bg-white border-b border-[var(--line)]">
+    <div className="sticky top-0 z-40 h-16 w-full bg-[var(--bg)] border-b border-[var(--rule)]">
       {/* Padding menyesuaikan dengan p-4 lg:p-8 pada Layout utama */}
       <div className="flex h-full items-center justify-between px-4 lg:px-8">
 
@@ -186,7 +186,7 @@ export default function AdminTopbar({
           {/* Hamburger button */}
           <button
             onClick={onMenuClick}
-            className={`${showMenuButtonOnDesktop ? 'block' : 'lg:opacity-0 lg:pointer-events-none'} -ml-2 p-2 rounded-xl text-[var(--text-dim)] hover:bg-[var(--paper-2)] hover:text-[var(--ink)] transition-colors`}
+            className={`${showMenuButtonOnDesktop ? 'block' : 'lg:opacity-0 lg:pointer-events-none'} -ml-2 p-2 rounded-[4px] text-[var(--fg-dim)] hover:bg-[var(--rule)] hover:text-[var(--fg)] transition-colors duration-150`}
             aria-label={language === 'id' ? 'Buka menu' : 'Open menu'}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -195,12 +195,10 @@ export default function AdminTopbar({
           </button>
 
           {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-[15px] ml-4 md:ml-2">
-            <span className="text-[var(--text-dim)]">{translatedBreadcrumb}</span>
-            <svg className="w-4 h-4 text-[var(--text-dim)]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-            <span className="font-semibold text-[var(--ink)] truncate max-w-[200px] md:max-w-xs">
+          <div className="flex items-center gap-2 ml-4 md:ml-2 min-w-0">
+            <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--fg-faint)]">{translatedBreadcrumb}</span>
+            <span className="text-[10px] text-[var(--fg-faint)]">/</span>
+            <span className="text-[13.5px] font-medium text-[var(--fg)] truncate max-w-[200px] md:max-w-md">
               {activeTitle}
             </span>
           </div>
@@ -211,7 +209,7 @@ export default function AdminTopbar({
           <button
             onClick={() => setLanguage(language === 'id' ? 'en' : 'id')}
             title={t('topbar.lang_switch')}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 transition-all cursor-pointer shadow-2xs"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[4px] border border-[var(--rule-strong)] hover:border-[var(--fg-faint)] bg-transparent hover:bg-[var(--rule)] text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--fg-dim)] hover:text-[var(--fg)] transition-colors duration-150 cursor-pointer"
           >
             <Globe className="w-3.5 h-3.5 text-slate-500" />
             <span>{language === 'id' ? 'ID' : 'EN'}</span>
@@ -221,7 +219,7 @@ export default function AdminTopbar({
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="relative p-2 text-[var(--ink)] hover:text-[var(--gold-soft)] transition-colors focus:outline-none"
+                className="relative p-2 rounded-[4px] text-[var(--fg-dim)] hover:text-[var(--fg)] hover:bg-[var(--rule)] transition-colors duration-150 focus:outline-none"
                 aria-label={t('topbar.notifications')}
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.6" viewBox="0 0 24 24">
@@ -236,13 +234,13 @@ export default function AdminTopbar({
 
               {/* Notification Dropdown */}
               {showNotifications && (
-                <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden z-50 animate-in slide-in-from-top-2 fade-in duration-200">
-                  <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 bg-slate-50/80">
-                    <h3 className="font-bold text-slate-800 text-[14px]">{t('topbar.notifications')}</h3>
+                <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-[var(--surface)] rounded-[4px] shadow-[var(--shadow-pop)] border border-[var(--rule-strong)] overflow-hidden z-50 animate-in slide-in-from-top-2 fade-in duration-150">
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--rule)] bg-[var(--canvas)]">
+                    <h3 className="font-medium text-[var(--fg)] text-[13px]">{t('topbar.notifications')}</h3>
                     {unreadCount > 0 && (
                       <button
                         onClick={() => setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })))}
-                        className="text-[12px] font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+                        className="text-[11.5px] font-medium text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors"
                       >
                         {t('notifications.mark_read')}
                       </button>
@@ -292,17 +290,17 @@ export default function AdminTopbar({
             </div>
           )}
 
-          <div className="hidden sm:block w-px h-8 bg-[var(--line)]"></div>
+          <div className="hidden sm:block w-px h-6 bg-[var(--rule)]"></div>
 
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex flex-col items-end leading-tight">
-              <span className="text-[14px] font-bold text-[var(--ink)]">{displayUserName}</span>
-              <span className="text-[11px] font-medium text-[var(--text-dim)] uppercase tracking-wide">
+              <span className="text-[13px] font-medium text-[var(--fg)]">{displayUserName}</span>
+              <span className="text-[10px] font-medium text-[var(--fg-faint)] uppercase tracking-[0.14em]">
                 {displayUserRole}
               </span>
             </div>
             {/* Avatar Inisial Dinamis */}
-            <div className="relative w-11 h-11 rounded-full bg-[var(--gold)] flex items-center justify-center text-white font-bold ring-1 ring-[var(--line)] shrink-0">
+            <div className="relative w-9 h-9 rounded-[4px] bg-[var(--accent)] flex items-center justify-center text-white text-[12px] font-medium shrink-0">
               {initials}
             </div>
           </div>
